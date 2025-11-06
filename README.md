@@ -18,6 +18,38 @@ A web-based application for creating custom Dungeons & Dragons character and mon
 - **Responsive Design**: Works on desktop and mobile devices
 - **Beautiful Card Design**: Styled to look like official D&D cards with parchment background and medieval aesthetic
 
+## Deployment
+
+This app is deployed using **GitHub Pages**. You can access the live version at:
+`https://[your-username].github.io/scaling-doodle/`
+
+### Deploy Your Own
+
+To deploy your own version:
+
+1. **Enable GitHub Pages:**
+   - Go to your repository on GitHub
+   - Navigate to **Settings** → **Pages**
+   - Under "Source", select the branch: `claude/dnd-card-builder-011CUrNzPiunL6W9Q6x1zYBz` (or merge to `main` first)
+   - Select `/ (root)` as the folder
+   - Click **Save**
+
+2. **Wait for deployment:**
+   - GitHub will automatically build and deploy your site
+   - It usually takes 1-2 minutes
+   - You'll see a green checkmark when it's ready
+
+3. **Access your site:**
+   - Your app will be available at: `https://[your-username].github.io/[repository-name]/`
+
+### Alternative Deployment Options
+
+This static web app can also be deployed to:
+- **Netlify**: Drag and drop the folder to Netlify
+- **Vercel**: Connect your GitHub repo for automatic deployments
+- **Cloudflare Pages**: Connect repository for edge deployment
+- **Any static hosting**: Upload files to any web server
+
 ## Getting Started
 
 ### Prerequisites
@@ -25,7 +57,7 @@ A web-based application for creating custom Dungeons & Dragons character and mon
 - A modern web browser (Chrome, Firefox, Safari, Edge)
 - No installation required!
 
-### Usage
+### Local Usage
 
 1. Open `index.html` in your web browser
 2. Fill in the card details in the editor panel on the left:
