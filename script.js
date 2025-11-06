@@ -81,14 +81,32 @@ const exportBtn = document.getElementById('exportBtn');
 const previewImage = document.getElementById('previewImage');
 const cardPreview = document.getElementById('cardPreview');
 
-// Current template
+// Deck management elements
+const addToDeckBtn = document.getElementById('addToDeckBtn');
+const viewDeckBtn = document.getElementById('viewDeckBtn');
+const printPreviewBtn = document.getElementById('printPreviewBtn');
+const deckCountSpan = document.getElementById('deckCount');
+const deckModal = document.getElementById('deckModal');
+const closeDeckModal = document.getElementById('closeDeckModal');
+const deckGrid = document.getElementById('deckGrid');
+const clearDeckBtn = document.getElementById('clearDeckBtn');
+const exportDeckBtn = document.getElementById('exportDeckBtn');
+const printModal = document.getElementById('printModal');
+const closePrintModal = document.getElementById('closePrintModal');
+const printContent = document.getElementById('printContent');
+const printBtn = document.getElementById('printBtn');
+
+// Current template and deck
 let currentTemplate = 'creature';
+let deck = [];
 
 // Initialize
 function init() {
     loadTemplate(currentTemplate);
     updatePreview();
     attachEventListeners();
+    loadDeck();
+    updateDeckCounter();
 }
 
 // Load template and show/hide appropriate fields
@@ -427,6 +445,229 @@ function attachEventListeners() {
             element.addEventListener('input', updatePreview);
         }
     });
+
+    // Deck management event listeners
+    addToDeckBtn.addEventListener('click', addCardToDeck);
+    viewDeckBtn.addEventListener('click', showDeckModal);
+    printPreviewBtn.addEventListener('click', showPrintPreview);
+    clearDeckBtn.addEventListener('click', clearDeck);
+    exportDeckBtn.addEventListener('click', exportAllCards);
+    closeDeckModal.addEventListener('click', () => deckModal.classList.remove('active'));
+    closePrintModal.addEventListener('click', () => printModal.classList.remove('active'));
+    printBtn.addEventListener('click', () => window.print());
+
+    // Close modals on outside click
+    deckModal.addEventListener('click', (e) => {
+        if (e.target === deckModal) {
+            deckModal.classList.remove('active');
+        }
+    });
+    printModal.addEventListener('click', (e) => {
+        if (e.target === printModal) {
+            printModal.classList.remove('active');
+        }
+    });
+}
+
+// Deck Management Functions
+
+// Load deck from localStorage
+function loadDeck() {
+    const savedDeck = localStorage.getItem('cardDeck');
+    if (savedDeck) {
+        try {
+            deck = JSON.parse(savedDeck);
+        } catch (e) {
+            deck = [];
+        }
+    }
+}
+
+// Save deck to localStorage
+function saveDeck() {
+    localStorage.setItem('cardDeck', JSON.stringify(deck));
+}
+
+// Update deck counter
+function updateDeckCounter() {
+    deckCountSpan.textContent = deck.length;
+}
+
+// Capture current card state
+function captureCardState() {
+    const cardData = {
+        template: currentTemplate,
+        html: cardPreview.innerHTML,
+        timestamp: Date.now(),
+        name: document.getElementById('cardName').value || 'Unnamed Card'
+    };
+    return cardData;
+}
+
+// Add card to deck
+function addCardToDeck() {
+    const cardData = captureCardState();
+    deck.push(cardData);
+    saveDeck();
+    updateDeckCounter();
+
+    // Show confirmation
+    const originalText = addToDeckBtn.textContent;
+    addToDeckBtn.textContent = 'Added!';
+    addToDeckBtn.style.background = '#218838';
+    setTimeout(() => {
+        addToDeckBtn.textContent = originalText;
+        addToDeckBtn.style.background = '';
+    }, 1000);
+}
+
+// Show deck modal
+function showDeckModal() {
+    if (deck.length === 0) {
+        deckGrid.innerHTML = '<div class="deck-empty">No cards in deck yet. Create a card and click "Add to Deck".</div>';
+    } else {
+        deckGrid.innerHTML = '';
+        deck.forEach((cardData, index) => {
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'deck-card-container';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-card-btn';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.onclick = () => removeCardFromDeck(index);
+
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            cardDiv.innerHTML = cardData.html;
+
+            cardContainer.appendChild(removeBtn);
+            cardContainer.appendChild(cardDiv);
+            deckGrid.appendChild(cardContainer);
+        });
+    }
+    deckModal.classList.add('active');
+}
+
+// Remove card from deck
+function removeCardFromDeck(index) {
+    if (confirm('Remove this card from the deck?')) {
+        deck.splice(index, 1);
+        saveDeck();
+        updateDeckCounter();
+        showDeckModal(); // Refresh the modal
+    }
+}
+
+// Clear entire deck
+function clearDeck() {
+    if (confirm('Are you sure you want to clear the entire deck? This cannot be undone.')) {
+        deck = [];
+        saveDeck();
+        updateDeckCounter();
+        showDeckModal(); // Refresh the modal
+    }
+}
+
+// Export all cards
+async function exportAllCards() {
+    if (deck.length === 0) {
+        alert('No cards in deck to export.');
+        return;
+    }
+
+    if (typeof html2canvas === 'undefined') {
+        alert('Export library not loaded. Please refresh the page and try again.');
+        return;
+    }
+
+    exportDeckBtn.textContent = 'Exporting...';
+    exportDeckBtn.disabled = true;
+
+    try {
+        for (let i = 0; i < deck.length; i++) {
+            const cardData = deck[i];
+
+            // Create temporary card element
+            const tempCard = document.createElement('div');
+            tempCard.className = 'card';
+            tempCard.style.position = 'absolute';
+            tempCard.style.left = '-9999px';
+            tempCard.innerHTML = cardData.html;
+            document.body.appendChild(tempCard);
+
+            const canvas = await html2canvas(tempCard, {
+                scale: 4,
+                backgroundColor: '#f9f6f0',
+                logging: false,
+                width: 750,
+                height: 1050
+            });
+
+            // Convert to blob and download
+            await new Promise((resolve) => {
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const fileName = `${cardData.name.replace(/\s+/g, '_')}_${i + 1}.png`;
+                    link.download = fileName;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    resolve();
+                });
+            });
+
+            document.body.removeChild(tempCard);
+
+            // Small delay between downloads
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        alert(`Successfully exported ${deck.length} cards!`);
+    } catch (error) {
+        console.error('Export failed:', error);
+        alert('Export failed. Please try again.');
+    } finally {
+        exportDeckBtn.textContent = 'Export All Cards';
+        exportDeckBtn.disabled = false;
+    }
+}
+
+// Show print preview
+function showPrintPreview() {
+    if (deck.length === 0) {
+        alert('No cards in deck to print. Add cards to your deck first.');
+        return;
+    }
+
+    printContent.innerHTML = '';
+
+    const cardsPerPage = 9; // 3x3 grid
+    const totalPages = Math.ceil(deck.length / cardsPerPage);
+
+    for (let page = 0; page < totalPages; page++) {
+        const printPage = document.createElement('div');
+        printPage.className = 'print-page';
+
+        const startIdx = page * cardsPerPage;
+        const endIdx = Math.min(startIdx + cardsPerPage, deck.length);
+
+        for (let i = startIdx; i < endIdx; i++) {
+            const printCard = document.createElement('div');
+            printCard.className = 'print-card';
+
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            cardDiv.innerHTML = deck[i].html;
+
+            printCard.appendChild(cardDiv);
+            printPage.appendChild(printCard);
+        }
+
+        printContent.appendChild(printPage);
+    }
+
+    printModal.classList.add('active');
 }
 
 // Initialize on page load
