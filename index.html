@@ -276,6 +276,21 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                             </div>
                         </div>
 
+                        <!-- Background Image Settings -->
+                        <div class="customization-section">
+                            <h4>Background Image</h4>
+                            <div class="setting-row">
+                                <label>
+                                    <input type="checkbox" id="useImageAsBackground">
+                                    Use Card Image as Background
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <label for="contentOpacity">Content Opacity: <span id="contentOpacityValue">0.95</span></label>
+                                <input type="range" id="contentOpacity" min="0.5" max="1" step="0.05" value="0.95">
+                            </div>
+                        </div>
+
                         <!-- Colors -->
                         <div class="customization-section">
                             <h4>Colors</h4>
@@ -301,6 +316,19 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                             </div>
                         </div>
 
+                        <!-- Back Card Settings -->
+                        <div class="customization-section">
+                            <h4>Back Card Design</h4>
+                            <div class="setting-row">
+                                <label for="backCardImageUpload">Back Card Image</label>
+                                <input type="file" id="backCardImageUpload" accept="image/*">
+                            </div>
+                            <div class="setting-row">
+                                <label for="backCardBgColor">Back Card Background</label>
+                                <input type="color" id="backCardBgColor" value="#2c3e50">
+                            </div>
+                        </div>
+
                         <!-- Theme Management -->
                         <div class="customization-section">
                             <h4>Theme Management</h4>
@@ -318,7 +346,11 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
             <!-- Preview Panel -->
             <div class="preview-panel">
                 <h2>Card Preview</h2>
-                <div id="cardPreview" class="card">
+                <div class="flip-controls">
+                    <button id="flipCardBtn" class="btn-secondary">Show Back</button>
+                </div>
+                <div class="card-container">
+                    <div id="cardPreview" class="card card-front">
                     <div class="card-image">
                         <img id="previewImage" src="" alt="Card Image">
                         <div class="card-name-overlay">
@@ -397,6 +429,14 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                         </div>
                     </div>
                 </div>
+
+                <!-- Back Card -->
+                <div class="card card-back">
+                    <div class="back-card-content">
+                        <img id="backCardPreviewImage" src="" alt="Back Card Design">
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>

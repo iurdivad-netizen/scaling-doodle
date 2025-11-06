@@ -356,6 +356,11 @@ function attachEventListeners() {
                 if (img) {
                     img.src = event.target.result;
                     img.style.display = 'block';
+                    // Update background image if feature is enabled
+                    const useImageAsBackground = document.getElementById('useImageAsBackground');
+                    if (useImageAsBackground && useImageAsBackground.checked) {
+                        document.documentElement.style.setProperty('--card-background-image', `url('${event.target.result}')`);
+                    }
                 }
             };
             reader.readAsDataURL(file);
@@ -387,6 +392,13 @@ function attachEventListeners() {
                 img.style.display = 'block';
                 img.onerror = function() {
                     alert('Failed to load image from URL. Please check the URL and try again.');
+                };
+                img.onload = function() {
+                    // Update background image if feature is enabled
+                    const useImageAsBackground = document.getElementById('useImageAsBackground');
+                    if (useImageAsBackground && useImageAsBackground.checked) {
+                        document.documentElement.style.setProperty('--card-background-image', `url('${url}')`);
+                    }
                 };
             }
         } else {
@@ -685,7 +697,11 @@ const defaultTheme = {
     cardBorderColor: '#8b4513',
     cardTextColor: '#333333',
     cardLabelColor: '#8b4513',
-    cardNameColor: '#f4e4c1'
+    cardNameColor: '#f4e4c1',
+    useImageAsBackground: false,
+    contentOpacity: 0.95,
+    backCardImage: '',
+    backCardBgColor: '#2c3e50'
 };
 
 // Apply theme to CSS variables
@@ -711,6 +727,22 @@ function applyTheme(theme) {
     root.style.setProperty('--card-text-color', theme.cardTextColor);
     root.style.setProperty('--card-label-color', theme.cardLabelColor);
     root.style.setProperty('--card-name-color', theme.cardNameColor);
+    root.style.setProperty('--content-opacity', theme.contentOpacity || 0.95);
+    root.style.setProperty('--back-card-bg-color', theme.backCardBgColor || '#2c3e50');
+
+    // Apply image as background setting
+    const card = document.getElementById('cardPreview');
+    if (theme.useImageAsBackground) {
+        card.classList.add('image-as-background');
+        // Set the background image from the current card image
+        const cardImage = document.getElementById('previewImage');
+        if (cardImage && cardImage.src) {
+            root.style.setProperty('--card-background-image', `url('${cardImage.src}')`);
+        }
+    } else {
+        card.classList.remove('image-as-background');
+        root.style.setProperty('--card-background-image', 'none');
+    }
 }
 
 // Update UI controls to reflect current theme
@@ -740,6 +772,11 @@ function updateCustomizationUI(theme) {
     document.getElementById('cardTextColor').value = theme.cardTextColor;
     document.getElementById('cardLabelColor').value = theme.cardLabelColor;
     document.getElementById('cardNameColor').value = theme.cardNameColor;
+
+    document.getElementById('useImageAsBackground').checked = theme.useImageAsBackground || false;
+    document.getElementById('contentOpacity').value = theme.contentOpacity || 0.95;
+    document.getElementById('contentOpacityValue').textContent = (theme.contentOpacity || 0.95).toFixed(2);
+    document.getElementById('backCardBgColor').value = theme.backCardBgColor || '#2c3e50';
 }
 
 // Get current theme from UI controls
@@ -756,7 +793,11 @@ function getCurrentTheme() {
         cardBorderColor: document.getElementById('cardBorderColor').value,
         cardTextColor: document.getElementById('cardTextColor').value,
         cardLabelColor: document.getElementById('cardLabelColor').value,
-        cardNameColor: document.getElementById('cardNameColor').value
+        cardNameColor: document.getElementById('cardNameColor').value,
+        useImageAsBackground: document.getElementById('useImageAsBackground').checked,
+        contentOpacity: parseFloat(document.getElementById('contentOpacity').value),
+        backCardImage: window.backCardImageData || '',
+        backCardBgColor: document.getElementById('backCardBgColor').value
     };
 }
 
@@ -894,12 +935,45 @@ function initCustomization() {
     });
 
     // Color pickers
-    const colorInputs = ['cardBgColor', 'cardBorderColor', 'cardTextColor', 'cardLabelColor', 'cardNameColor'];
+    const colorInputs = ['cardBgColor', 'cardBorderColor', 'cardTextColor', 'cardLabelColor', 'cardNameColor', 'backCardBgColor'];
     colorInputs.forEach(id => {
         document.getElementById(id).addEventListener('input', function() {
             const theme = getCurrentTheme();
             applyTheme(theme);
         });
+    });
+
+    // Image as background checkbox
+    document.getElementById('useImageAsBackground').addEventListener('change', function() {
+        const theme = getCurrentTheme();
+        applyTheme(theme);
+    });
+
+    // Content opacity slider
+    document.getElementById('contentOpacity').addEventListener('input', function() {
+        document.getElementById('contentOpacityValue').textContent = parseFloat(this.value).toFixed(2);
+        const theme = getCurrentTheme();
+        applyTheme(theme);
+    });
+
+    // Back card image upload
+    document.getElementById('backCardImageUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                window.backCardImageData = event.target.result;
+                document.getElementById('backCardPreviewImage').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Flip card button
+    document.getElementById('flipCardBtn').addEventListener('click', function() {
+        const cardContainer = document.querySelector('.card-container');
+        cardContainer.classList.toggle('flipped');
+        this.textContent = cardContainer.classList.contains('flipped') ? 'Show Front' : 'Show Back';
     });
 
     // Theme management buttons
