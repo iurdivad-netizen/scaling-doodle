@@ -670,5 +670,246 @@ function showPrintPreview() {
     printModal.classList.add('active');
 }
 
+// Card Customization System
+
+// Default theme settings
+const defaultTheme = {
+    fontFamily: "'Georgia', serif",
+    cardNameSize: 1.8,
+    cardHeaderSize: 0.95,
+    cardDescriptionSize: 0.9,
+    cardStatLabelSize: 0.95,
+    cardImageHeight: 240,
+    sectionSpacing: 12,
+    cardBgColor: '#f9f6f0',
+    cardBorderColor: '#8b4513',
+    cardTextColor: '#333333',
+    cardLabelColor: '#8b4513',
+    cardNameColor: '#f4e4c1'
+};
+
+// Apply theme to CSS variables
+function applyTheme(theme) {
+    const root = document.documentElement;
+
+    root.style.setProperty('--card-font-family', theme.fontFamily);
+    root.style.setProperty('--card-name-font-family', theme.fontFamily);
+    root.style.setProperty('--card-header-font-family', theme.fontFamily);
+    root.style.setProperty('--card-content-font-family', theme.fontFamily);
+
+    root.style.setProperty('--card-name-size', theme.cardNameSize + 'em');
+    root.style.setProperty('--card-header-size', theme.cardHeaderSize + 'em');
+    root.style.setProperty('--card-description-size', theme.cardDescriptionSize + 'em');
+    root.style.setProperty('--card-stat-label-size', theme.cardStatLabelSize + 'em');
+    root.style.setProperty('--card-stat-value-size', theme.cardStatLabelSize + 'em');
+
+    root.style.setProperty('--card-image-height', theme.cardImageHeight + 'px');
+    root.style.setProperty('--section-spacing', theme.sectionSpacing + 'px');
+
+    root.style.setProperty('--card-bg-color', theme.cardBgColor);
+    root.style.setProperty('--card-border-color', theme.cardBorderColor);
+    root.style.setProperty('--card-text-color', theme.cardTextColor);
+    root.style.setProperty('--card-label-color', theme.cardLabelColor);
+    root.style.setProperty('--card-name-color', theme.cardNameColor);
+}
+
+// Update UI controls to reflect current theme
+function updateCustomizationUI(theme) {
+    document.getElementById('fontFamily').value = theme.fontFamily;
+
+    document.getElementById('cardNameSize').value = theme.cardNameSize;
+    document.getElementById('cardNameSizeValue').textContent = theme.cardNameSize;
+
+    document.getElementById('cardHeaderSize').value = theme.cardHeaderSize;
+    document.getElementById('cardHeaderSizeValue').textContent = theme.cardHeaderSize;
+
+    document.getElementById('cardDescriptionSize').value = theme.cardDescriptionSize;
+    document.getElementById('cardDescriptionSizeValue').textContent = theme.cardDescriptionSize;
+
+    document.getElementById('cardStatLabelSize').value = theme.cardStatLabelSize;
+    document.getElementById('cardStatLabelSizeValue').textContent = theme.cardStatLabelSize;
+
+    document.getElementById('cardImageHeight').value = theme.cardImageHeight;
+    document.getElementById('cardImageHeightValue').textContent = theme.cardImageHeight;
+
+    document.getElementById('sectionSpacing').value = theme.sectionSpacing;
+    document.getElementById('sectionSpacingValue').textContent = theme.sectionSpacing;
+
+    document.getElementById('cardBgColor').value = theme.cardBgColor;
+    document.getElementById('cardBorderColor').value = theme.cardBorderColor;
+    document.getElementById('cardTextColor').value = theme.cardTextColor;
+    document.getElementById('cardLabelColor').value = theme.cardLabelColor;
+    document.getElementById('cardNameColor').value = theme.cardNameColor;
+}
+
+// Get current theme from UI controls
+function getCurrentTheme() {
+    return {
+        fontFamily: document.getElementById('fontFamily').value,
+        cardNameSize: parseFloat(document.getElementById('cardNameSize').value),
+        cardHeaderSize: parseFloat(document.getElementById('cardHeaderSize').value),
+        cardDescriptionSize: parseFloat(document.getElementById('cardDescriptionSize').value),
+        cardStatLabelSize: parseFloat(document.getElementById('cardStatLabelSize').value),
+        cardImageHeight: parseInt(document.getElementById('cardImageHeight').value),
+        sectionSpacing: parseInt(document.getElementById('sectionSpacing').value),
+        cardBgColor: document.getElementById('cardBgColor').value,
+        cardBorderColor: document.getElementById('cardBorderColor').value,
+        cardTextColor: document.getElementById('cardTextColor').value,
+        cardLabelColor: document.getElementById('cardLabelColor').value,
+        cardNameColor: document.getElementById('cardNameColor').value
+    };
+}
+
+// Save theme to localStorage
+function saveTheme() {
+    const theme = getCurrentTheme();
+    localStorage.setItem('cardTheme', JSON.stringify(theme));
+
+    // Show confirmation
+    const btn = document.getElementById('saveThemeBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Theme Saved!';
+    btn.style.background = '#28a745';
+    btn.style.color = 'white';
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+    }, 1500);
+}
+
+// Load theme from localStorage
+function loadTheme() {
+    const savedTheme = localStorage.getItem('cardTheme');
+    if (savedTheme) {
+        try {
+            const theme = JSON.parse(savedTheme);
+            applyTheme(theme);
+            updateCustomizationUI(theme);
+
+            // Show confirmation
+            const btn = document.getElementById('loadThemeBtn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Theme Loaded!';
+            btn.style.background = '#28a745';
+            btn.style.color = 'white';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 1500);
+        } catch (e) {
+            alert('Failed to load theme. Using default settings.');
+            resetTheme();
+        }
+    } else {
+        alert('No saved theme found. Using default settings.');
+    }
+}
+
+// Reset to default theme
+function resetTheme() {
+    applyTheme(defaultTheme);
+    updateCustomizationUI(defaultTheme);
+
+    // Show confirmation
+    const btn = document.getElementById('resetThemeBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Reset Complete!';
+    btn.style.background = '#28a745';
+    btn.style.color = 'white';
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+    }, 1500);
+}
+
+// Initialize customization system
+function initCustomization() {
+    // Load saved theme or use default
+    const savedTheme = localStorage.getItem('cardTheme');
+    if (savedTheme) {
+        try {
+            const theme = JSON.parse(savedTheme);
+            applyTheme(theme);
+            updateCustomizationUI(theme);
+        } catch (e) {
+            applyTheme(defaultTheme);
+            updateCustomizationUI(defaultTheme);
+        }
+    } else {
+        applyTheme(defaultTheme);
+        updateCustomizationUI(defaultTheme);
+    }
+
+    // Toggle customization panel
+    document.getElementById('toggleCustomization').addEventListener('click', function() {
+        const panel = document.getElementById('customizationPanel');
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+            this.textContent = 'Hide';
+        } else {
+            panel.style.display = 'none';
+            this.textContent = 'Show';
+        }
+    });
+
+    // Font family change
+    document.getElementById('fontFamily').addEventListener('change', function() {
+        const theme = getCurrentTheme();
+        applyTheme(theme);
+    });
+
+    // Font size sliders
+    const fontSizeInputs = [
+        { id: 'cardNameSize', valueId: 'cardNameSizeValue' },
+        { id: 'cardHeaderSize', valueId: 'cardHeaderSizeValue' },
+        { id: 'cardDescriptionSize', valueId: 'cardDescriptionSizeValue' },
+        { id: 'cardStatLabelSize', valueId: 'cardStatLabelSizeValue' }
+    ];
+
+    fontSizeInputs.forEach(input => {
+        const element = document.getElementById(input.id);
+        element.addEventListener('input', function() {
+            document.getElementById(input.valueId).textContent = this.value;
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+        });
+    });
+
+    // Section size sliders
+    const sectionSizeInputs = [
+        { id: 'cardImageHeight', valueId: 'cardImageHeightValue' },
+        { id: 'sectionSpacing', valueId: 'sectionSpacingValue' }
+    ];
+
+    sectionSizeInputs.forEach(input => {
+        const element = document.getElementById(input.id);
+        element.addEventListener('input', function() {
+            document.getElementById(input.valueId).textContent = this.value;
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+        });
+    });
+
+    // Color pickers
+    const colorInputs = ['cardBgColor', 'cardBorderColor', 'cardTextColor', 'cardLabelColor', 'cardNameColor'];
+    colorInputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', function() {
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+        });
+    });
+
+    // Theme management buttons
+    document.getElementById('saveThemeBtn').addEventListener('click', saveTheme);
+    document.getElementById('loadThemeBtn').addEventListener('click', loadTheme);
+    document.getElementById('resetThemeBtn').addEventListener('click', resetTheme);
+}
+
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', function() {
+    init();
+    initCustomization();
+});
