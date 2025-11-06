@@ -352,19 +352,36 @@ header p {
 }
 
 .card-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--ability-grid-gap);
     margin: 10px 0;
 }
 
 .stat-row {
-    margin-bottom: var(--stat-row-spacing);
+    text-align: center;
+    padding: 8px 4px;
+    background: #e8dcc4;
+    border: 2px solid var(--card-border-color);
+    border-radius: 6px;
     color: var(--card-text-color);
     font-size: var(--card-stat-value-size);
     line-height: var(--card-stat-line-height);
 }
 
 .stat-row strong {
+    display: block;
+    font-weight: bold;
     color: var(--card-label-color);
     font-size: var(--card-stat-label-size);
+    margin-bottom: 4px;
+}
+
+.stat-row span {
+    display: block;
+    color: var(--card-text-color);
+    font-size: var(--card-ability-value-size);
+    font-weight: 600;
 }
 
 .ability-scores-display {
