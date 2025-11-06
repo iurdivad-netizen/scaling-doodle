@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Card Builder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>D&D Card Builder</h1>
+            <p>Create custom D&D character and monster cards</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Editor Panel -->
+            <div class="editor-panel">
+                <h2>Card Editor</h2>
+
+                <div class="form-section">
+                    <label for="cardName">Name</label>
+                    <input type="text" id="cardName" placeholder="Enter card name" value="Ancient Red Dragon">
+                </div>
+
+                <div class="form-section">
+                    <label for="cardType">Type</label>
+                    <input type="text" id="cardType" placeholder="e.g., Dragon, Humanoid" value="Gargantuan Dragon">
+                </div>
+
+                <div class="form-section">
+                    <label for="cardSubtype">Alignment</label>
+                    <input type="text" id="cardSubtype" placeholder="e.g., Chaotic Evil" value="Chaotic Evil">
+                </div>
+
+                <div class="form-section">
+                    <h3>Image</h3>
+                    <div class="image-options">
+                        <label>
+                            <input type="radio" name="imageSource" value="upload" checked>
+                            Upload Image
+                        </label>
+                        <label>
+                            <input type="radio" name="imageSource" value="url">
+                            Image URL
+                        </label>
+                    </div>
+                    <input type="file" id="imageUpload" accept="image/*">
+                    <input type="text" id="imageUrl" placeholder="Enter image URL" style="display: none;">
+                    <button id="loadImageBtn" style="display: none;">Load Image</button>
+                </div>
+
+                <div class="form-section">
+                    <h3>Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-input">
+                            <label for="ac">Armor Class</label>
+                            <input type="text" id="ac" value="22">
+                        </div>
+                        <div class="stat-input">
+                            <label for="hp">Hit Points</label>
+                            <input type="text" id="hp" value="546 (28d20 + 252)">
+                        </div>
+                        <div class="stat-input">
+                            <label for="speed">Speed</label>
+                            <input type="text" id="speed" value="40 ft., climb 40 ft., fly 80 ft.">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Ability Scores</h3>
+                    <div class="ability-scores">
+                        <div class="ability">
+                            <label for="str">STR</label>
+                            <input type="text" id="str" value="30 (+10)">
+                        </div>
+                        <div class="ability">
+                            <label for="dex">DEX</label>
+                            <input type="text" id="dex" value="10 (+0)">
+                        </div>
+                        <div class="ability">
+                            <label for="con">CON</label>
+                            <input type="text" id="con" value="29 (+9)">
+                        </div>
+                        <div class="ability">
+                            <label for="int">INT</label>
+                            <input type="text" id="int" value="18 (+4)">
+                        </div>
+                        <div class="ability">
+                            <label for="wis">WIS</label>
+                            <input type="text" id="wis" value="15 (+2)">
+                        </div>
+                        <div class="ability">
+                            <label for="cha">CHA</label>
+                            <input type="text" id="cha" value="23 (+6)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label for="additionalStats">Additional Stats</label>
+                    <textarea id="additionalStats" rows="4" placeholder="Saving Throws, Skills, Immunities, etc.">Saving Throws: Dex +7, Con +16, Wis +9, Cha +13
+Skills: Perception +16, Stealth +7
+Damage Immunities: Fire
+Senses: Blindsight 60 ft., Darkvision 120 ft.
+Languages: Common, Draconic
+Challenge: 24 (62,000 XP)</textarea>
+                </div>
+
+                <div class="form-section">
+                    <label for="abilities">Abilities</label>
+                    <textarea id="abilities" rows="6" placeholder="Enter abilities and actions">Legendary Resistance (3/Day): If the dragon fails a saving throw, it can choose to succeed instead.
+
+Fire Aura: At the start of each of the dragon's turns, each creature within 10 feet of it takes 14 (4d6) fire damage.
+
+Multiattack: The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="resetBtn" class="btn-secondary">Reset</button>
+                    <button id="exportBtn" class="btn-primary">Export Card</button>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <h2>Card Preview</h2>
+                <div id="cardPreview" class="card">
+                    <div class="card-image">
+                        <img id="previewImage" src="" alt="Card Image">
+                        <div class="card-name-overlay">
+                            <h2 id="previewName">Ancient Red Dragon</h2>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-type">
+                            <span id="previewType">Gargantuan Dragon</span>
+                            <span class="separator">•</span>
+                            <span id="previewSubtype">Chaotic Evil</span>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="card-stats">
+                            <div class="stat-row">
+                                <strong>Armor Class:</strong> <span id="previewAC">22</span>
+                            </div>
+                            <div class="stat-row">
+                                <strong>Hit Points:</strong> <span id="previewHP">546 (28d20 + 252)</span>
+                            </div>
+                            <div class="stat-row">
+                                <strong>Speed:</strong> <span id="previewSpeed">40 ft., climb 40 ft., fly 80 ft.</span>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="ability-scores-display">
+                            <div class="ability-score">
+                                <div class="ability-name">STR</div>
+                                <div class="ability-value" id="previewStr">30 (+10)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">DEX</div>
+                                <div class="ability-value" id="previewDex">10 (+0)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">CON</div>
+                                <div class="ability-value" id="previewCon">29 (+9)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">INT</div>
+                                <div class="ability-value" id="previewInt">18 (+4)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">WIS</div>
+                                <div class="ability-value" id="previewWis">15 (+2)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">CHA</div>
+                                <div class="ability-value" id="previewCha">23 (+6)</div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="additional-stats">
+                            <p id="previewAdditionalStats">Saving Throws: Dex +7, Con +16, Wis +9, Cha +13
+Skills: Perception +16, Stealth +7
+Damage Immunities: Fire
+Senses: Blindsight 60 ft., Darkvision 120 ft.
+Languages: Common, Draconic
+Challenge: 24 (62,000 XP)</p>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="abilities-section">
+                            <p id="previewAbilities">Legendary Resistance (3/Day): If the dragon fails a saving throw, it can choose to succeed instead.
+
+Fire Aura: At the start of each of the dragon's turns, each creature within 10 feet of it takes 14 (4d6) fire damage.
+
+Multiattack: The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- html2canvas library for PNG export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
