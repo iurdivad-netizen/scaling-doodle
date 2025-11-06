@@ -356,6 +356,31 @@ function attachEventListeners() {
                 if (img) {
                     img.src = event.target.result;
                     img.style.display = 'block';
+
+                    // Auto-adjust image height based on image dimensions
+                    const tempImg = new Image();
+                    tempImg.onload = function() {
+                        const cardWidth = 750; // CSS variable --card-width
+                        const aspectRatio = tempImg.naturalHeight / tempImg.naturalWidth;
+                        let calculatedHeight = Math.round(cardWidth * aspectRatio);
+
+                        // Clamp between 150 and 600
+                        calculatedHeight = Math.max(150, Math.min(600, calculatedHeight));
+
+                        // Update the slider and value display
+                        const heightSlider = document.getElementById('cardImageHeight');
+                        const heightValue = document.getElementById('cardImageHeightValue');
+                        if (heightSlider && heightValue) {
+                            heightSlider.value = calculatedHeight;
+                            heightValue.textContent = calculatedHeight;
+
+                            // Apply the theme with new height
+                            const theme = getCurrentTheme();
+                            applyTheme(theme);
+                        }
+                    };
+                    tempImg.src = event.target.result;
+
                     // Update background image if feature is enabled
                     const useImageAsBackground = document.getElementById('useImageAsBackground');
                     if (useImageAsBackground && useImageAsBackground.checked) {
@@ -394,6 +419,26 @@ function attachEventListeners() {
                     alert('Failed to load image from URL. Please check the URL and try again.');
                 };
                 img.onload = function() {
+                    // Auto-adjust image height based on image dimensions
+                    const cardWidth = 750; // CSS variable --card-width
+                    const aspectRatio = img.naturalHeight / img.naturalWidth;
+                    let calculatedHeight = Math.round(cardWidth * aspectRatio);
+
+                    // Clamp between 150 and 600
+                    calculatedHeight = Math.max(150, Math.min(600, calculatedHeight));
+
+                    // Update the slider and value display
+                    const heightSlider = document.getElementById('cardImageHeight');
+                    const heightValue = document.getElementById('cardImageHeightValue');
+                    if (heightSlider && heightValue) {
+                        heightSlider.value = calculatedHeight;
+                        heightValue.textContent = calculatedHeight;
+
+                        // Apply the theme with new height
+                        const theme = getCurrentTheme();
+                        applyTheme(theme);
+                    }
+
                     // Update background image if feature is enabled
                     const useImageAsBackground = document.getElementById('useImageAsBackground');
                     if (useImageAsBackground && useImageAsBackground.checked) {
