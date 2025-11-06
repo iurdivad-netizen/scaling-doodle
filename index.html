@@ -206,6 +206,19 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                     <button id="resetBtn" class="btn-secondary">Reset</button>
                     <button id="exportBtn" class="btn-primary">Export Card</button>
                 </div>
+
+                <!-- Deck Management -->
+                <div class="deck-controls">
+                    <h3>Deck Management</h3>
+                    <div class="deck-actions">
+                        <button id="addToDeckBtn" class="btn-add-to-deck">Add to Deck</button>
+                        <button id="viewDeckBtn" class="btn-view-deck">View Deck</button>
+                        <button id="printPreviewBtn" class="btn-print-preview">Print Preview</button>
+                    </div>
+                    <div class="deck-counter">
+                        Cards in deck: <span id="deckCount">0</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Preview Panel -->
@@ -290,6 +303,35 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deck Modal -->
+    <div id="deckModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Card Deck</h2>
+                <button class="modal-close" id="closeDeckModal">&times;</button>
+            </div>
+            <div id="deckGrid" class="deck-grid"></div>
+            <div class="modal-actions">
+                <button id="clearDeckBtn" class="btn-secondary">Clear Deck</button>
+                <button id="exportDeckBtn" class="btn-primary">Export All Cards</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Preview Modal -->
+    <div id="printModal" class="modal">
+        <div class="modal-content print-preview">
+            <div class="modal-header">
+                <h2>Print Preview</h2>
+                <button class="modal-close" id="closePrintModal">&times;</button>
+            </div>
+            <div id="printContent"></div>
+            <div class="modal-actions">
+                <button id="printBtn" class="btn-primary">Print</button>
             </div>
         </div>
     </div>
