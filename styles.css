@@ -969,6 +969,7 @@ header p {
 /* Image as Background Styles */
 .card.image-as-background {
     position: relative;
+    background: none;
 }
 
 .card.image-as-background::before {
@@ -1009,6 +1010,7 @@ header p {
 .card.image-as-background .card-content {
     position: relative;
     z-index: 1;
+    background: none;
 }
 
 .card.image-as-background .card-name-overlay {
