@@ -221,15 +221,22 @@ header p {
     padding-bottom: 10px;
 }
 
-/* Card Styles - Poker Card Size (2.5" x 3.5" at display scale) */
+/* Card preview container with scaling */
+#cardPreview {
+    transform: scale(0.5);
+    transform-origin: top center;
+    margin: 0 auto -262.5px;
+}
+
+/* Card Styles - Poker Card Size (2.5" x 3.5" at print resolution) */
 .card {
     background: #f9f6f0;
     border: 2px solid #8b4513;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    width: 375px; /* 2.5" at 150 DPI (300 DPI / 2 for screen) */
-    height: 525px; /* 3.5" at 150 DPI - maintains poker card aspect ratio */
+    width: 750px; /* 2.5" at 300 DPI */
+    height: 1050px; /* 3.5" at 300 DPI - maintains poker card aspect ratio */
     margin: 0 auto;
     font-family: 'Georgia', serif;
     display: flex;
@@ -239,7 +246,7 @@ header p {
 .card-image {
     position: relative;
     width: 100%;
-    height: 120px; /* Reduced from 180px to save space */
+    height: 240px; /* Proportional to 750x1050 size */
     overflow: hidden;
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     border-bottom: 2px solid #8b4513;
@@ -258,50 +265,50 @@ header p {
     left: 0;
     right: 0;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3));
-    padding: 8px 10px;
+    padding: 16px 20px;
 }
 
 .card-name-overlay h2 {
     color: #f4e4c1;
-    font-size: 1.1em;
+    font-size: 1.8em;
     margin: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     line-height: 1.2;
 }
 
 .card-content {
-    padding: 8px 10px;
+    padding: 16px 20px;
     background: #f9f6f0;
     flex-grow: 1;
     overflow-y: auto;
-    font-size: 0.7em;
+    font-size: 1em;
 }
 
 .card-type {
     color: #8b4513;
-    font-size: 0.9em;
+    font-size: 0.95em;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     font-style: italic;
     line-height: 1.2;
 }
 
 .separator {
-    margin: 0 4px;
+    margin: 0 8px;
 }
 
 .divider {
-    height: 1px;
+    height: 2px;
     background: linear-gradient(to right, transparent, #c0a080, transparent);
-    margin: 6px 0;
+    margin: 12px 0;
 }
 
 .card-stats {
-    margin: 5px 0;
+    margin: 10px 0;
 }
 
 .stat-row {
-    margin-bottom: 3px;
+    margin-bottom: 6px;
     color: #333;
     font-size: 0.95em;
     line-height: 1.3;
@@ -314,51 +321,51 @@ header p {
 .ability-scores-display {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 4px;
-    margin: 5px 0;
+    gap: 8px;
+    margin: 10px 0;
 }
 
 .ability-score {
     text-align: center;
-    padding: 4px 2px;
+    padding: 8px 4px;
     background: #e8dcc4;
-    border: 1px solid #8b4513;
-    border-radius: 4px;
+    border: 2px solid #8b4513;
+    border-radius: 6px;
 }
 
 .ability-name {
     font-weight: bold;
     color: #8b4513;
-    font-size: 0.75em;
-    margin-bottom: 2px;
+    font-size: 0.85em;
+    margin-bottom: 4px;
 }
 
 .ability-value {
     color: #333;
-    font-size: 0.7em;
+    font-size: 0.8em;
     font-weight: 600;
 }
 
 .additional-stats {
-    margin: 5px 0;
+    margin: 10px 0;
 }
 
 .additional-stats p {
     color: #333;
     font-size: 0.9em;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
     margin: 0;
 }
 
 .abilities-section {
-    margin: 5px 0;
+    margin: 10px 0;
 }
 
 .abilities-section p {
     color: #333;
     font-size: 0.9em;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
     margin: 0;
 }
@@ -372,7 +379,7 @@ header p {
 .spell-description p {
     color: #333;
     font-size: 0.9em;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
     margin: 0;
 }
@@ -391,13 +398,13 @@ header p {
     color: #666;
     font-size: 0.85em;
     font-style: italic;
-    margin-top: 3px;
+    margin-top: 6px;
 }
 
 .item-description p {
     color: #333;
     font-size: 0.9em;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
     margin: 0;
 }
@@ -411,7 +418,7 @@ header p {
 .ability-description p {
     color: #333;
     font-size: 0.9em;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
     margin: 0;
 }
@@ -423,12 +430,12 @@ header p {
 }
 
 .equipment-details {
-    margin: 5px 0;
+    margin: 10px 0;
     font-size: 0.9em;
 }
 
 .equipment-details div {
-    margin-bottom: 3px;
+    margin-bottom: 6px;
     color: #333;
 }
 
@@ -439,7 +446,7 @@ header p {
 .equipment-description p {
     color: #333;
     font-size: 0.9em;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
     margin: 0;
 }
@@ -724,18 +731,9 @@ header p {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    .card {
-        width: 300px;
-        height: 420px;
-    }
-
-    .card-image {
-        height: 96px;
-    }
-
-    .card-content {
-        font-size: 0.6em;
-        padding: 8px;
+    #cardPreview {
+        transform: scale(0.4);
+        margin: 0 auto -315px;
     }
 
     .button-group {
