@@ -994,6 +994,8 @@ header p {
     height: var(--card-image-height);
     min-height: var(--card-image-height);
     flex-shrink: 0;
+    background: none;
+    border-bottom: none;
 }
 
 .card.image-as-background .card-image img {
