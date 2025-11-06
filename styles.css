@@ -418,6 +418,10 @@ header p {
 
 .additional-stats {
     margin: 10px 0;
+    padding: 12px;
+    background: #e8dcc4;
+    border: 2px solid var(--card-border-color);
+    border-radius: 6px;
 }
 
 .additional-stats p {
@@ -430,6 +434,10 @@ header p {
 
 .abilities-section {
     margin: 10px 0;
+    padding: 12px;
+    background: #e8dcc4;
+    border: 2px solid var(--card-border-color);
+    border-radius: 6px;
 }
 
 .abilities-section p {
