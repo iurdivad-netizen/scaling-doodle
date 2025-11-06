@@ -80,7 +80,8 @@ header p {
 }
 
 .form-section input[type="text"],
-.form-section textarea {
+.form-section textarea,
+.form-section select {
     width: 100%;
     padding: 12px;
     border: 2px solid #e0e0e0;
@@ -91,9 +92,15 @@ header p {
 }
 
 .form-section input[type="text"]:focus,
-.form-section textarea:focus {
+.form-section textarea:focus,
+.form-section select:focus {
     outline: none;
     border-color: #667eea;
+}
+
+.form-section select {
+    background: white;
+    cursor: pointer;
 }
 
 .form-section textarea {
@@ -214,25 +221,29 @@ header p {
     padding-bottom: 10px;
 }
 
-/* Card Styles */
+/* Card Styles - Poker Card Size (2.5" x 3.5" at display scale) */
 .card {
     background: #f9f6f0;
     border: 3px solid #8b4513;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
+    width: 375px; /* 2.5" at 150 DPI (300 DPI / 2 for screen) */
+    height: 525px; /* 3.5" at 150 DPI - maintains poker card aspect ratio */
     margin: 0 auto;
     font-family: 'Georgia', serif;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-image {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 180px; /* Adjusted for poker card proportions */
     overflow: hidden;
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     border-bottom: 3px solid #8b4513;
+    flex-shrink: 0;
 }
 
 .card-image img {
@@ -258,8 +269,11 @@ header p {
 }
 
 .card-content {
-    padding: 20px;
+    padding: 15px;
     background: #f9f6f0;
+    flex-grow: 1;
+    overflow-y: auto;
+    font-size: 0.9em;
 }
 
 .card-type {
@@ -344,6 +358,83 @@ header p {
     white-space: pre-line;
 }
 
+/* Spell Card Styles */
+.spell-header {
+    color: #4a5ab3;
+    font-weight: 700;
+}
+
+.spell-description p {
+    color: #333;
+    font-size: 0.85em;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+/* Item Card Styles */
+.item-header {
+    color: #8b4513;
+}
+
+.item-rarity {
+    color: #b8860b;
+    font-weight: 700;
+}
+
+.item-attunement {
+    color: #666;
+    font-size: 0.8em;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.item-description p {
+    color: #333;
+    font-size: 0.85em;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+/* Ability Card Styles */
+.ability-header {
+    color: #c0504d;
+    font-weight: 700;
+}
+
+.ability-description p {
+    color: #333;
+    font-size: 0.85em;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+/* Equipment Card Styles */
+.equipment-header {
+    color: #4f81bd;
+    font-weight: 700;
+}
+
+.equipment-details {
+    margin: 10px 0;
+    font-size: 0.85em;
+}
+
+.equipment-details div {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.equipment-details strong {
+    color: #8b4513;
+}
+
+.equipment-description p {
+    color: #333;
+    font-size: 0.85em;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
@@ -368,7 +459,17 @@ header p {
     }
 
     .card {
-        max-width: 100%;
+        width: 300px;
+        height: 420px;
+    }
+
+    .card-image {
+        height: 144px;
+    }
+
+    .card-content {
+        font-size: 0.75em;
+        padding: 10px;
     }
 
     .button-group {

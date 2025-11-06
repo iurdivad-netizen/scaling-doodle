@@ -19,6 +19,17 @@
                 <h2>Card Editor</h2>
 
                 <div class="form-section">
+                    <label for="cardTemplate">Card Template</label>
+                    <select id="cardTemplate">
+                        <option value="creature">Creature/Monster</option>
+                        <option value="spell">Spell</option>
+                        <option value="item">Magic Item</option>
+                        <option value="ability">Character Ability</option>
+                        <option value="equipment">Equipment</option>
+                    </select>
+                </div>
+
+                <div class="form-section">
                     <label for="cardName">Name</label>
                     <input type="text" id="cardName" placeholder="Enter card name" value="Ancient Red Dragon">
                 </div>
@@ -28,9 +39,83 @@
                     <input type="text" id="cardType" placeholder="e.g., Dragon, Humanoid" value="Gargantuan Dragon">
                 </div>
 
-                <div class="form-section">
+                <div class="form-section template-creature">
                     <label for="cardSubtype">Alignment</label>
                     <input type="text" id="cardSubtype" placeholder="e.g., Chaotic Evil" value="Chaotic Evil">
+                </div>
+
+                <!-- Spell-specific fields -->
+                <div class="form-section template-spell" style="display: none;">
+                    <label for="spellLevel">Level</label>
+                    <input type="text" id="spellLevel" placeholder="e.g., 3rd-level" value="">
+                </div>
+
+                <div class="form-section template-spell" style="display: none;">
+                    <label for="spellSchool">School</label>
+                    <input type="text" id="spellSchool" placeholder="e.g., Evocation" value="">
+                </div>
+
+                <div class="form-section template-spell" style="display: none;">
+                    <label for="castingTime">Casting Time</label>
+                    <input type="text" id="castingTime" placeholder="e.g., 1 action" value="">
+                </div>
+
+                <div class="form-section template-spell" style="display: none;">
+                    <label for="spellRange">Range</label>
+                    <input type="text" id="spellRange" placeholder="e.g., 60 feet" value="">
+                </div>
+
+                <div class="form-section template-spell" style="display: none;">
+                    <label for="components">Components</label>
+                    <input type="text" id="components" placeholder="e.g., V, S, M" value="">
+                </div>
+
+                <div class="form-section template-spell" style="display: none;">
+                    <label for="duration">Duration</label>
+                    <input type="text" id="duration" placeholder="e.g., Instantaneous" value="">
+                </div>
+
+                <!-- Item-specific fields -->
+                <div class="form-section template-item" style="display: none;">
+                    <label for="itemRarity">Rarity</label>
+                    <input type="text" id="itemRarity" placeholder="e.g., Rare" value="">
+                </div>
+
+                <div class="form-section template-item" style="display: none;">
+                    <label for="itemType">Item Type</label>
+                    <input type="text" id="itemType" placeholder="e.g., Wondrous Item" value="">
+                </div>
+
+                <div class="form-section template-item" style="display: none;">
+                    <label for="attunement">Attunement</label>
+                    <input type="text" id="attunement" placeholder="e.g., Requires attunement" value="">
+                </div>
+
+                <!-- Equipment-specific fields -->
+                <div class="form-section template-equipment" style="display: none;">
+                    <label for="equipmentType">Equipment Type</label>
+                    <input type="text" id="equipmentType" placeholder="e.g., Armor, Weapon" value="">
+                </div>
+
+                <div class="form-section template-equipment" style="display: none;">
+                    <label for="equipmentCost">Cost</label>
+                    <input type="text" id="equipmentCost" placeholder="e.g., 50 gp" value="">
+                </div>
+
+                <div class="form-section template-equipment" style="display: none;">
+                    <label for="equipmentWeight">Weight</label>
+                    <input type="text" id="equipmentWeight" placeholder="e.g., 10 lb." value="">
+                </div>
+
+                <!-- Ability-specific fields -->
+                <div class="form-section template-ability" style="display: none;">
+                    <label for="abilitySource">Source</label>
+                    <input type="text" id="abilitySource" placeholder="e.g., Class Feature, Racial Trait" value="">
+                </div>
+
+                <div class="form-section template-ability" style="display: none;">
+                    <label for="abilityLevel">Level/Prerequisite</label>
+                    <input type="text" id="abilityLevel" placeholder="e.g., 5th level" value="">
                 </div>
 
                 <div class="form-section">
@@ -50,7 +135,7 @@
                     <button id="loadImageBtn" style="display: none;">Load Image</button>
                 </div>
 
-                <div class="form-section">
+                <div class="form-section template-creature">
                     <h3>Stats</h3>
                     <div class="stats-grid">
                         <div class="stat-input">
@@ -68,7 +153,7 @@
                     </div>
                 </div>
 
-                <div class="form-section">
+                <div class="form-section template-creature">
                     <h3>Ability Scores</h3>
                     <div class="ability-scores">
                         <div class="ability">
@@ -98,7 +183,7 @@
                     </div>
                 </div>
 
-                <div class="form-section">
+                <div class="form-section template-creature">
                     <label for="additionalStats">Additional Stats</label>
                     <textarea id="additionalStats" rows="4" placeholder="Saving Throws, Skills, Immunities, etc.">Saving Throws: Dex +7, Con +16, Wis +9, Cha +13
 Skills: Perception +16, Stealth +7
@@ -109,8 +194,8 @@ Challenge: 24 (62,000 XP)</textarea>
                 </div>
 
                 <div class="form-section">
-                    <label for="abilities">Abilities</label>
-                    <textarea id="abilities" rows="6" placeholder="Enter abilities and actions">Legendary Resistance (3/Day): If the dragon fails a saving throw, it can choose to succeed instead.
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="6" placeholder="Enter card description, effects, or details">Legendary Resistance (3/Day): If the dragon fails a saving throw, it can choose to succeed instead.
 
 Fire Aura: At the start of each of the dragon's turns, each creature within 10 feet of it takes 14 (4d6) fire damage.
 
