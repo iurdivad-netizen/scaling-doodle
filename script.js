@@ -200,9 +200,9 @@ function generateCreaturePreview() {
             </div>
             <div class="divider"></div>
             <div class="card-stats">
-                <div class="stat-row"><strong>Armor Class:</strong> ${ac}</div>
-                <div class="stat-row"><strong>Hit Points:</strong> ${hp}</div>
-                <div class="stat-row"><strong>Speed:</strong> ${speed}</div>
+                <div class="stat-row"><strong>AC</strong><span>${ac}</span></div>
+                <div class="stat-row"><strong>HP</strong><span>${hp}</span></div>
+                <div class="stat-row"><strong>Speed</strong><span>${speed}</span></div>
             </div>
             <div class="divider"></div>
             <div class="ability-scores-display">
@@ -247,10 +247,10 @@ function generateSpellPreview() {
             </div>
             <div class="divider"></div>
             <div class="card-stats">
-                <div class="stat-row"><strong>Casting Time:</strong> ${castingTime}</div>
-                <div class="stat-row"><strong>Range:</strong> ${range}</div>
-                <div class="stat-row"><strong>Components:</strong> ${components}</div>
-                <div class="stat-row"><strong>Duration:</strong> ${duration}</div>
+                <div class="stat-row"><strong>Cast Time</strong><span>${castingTime}</span></div>
+                <div class="stat-row"><strong>Range</strong><span>${range}</span></div>
+                <div class="stat-row"><strong>Components</strong><span>${components}</span></div>
+                <div class="stat-row"><strong>Duration</strong><span>${duration}</span></div>
             </div>
             <div class="divider"></div>
             <div class="spell-description"><p>${description}</p></div>
