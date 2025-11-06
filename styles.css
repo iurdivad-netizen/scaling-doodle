@@ -4,6 +4,51 @@
     box-sizing: border-box;
 }
 
+/* CSS Custom Properties for Card Customization */
+:root {
+    /* Card dimensions */
+    --card-width: 750px;
+    --card-height: 1050px;
+    --card-image-height: 240px;
+    --card-content-padding: 16px 20px;
+    --card-border-radius: 8px;
+
+    /* Font families */
+    --card-font-family: 'Georgia', serif;
+    --card-name-font-family: 'Georgia', serif;
+    --card-header-font-family: 'Georgia', serif;
+    --card-content-font-family: 'Georgia', serif;
+
+    /* Font sizes */
+    --card-name-size: 1.8em;
+    --card-header-size: 0.95em;
+    --card-stat-label-size: 0.95em;
+    --card-stat-value-size: 0.95em;
+    --card-description-size: 0.9em;
+    --card-ability-name-size: 0.85em;
+    --card-ability-value-size: 0.8em;
+
+    /* Colors */
+    --card-bg-color: #f9f6f0;
+    --card-border-color: #8b4513;
+    --card-name-color: #f4e4c1;
+    --card-header-color: #8b4513;
+    --card-text-color: #333;
+    --card-label-color: #8b4513;
+    --divider-color: #c0a080;
+
+    /* Spacing */
+    --section-spacing: 12px;
+    --stat-row-spacing: 6px;
+    --ability-grid-gap: 8px;
+
+    /* Line heights */
+    --card-name-line-height: 1.2;
+    --card-header-line-height: 1.2;
+    --card-stat-line-height: 1.3;
+    --card-description-line-height: 1.5;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -230,15 +275,15 @@ header p {
 
 /* Card Styles - Poker Card Size (2.5" x 3.5" at print resolution) */
 .card {
-    background: #f9f6f0;
-    border: 2px solid #8b4513;
-    border-radius: 8px;
+    background: var(--card-bg-color);
+    border: 2px solid var(--card-border-color);
+    border-radius: var(--card-border-radius);
     overflow: hidden;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    width: 750px; /* 2.5" at 300 DPI */
-    height: 1050px; /* 3.5" at 300 DPI - maintains poker card aspect ratio */
+    width: var(--card-width); /* 2.5" at 300 DPI */
+    height: var(--card-height); /* 3.5" at 300 DPI - maintains poker card aspect ratio */
     margin: 0 auto;
-    font-family: 'Georgia', serif;
+    font-family: var(--card-font-family);
     display: flex;
     flex-direction: column;
 }
@@ -246,10 +291,10 @@ header p {
 .card-image {
     position: relative;
     width: 100%;
-    height: 240px; /* Proportional to 750x1050 size */
+    height: var(--card-image-height); /* Proportional to 750x1050 size */
     overflow: hidden;
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    border-bottom: 2px solid #8b4513;
+    border-bottom: 2px solid var(--card-border-color);
     flex-shrink: 0;
 }
 
@@ -269,28 +314,31 @@ header p {
 }
 
 .card-name-overlay h2 {
-    color: #f4e4c1;
-    font-size: 1.8em;
+    color: var(--card-name-color);
+    font-size: var(--card-name-size);
+    font-family: var(--card-name-font-family);
     margin: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    line-height: 1.2;
+    line-height: var(--card-name-line-height);
 }
 
 .card-content {
-    padding: 16px 20px;
-    background: #f9f6f0;
+    padding: var(--card-content-padding);
+    background: var(--card-bg-color);
     flex-grow: 1;
     overflow-y: auto;
     font-size: 1em;
+    font-family: var(--card-content-font-family);
 }
 
 .card-type {
-    color: #8b4513;
-    font-size: 0.95em;
+    color: var(--card-header-color);
+    font-size: var(--card-header-size);
+    font-family: var(--card-header-font-family);
     font-weight: 600;
     margin-bottom: 10px;
     font-style: italic;
-    line-height: 1.2;
+    line-height: var(--card-header-line-height);
 }
 
 .separator {
@@ -299,8 +347,8 @@ header p {
 
 .divider {
     height: 2px;
-    background: linear-gradient(to right, transparent, #c0a080, transparent);
-    margin: 12px 0;
+    background: linear-gradient(to right, transparent, var(--divider-color), transparent);
+    margin: var(--section-spacing) 0;
 }
 
 .card-stats {
@@ -308,20 +356,21 @@ header p {
 }
 
 .stat-row {
-    margin-bottom: 6px;
-    color: #333;
-    font-size: 0.95em;
-    line-height: 1.3;
+    margin-bottom: var(--stat-row-spacing);
+    color: var(--card-text-color);
+    font-size: var(--card-stat-value-size);
+    line-height: var(--card-stat-line-height);
 }
 
 .stat-row strong {
-    color: #8b4513;
+    color: var(--card-label-color);
+    font-size: var(--card-stat-label-size);
 }
 
 .ability-scores-display {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
+    gap: var(--ability-grid-gap);
     margin: 10px 0;
 }
 
@@ -329,20 +378,20 @@ header p {
     text-align: center;
     padding: 8px 4px;
     background: #e8dcc4;
-    border: 2px solid #8b4513;
+    border: 2px solid var(--card-border-color);
     border-radius: 6px;
 }
 
 .ability-name {
     font-weight: bold;
-    color: #8b4513;
-    font-size: 0.85em;
+    color: var(--card-label-color);
+    font-size: var(--card-ability-name-size);
     margin-bottom: 4px;
 }
 
 .ability-value {
-    color: #333;
-    font-size: 0.8em;
+    color: var(--card-text-color);
+    font-size: var(--card-ability-value-size);
     font-weight: 600;
 }
 
@@ -351,9 +400,9 @@ header p {
 }
 
 .additional-stats p {
-    color: #333;
-    font-size: 0.9em;
-    line-height: 1.5;
+    color: var(--card-text-color);
+    font-size: var(--card-description-size);
+    line-height: var(--card-description-line-height);
     white-space: pre-line;
     margin: 0;
 }
@@ -363,9 +412,9 @@ header p {
 }
 
 .abilities-section p {
-    color: #333;
-    font-size: 0.9em;
-    line-height: 1.5;
+    color: var(--card-text-color);
+    font-size: var(--card-description-size);
+    line-height: var(--card-description-line-height);
     white-space: pre-line;
     margin: 0;
 }
@@ -377,9 +426,9 @@ header p {
 }
 
 .spell-description p {
-    color: #333;
-    font-size: 0.9em;
-    line-height: 1.5;
+    color: var(--card-text-color);
+    font-size: var(--card-description-size);
+    line-height: var(--card-description-line-height);
     white-space: pre-line;
     margin: 0;
 }
@@ -402,9 +451,9 @@ header p {
 }
 
 .item-description p {
-    color: #333;
-    font-size: 0.9em;
-    line-height: 1.5;
+    color: var(--card-text-color);
+    font-size: var(--card-description-size);
+    line-height: var(--card-description-line-height);
     white-space: pre-line;
     margin: 0;
 }
@@ -416,9 +465,9 @@ header p {
 }
 
 .ability-description p {
-    color: #333;
-    font-size: 0.9em;
-    line-height: 1.5;
+    color: var(--card-text-color);
+    font-size: var(--card-description-size);
+    line-height: var(--card-description-line-height);
     white-space: pre-line;
     margin: 0;
 }
@@ -435,18 +484,18 @@ header p {
 }
 
 .equipment-details div {
-    margin-bottom: 6px;
-    color: #333;
+    margin-bottom: var(--stat-row-spacing);
+    color: var(--card-text-color);
 }
 
 .equipment-details strong {
-    color: #8b4513;
+    color: var(--card-label-color);
 }
 
 .equipment-description p {
-    color: #333;
-    font-size: 0.9em;
-    line-height: 1.5;
+    color: var(--card-text-color);
+    font-size: var(--card-description-size);
+    line-height: var(--card-description-line-height);
     white-space: pre-line;
     margin: 0;
 }
@@ -462,6 +511,104 @@ header p {
     color: #555;
     margin-bottom: 15px;
     font-size: 1.2em;
+}
+
+/* Card Customization Styles */
+.customization-controls {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #e0e0e0;
+}
+
+.customization-controls h3 {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-toggle {
+    padding: 6px 12px;
+    border: 2px solid #667eea;
+    border-radius: 4px;
+    background: white;
+    color: #667eea;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-toggle:hover {
+    background: #667eea;
+    color: white;
+}
+
+.customization-panel {
+    margin-top: 15px;
+}
+
+.customization-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.customization-section h4 {
+    color: #667eea;
+    margin-bottom: 12px;
+    font-size: 1em;
+    font-weight: 600;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 6px;
+}
+
+.setting-row {
+    margin-bottom: 12px;
+}
+
+.setting-row label {
+    display: block;
+    margin-bottom: 6px;
+    color: #555;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.setting-row input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+}
+
+.setting-row input[type="color"] {
+    width: 60px;
+    height: 40px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.setting-row select {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.theme-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.theme-actions button {
+    padding: 10px;
+    font-size: 14px;
 }
 
 .deck-actions {
