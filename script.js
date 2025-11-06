@@ -699,7 +699,7 @@ const defaultTheme = {
     cardLabelColor: '#8b4513',
     cardNameColor: '#f4e4c1',
     useImageAsBackground: false,
-    contentOpacity: 0.95,
+    contentOpacity: 0.3,
     backCardImage: '',
     backCardBgColor: '#2c3e50'
 };
@@ -727,7 +727,7 @@ function applyTheme(theme) {
     root.style.setProperty('--card-text-color', theme.cardTextColor);
     root.style.setProperty('--card-label-color', theme.cardLabelColor);
     root.style.setProperty('--card-name-color', theme.cardNameColor);
-    root.style.setProperty('--content-opacity', theme.contentOpacity || 0.95);
+    root.style.setProperty('--content-opacity', theme.contentOpacity !== undefined ? theme.contentOpacity : 0.3);
     root.style.setProperty('--back-card-bg-color', theme.backCardBgColor || '#2c3e50');
 
     // Apply image as background setting
@@ -774,8 +774,9 @@ function updateCustomizationUI(theme) {
     document.getElementById('cardNameColor').value = theme.cardNameColor;
 
     document.getElementById('useImageAsBackground').checked = theme.useImageAsBackground || false;
-    document.getElementById('contentOpacity').value = theme.contentOpacity || 0.95;
-    document.getElementById('contentOpacityValue').textContent = (theme.contentOpacity || 0.95).toFixed(2);
+    const opacity = theme.contentOpacity !== undefined ? theme.contentOpacity : 0.3;
+    document.getElementById('contentOpacity').value = opacity;
+    document.getElementById('contentOpacityValue').textContent = opacity.toFixed(2);
     document.getElementById('backCardBgColor').value = theme.backCardBgColor || '#2c3e50';
 }
 
