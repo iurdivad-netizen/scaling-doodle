@@ -950,12 +950,49 @@ function updateDeckCounter() {
 
 // Capture current card state
 function captureCardState() {
+    const template = templates[currentTemplate];
+    const formFields = {};
+
+    // Save all form field values for the current template
+    template.fields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) {
+            if (element.type === 'file') {
+                // Don't save file input value, we'll use the image data instead
+                return;
+            }
+            formFields[fieldId] = element.value;
+        }
+    });
+
+    // Get current theme settings from CSS variables
+    const root = document.documentElement;
+    const currentTheme = {
+        fontFamily: root.style.getPropertyValue('--card-font-family') || defaultTheme.fontFamily,
+        cardNameSize: parseFloat(root.style.getPropertyValue('--card-name-size')) || defaultTheme.cardNameSize,
+        cardHeaderSize: parseFloat(root.style.getPropertyValue('--card-header-size')) || defaultTheme.cardHeaderSize,
+        cardDescriptionSize: parseFloat(root.style.getPropertyValue('--card-description-size')) || defaultTheme.cardDescriptionSize,
+        cardStatLabelSize: parseFloat(root.style.getPropertyValue('--card-stat-label-size')) || defaultTheme.cardStatLabelSize,
+        cardImageHeight: parseFloat(root.style.getPropertyValue('--card-image-height')) || defaultTheme.cardImageHeight,
+        sectionSpacing: parseFloat(root.style.getPropertyValue('--section-spacing')) || defaultTheme.sectionSpacing,
+        cardBgColor: root.style.getPropertyValue('--card-bg-color') || defaultTheme.cardBgColor,
+        cardBorderColor: root.style.getPropertyValue('--card-border-color') || defaultTheme.cardBorderColor,
+        cardTextColor: root.style.getPropertyValue('--card-text-color') || defaultTheme.cardTextColor,
+        cardLabelColor: root.style.getPropertyValue('--card-label-color') || defaultTheme.cardLabelColor,
+        cardNameColor: root.style.getPropertyValue('--card-name-color') || defaultTheme.cardNameColor,
+        useImageAsBackground: cardPreview.classList.contains('image-as-background'),
+        contentOpacity: parseFloat(root.style.getPropertyValue('--content-opacity')) || defaultTheme.contentOpacity,
+        backCardBgColor: root.style.getPropertyValue('--back-card-bg-color') || defaultTheme.backCardBgColor
+    };
+
     const cardData = {
         template: currentTemplate,
         layout: cardLayoutSelect.value,
         html: cardPreview.innerHTML,
         timestamp: Date.now(),
         name: document.getElementById('cardName').value || 'Unnamed Card',
+        formFields: formFields,
+        theme: currentTheme,
         hasBackgroundImage: cardPreview.classList.contains('image-as-background'),
         backgroundImage: cardPreview.classList.contains('image-as-background')
             ? getComputedStyle(document.documentElement).getPropertyValue('--card-background-image')
@@ -972,6 +1009,79 @@ function captureCardState() {
         frontCardImage: document.getElementById('previewImage')?.src || ''
     };
     return cardData;
+}
+
+// Load card state into editor for editing
+function loadCardIntoEditor(cardData) {
+    // Load the template first
+    currentTemplate = cardData.template;
+    cardTemplateSelect.value = cardData.template;
+    loadTemplate(cardData.template);
+
+    // Set the layout
+    cardLayoutSelect.value = cardData.layout || 'standard';
+
+    // Restore all form field values
+    if (cardData.formFields) {
+        Object.keys(cardData.formFields).forEach(fieldId => {
+            const element = document.getElementById(fieldId);
+            if (element && element.type !== 'file') {
+                element.value = cardData.formFields[fieldId];
+            }
+        });
+    }
+
+    // Restore image if present
+    if (cardData.frontCardImage) {
+        previewImage.src = cardData.frontCardImage;
+        previewImage.style.display = 'block';
+        document.querySelector('input[name="imageSource"][value="url"]').checked = true;
+    }
+
+    // Restore back card image if present
+    if (cardData.backCardImage) {
+        window.backCardImageData = cardData.backCardImage;
+    }
+
+    // Restore theme settings
+    if (cardData.theme) {
+        applyTheme(cardData.theme);
+
+        // Update theme input fields
+        document.getElementById('fontFamily').value = cardData.theme.fontFamily;
+        document.getElementById('cardNameSize').value = cardData.theme.cardNameSize;
+        document.getElementById('cardHeaderSize').value = cardData.theme.cardHeaderSize;
+        document.getElementById('cardDescriptionSize').value = cardData.theme.cardDescriptionSize;
+        document.getElementById('cardStatLabelSize').value = cardData.theme.cardStatLabelSize;
+        document.getElementById('cardImageHeight').value = cardData.theme.cardImageHeight;
+        document.getElementById('sectionSpacing').value = cardData.theme.sectionSpacing;
+        document.getElementById('cardBgColor').value = cardData.theme.cardBgColor;
+        document.getElementById('cardBorderColor').value = cardData.theme.cardBorderColor;
+        document.getElementById('cardTextColor').value = cardData.theme.cardTextColor;
+        document.getElementById('cardLabelColor').value = cardData.theme.cardLabelColor;
+        document.getElementById('cardNameColor').value = cardData.theme.cardNameColor;
+        document.getElementById('backCardBgColor').value = cardData.theme.backCardBgColor;
+
+        // Handle image as background setting
+        const useImageBgCheckbox = document.getElementById('useImageAsBackground');
+        if (useImageBgCheckbox) {
+            useImageBgCheckbox.checked = cardData.theme.useImageAsBackground || false;
+        }
+
+        const contentOpacityInput = document.getElementById('contentOpacity');
+        if (contentOpacityInput) {
+            contentOpacityInput.value = cardData.theme.contentOpacity || 0.3;
+        }
+    }
+
+    // Update the preview
+    updatePreview();
+
+    // Close the deck modal
+    deckModal.classList.remove('active');
+
+    // Scroll to top of page to show the editor
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Add card to deck
@@ -1004,11 +1114,21 @@ function showDeckModal() {
             const removeBtn = document.createElement('button');
             removeBtn.className = 'remove-card-btn';
             removeBtn.innerHTML = '&times;';
-            removeBtn.addEventListener('click', () => removeCardFromDeck(index));
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent card selection when clicking remove
+                removeCardFromDeck(index);
+            });
 
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
             cardDiv.innerHTML = cardData.html;
+            cardDiv.style.cursor = 'pointer'; // Show it's clickable
+            cardDiv.title = 'Click to edit this card';
+
+            // Add click handler to load card into editor
+            cardDiv.addEventListener('click', () => {
+                loadCardIntoEditor(cardData);
+            });
 
             // Apply background image styling if it was saved
             if (cardData.hasBackgroundImage && cardData.backgroundImage) {
