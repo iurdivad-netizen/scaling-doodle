@@ -903,6 +903,7 @@ header p {
     transform: scale(0.317);
     transform-origin: top left;
     margin: 0;
+    margin-left: -2px;
     box-sizing: border-box;
 }
 
@@ -1010,6 +1011,7 @@ header p {
         transform: scale(0.317) !important;
         transform-origin: top left !important;
         margin: 0 !important;
+        margin-left: -2px !important;
         display: flex !important;
         flex-direction: column !important;
         background: var(--card-bg-color) !important;
