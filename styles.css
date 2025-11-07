@@ -962,8 +962,13 @@ header p {
 /* Ensure both cards are same size */
 .card-front,
 .card-back {
-    width: var(--card-width);
-    height: var(--card-height);
+    width: var(--card-width) !important;
+    height: var(--card-height) !important;
+    flex-shrink: 0;
+    min-width: var(--card-width);
+    min-height: var(--card-height);
+    max-width: var(--card-width);
+    max-height: var(--card-height);
 }
 
 /* Responsive: stack cards on smaller screens */
@@ -1187,6 +1192,8 @@ header p {
 /* Back Card Styles */
 .card-back {
     background: var(--back-card-bg-color);
+    width: var(--card-width);
+    height: var(--card-height);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1195,6 +1202,7 @@ header p {
     overflow: hidden;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     position: relative; /* For absolute positioning of immersive layout elements */
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .back-card-content {
