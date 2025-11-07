@@ -110,11 +110,11 @@ let currentTemplate = 'creature';
 let deck = [];
 
 // Initialize
-function init() {
+async function init() {
     loadTemplate(currentTemplate);
     updatePreview();
     attachEventListeners();
-    loadDeck();
+    await loadDeck();
     updateDeckCounter();
 }
 
@@ -952,40 +952,147 @@ function attachEventListeners() {
 
 // Deck Management Functions
 
-// Load deck from localStorage
-function loadDeck() {
-    const savedDeck = localStorage.getItem('cardDeck');
-    if (savedDeck) {
-        try {
-            deck = JSON.parse(savedDeck);
-        } catch (e) {
+// IndexedDB wrapper for larger storage capacity
+const DeckDB = {
+    dbName: 'CardDeckDB',
+    dbVersion: 1,
+    storeName: 'decks',
+    db: null,
+
+    // Initialize IndexedDB
+    init() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, this.dbVersion);
+
+            request.onerror = () => {
+                console.error('IndexedDB error:', request.error);
+                reject(request.error);
+            };
+
+            request.onsuccess = () => {
+                this.db = request.result;
+                resolve(this.db);
+            };
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+
+                // Create object store if it doesn't exist
+                if (!db.objectStoreNames.contains(this.storeName)) {
+                    db.createObjectStore(this.storeName, { keyPath: 'id' });
+                }
+            };
+        });
+    },
+
+    // Save deck to IndexedDB
+    saveDeck(deckData) {
+        return new Promise((resolve, reject) => {
+            if (!this.db) {
+                reject(new Error('Database not initialized'));
+                return;
+            }
+
+            const transaction = this.db.transaction([this.storeName], 'readwrite');
+            const objectStore = transaction.objectStore(this.storeName);
+            const request = objectStore.put({ id: 'mainDeck', data: deckData, timestamp: Date.now() });
+
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    },
+
+    // Load deck from IndexedDB
+    loadDeck() {
+        return new Promise((resolve, reject) => {
+            if (!this.db) {
+                reject(new Error('Database not initialized'));
+                return;
+            }
+
+            const transaction = this.db.transaction([this.storeName], 'readonly');
+            const objectStore = transaction.objectStore(this.storeName);
+            const request = objectStore.get('mainDeck');
+
+            request.onsuccess = () => {
+                if (request.result && request.result.data) {
+                    resolve(request.result.data);
+                } else {
+                    resolve([]);
+                }
+            };
+            request.onerror = () => reject(request.error);
+        });
+    },
+
+    // Migrate data from localStorage to IndexedDB
+    async migrateFromLocalStorage() {
+        const savedDeck = localStorage.getItem('cardDeck');
+        if (savedDeck) {
+            try {
+                const deckData = JSON.parse(savedDeck);
+                await this.saveDeck(deckData);
+                console.log('Migrated deck from localStorage to IndexedDB');
+                // Keep localStorage as backup for now
+                // localStorage.removeItem('cardDeck');
+            } catch (e) {
+                console.error('Migration error:', e);
+            }
+        }
+    }
+};
+
+// Load deck from IndexedDB
+async function loadDeck() {
+    try {
+        // Initialize IndexedDB
+        await DeckDB.init();
+
+        // Check if we need to migrate from localStorage
+        const hasLocalStorage = localStorage.getItem('cardDeck');
+        if (hasLocalStorage) {
+            await DeckDB.migrateFromLocalStorage();
+        }
+
+        // Load from IndexedDB
+        deck = await DeckDB.loadDeck();
+    } catch (e) {
+        console.error('Failed to load deck from IndexedDB:', e);
+
+        // Fallback to localStorage
+        const savedDeck = localStorage.getItem('cardDeck');
+        if (savedDeck) {
+            try {
+                deck = JSON.parse(savedDeck);
+            } catch (err) {
+                deck = [];
+            }
+        } else {
             deck = [];
         }
     }
 }
 
-// Save deck to localStorage
-function saveDeck() {
+// Save deck to IndexedDB
+async function saveDeck() {
     try {
-        localStorage.setItem('cardDeck', JSON.stringify(deck));
+        // Save to IndexedDB (much larger capacity than localStorage)
+        await DeckDB.saveDeck(deck);
+
+        // Also try to save to localStorage as backup (if it fits)
+        try {
+            localStorage.setItem('cardDeck', JSON.stringify(deck));
+        } catch (localStorageError) {
+            // Ignore localStorage quota errors - IndexedDB is our primary storage now
+            console.log('localStorage quota exceeded, using IndexedDB only');
+        }
 
         // Show auto-save notification
         showAutoSaveNotification();
     } catch (e) {
-        if (e.name === 'QuotaExceededError' || e.code === 22) {
-            alert('Deck is too large to save! Background images take up a lot of space. Try:\n\n' +
-                  '1. Exporting your deck to a file\n' +
-                  '2. Using smaller images\n' +
-                  '3. Using fewer cards with background images\n\n' +
-                  'The card was NOT saved to your deck.');
-
-            // Remove the last added card that caused the quota error
-            deck.pop();
-            updateDeckCounter();
-        } else {
-            alert('Failed to save deck: ' + e.message);
-            console.error('saveDeck error:', e);
-        }
+        // IndexedDB errors are rare but handle them gracefully
+        console.error('Failed to save deck:', e);
+        alert('Failed to save deck: ' + e.message + '\n\nTry exporting your deck to a file as a backup.');
     }
 }
 
@@ -1154,10 +1261,10 @@ function loadCardIntoEditor(cardData) {
 }
 
 // Add card to deck
-function addCardToDeck() {
+async function addCardToDeck() {
     const cardData = captureCardState();
     deck.push(cardData);
-    saveDeck();
+    await saveDeck();
     updateDeckCounter();
 
     // Show confirmation
@@ -1224,20 +1331,20 @@ function showDeckModal() {
 }
 
 // Remove card from deck
-function removeCardFromDeck(index) {
+async function removeCardFromDeck(index) {
     if (confirm('Remove this card from the deck?')) {
         deck.splice(index, 1);
-        saveDeck();
+        await saveDeck();
         updateDeckCounter();
         showDeckModal(); // Refresh the modal
     }
 }
 
 // Clear entire deck
-function clearDeck() {
+async function clearDeck() {
     if (confirm('Are you sure you want to clear the entire deck? This cannot be undone.')) {
         deck = [];
-        saveDeck();
+        await saveDeck();
         updateDeckCounter();
         showDeckModal(); // Refresh the modal
     }
@@ -1277,7 +1384,7 @@ function loadDeckFromFile(event) {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = async function(e) {
         try {
             const loadedDeck = JSON.parse(e.target.result);
 
@@ -1318,7 +1425,7 @@ function loadDeckFromFile(event) {
                 deck = deck.concat(validatedDeck);
             }
 
-            saveDeck();
+            await saveDeck();
             updateDeckCounter();
             showDeckModal(); // Refresh the modal
 
