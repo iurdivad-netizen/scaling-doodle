@@ -943,13 +943,164 @@ header p {
         transform-origin: top left !important;
         overflow: hidden !important;
         page-break-inside: avoid !important;
+        position: relative !important;
     }
 
     .print-card .card {
         width: 750px !important;
         height: 1050px !important;
-        transform: scale(0.24) !important;
+        transform: scale(0.317) !important;
         transform-origin: top left !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: var(--card-bg-color) !important;
+        border: 2px solid var(--card-border-color) !important;
+        border-radius: var(--card-border-radius) !important;
+        box-shadow: none !important;
+        position: relative !important;
+    }
+
+    /* Ensure card images render in print */
+    .print-card .card-image {
+        position: relative !important;
+        width: 100% !important;
+        height: var(--card-image-height) !important;
+        overflow: hidden !important;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        border-bottom: 2px solid var(--card-border-color) !important;
+        flex-shrink: 0 !important;
+    }
+
+    .print-card .card-image img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .print-card .card-name-overlay {
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3)) !important;
+        padding: 16px 20px !important;
+    }
+
+    .print-card .card-name-overlay h2 {
+        color: var(--card-name-color) !important;
+        font-size: var(--card-name-size) !important;
+        margin: 0 !important;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+    }
+
+    .print-card .card-content {
+        padding: var(--card-content-padding) !important;
+        background: var(--card-bg-color) !important;
+        flex-grow: 1 !important;
+        overflow: hidden !important;
+        font-size: 1em !important;
+    }
+
+    /* Ensure card grids render in print */
+    .print-card .card-stats,
+    .print-card .ability-scores-display {
+        display: grid !important;
+    }
+
+    .print-card .card-stats {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: var(--ability-grid-gap) !important;
+    }
+
+    .print-card .ability-scores-display {
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: var(--ability-grid-gap) !important;
+    }
+
+    /* Back card styles for print */
+    .print-card .card-back {
+        background: var(--back-card-bg-color) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+    }
+
+    .print-card .back-card-content {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+    }
+
+    .print-card .back-card-content img,
+    .print-card .back-card-background img,
+    .print-card .back-card-print-image {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .print-card .back-card-background {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .print-card .back-card-overlay {
+        position: relative !important;
+        z-index: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        height: 100% !important;
+        padding: calc(var(--section-spacing) * 3) !important;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.9) 50%, rgba(0, 0, 0, 0.85) 100%) !important;
+        gap: calc(var(--section-spacing) * 2) !important;
+    }
+
+    /* Ensure immersive layout styles work in print */
+    .print-card .card-image-background {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .print-card .card-image-background img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .print-card .immersive-overlay {
+        position: relative !important;
+        z-index: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-end !important;
+        height: 100% !important;
+        padding: calc(var(--section-spacing) * 2) !important;
+    }
+
+    /* Ensure all text and elements are visible */
+    .print-card * {
+        color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
 
