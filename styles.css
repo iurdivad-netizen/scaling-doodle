@@ -1022,8 +1022,16 @@ header p {
 }
 
 .card.image-as-background .card-name-overlay {
-    position: relative;
+    position: absolute;
     z-index: 2;
+}
+
+/* Make card type/alignment readable over background image */
+.card.image-as-background .card-type {
+    background: rgba(249, 246, 240, 0.9);
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: inline-block;
 }
 
 /* Back Card Styles */
