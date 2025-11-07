@@ -238,9 +238,14 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                             Image URL
                         </label>
                     </div>
-                    <input type="file" id="imageUpload" accept="image/*">
-                    <input type="text" id="imageUrl" placeholder="Enter image URL" style="display: none;">
-                    <button id="loadImageBtn" style="display: none;">Load Image</button>
+                    <div class="image-controls">
+                        <input type="file" id="imageUpload" accept="image/*">
+                        <button id="clearImageBtn" class="clear-image-btn">Clear Image</button>
+                    </div>
+                    <div class="image-url-controls">
+                        <input type="text" id="imageUrl" placeholder="Enter image URL" style="display: none;">
+                        <button id="loadImageBtn" style="display: none;">Load Image</button>
+                    </div>
                 </div>
 
                 <div class="form-section template-creature">
