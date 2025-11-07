@@ -82,6 +82,10 @@ const exportBtn = document.getElementById('exportBtn');
 const previewImage = document.getElementById('previewImage');
 const cardPreview = document.getElementById('cardPreview');
 
+// Import elements
+const importTextArea = document.getElementById('importText');
+const importBtn = document.getElementById('importBtn');
+
 // Deck management elements
 const addToDeckBtn = document.getElementById('addToDeckBtn');
 const viewDeckBtn = document.getElementById('viewDeckBtn');
@@ -566,6 +570,159 @@ function updateBackCard() {
     }
 }
 
+// Parse D&D character text and extract card data
+function parseCharacterText(text) {
+    const lines = text.trim().split('\n').filter(line => line.trim());
+
+    const parsedData = {
+        cardName: '',
+        cardType: '',
+        cardSubtype: '',
+        ac: '',
+        hp: '',
+        speed: '',
+        str: '',
+        dex: '',
+        con: '',
+        int: '',
+        wis: '',
+        cha: '',
+        additionalStats: '',
+        description: ''
+    };
+
+    if (lines.length === 0) return parsedData;
+
+    // Parse first line: "Name – Type/Class"
+    const firstLine = lines[0];
+    if (firstLine.includes('–') || firstLine.includes('-')) {
+        const separator = firstLine.includes('–') ? '–' : '-';
+        const parts = firstLine.split(separator);
+        parsedData.cardName = parts[0].trim();
+        if (parts[1]) {
+            const typeInfo = parts[1].trim();
+            // Try to separate race and class
+            const typeParts = typeInfo.split(' ');
+            if (typeParts.length >= 2) {
+                parsedData.cardType = typeParts[0]; // First word (e.g., "Human")
+                parsedData.cardSubtype = typeParts.slice(1).join(' '); // Rest (e.g., "Grave Cleric")
+            } else {
+                parsedData.cardType = typeInfo;
+            }
+        }
+    } else {
+        parsedData.cardName = firstLine;
+    }
+
+    // Parse stats line: "AC: X | HP: Y | Speed: Z"
+    const statsLine = lines.find(line => /AC:/i.test(line) && /HP:/i.test(line));
+    if (statsLine) {
+        const acMatch = statsLine.match(/AC:\s*(\d+[^|]*)/i);
+        const hpMatch = statsLine.match(/HP:\s*([^|]*)/i);
+        const speedMatch = statsLine.match(/Speed:\s*(.*?)$/i);
+
+        if (acMatch) parsedData.ac = acMatch[1].trim();
+        if (hpMatch) parsedData.hp = hpMatch[1].trim();
+        if (speedMatch) parsedData.speed = speedMatch[1].trim();
+    }
+
+    // Parse ability scores line: "STR X (+Y) DEX X (+Y) ..."
+    const abilityLine = lines.find(line => /STR\s+\d+/.test(line));
+    if (abilityLine) {
+        const strMatch = abilityLine.match(/STR\s+(\d+\s*\([^)]+\))/);
+        const dexMatch = abilityLine.match(/DEX\s+(\d+\s*\([^)]+\))/);
+        const conMatch = abilityLine.match(/CON\s+(\d+\s*\([^)]+\))/);
+        const intMatch = abilityLine.match(/INT\s+(\d+\s*\([^)]+\))/);
+        const wisMatch = abilityLine.match(/WIS\s+(\d+\s*\([^)]+\))/);
+        const chaMatch = abilityLine.match(/CHA\s+(\d+\s*\([^)]+\))/);
+
+        if (strMatch) parsedData.str = strMatch[1].trim();
+        if (dexMatch) parsedData.dex = dexMatch[1].trim();
+        if (conMatch) parsedData.con = conMatch[1].trim();
+        if (intMatch) parsedData.int = intMatch[1].trim();
+        if (wisMatch) parsedData.wis = wisMatch[1].trim();
+        if (chaMatch) parsedData.cha = chaMatch[1].trim();
+    }
+
+    // Collect remaining lines for additional stats and description
+    const additionalLines = [];
+    const descriptionLines = [];
+    let inDescription = false;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        // Skip lines we've already processed
+        if (line === firstLine || line === statsLine || line === abilityLine) {
+            continue;
+        }
+
+        // Check if this looks like a feature/ability (contains colons, starts with capital, etc.)
+        if (line.includes(':') || /^[A-Z]/.test(line)) {
+            if (line.toLowerCase().includes('feature') ||
+                line.toLowerCase().includes('equipment') ||
+                line.toLowerCase().includes('spell') ||
+                line.toLowerCase().includes('saving throw') ||
+                line.toLowerCase().includes('skill')) {
+                additionalLines.push(line);
+            } else {
+                descriptionLines.push(line);
+            }
+        } else if (line.trim()) {
+            descriptionLines.push(line);
+        }
+    }
+
+    // Populate additional stats and description
+    parsedData.additionalStats = additionalLines.join('\n').trim();
+    parsedData.description = descriptionLines.join('\n\n').trim();
+
+    return parsedData;
+}
+
+// Import and auto-fill card data from text
+function importCardData() {
+    const text = importTextArea.value;
+    if (!text.trim()) {
+        alert('Please paste character data to import.');
+        return;
+    }
+
+    // Parse the text
+    const data = parseCharacterText(text);
+
+    // Switch to creature template if not already
+    if (currentTemplate !== 'creature') {
+        cardTemplateSelect.value = 'creature';
+        loadTemplate('creature');
+    }
+
+    // Fill in the form fields
+    if (data.cardName) document.getElementById('cardName').value = data.cardName;
+    if (data.cardType) document.getElementById('cardType').value = data.cardType;
+    if (data.cardSubtype) document.getElementById('cardSubtype').value = data.cardSubtype;
+    if (data.ac) document.getElementById('ac').value = data.ac;
+    if (data.hp) document.getElementById('hp').value = data.hp;
+    if (data.speed) document.getElementById('speed').value = data.speed;
+    if (data.str) document.getElementById('str').value = data.str;
+    if (data.dex) document.getElementById('dex').value = data.dex;
+    if (data.con) document.getElementById('con').value = data.con;
+    if (data.int) document.getElementById('int').value = data.int;
+    if (data.wis) document.getElementById('wis').value = data.wis;
+    if (data.cha) document.getElementById('cha').value = data.cha;
+    if (data.additionalStats) document.getElementById('additionalStats').value = data.additionalStats;
+    if (data.description) document.getElementById('description').value = data.description;
+
+    // Update the preview
+    updatePreview();
+
+    // Clear the import text area
+    importTextArea.value = '';
+
+    // Show success message
+    alert('Card data imported successfully!');
+}
+
 // Attach event listeners
 function attachEventListeners() {
     // Template change
@@ -688,6 +845,9 @@ function attachEventListeners() {
             alert('Please enter an image URL');
         }
     });
+
+    // Import button
+    importBtn.addEventListener('click', importCardData);
 
     // Reset button
     resetBtn.addEventListener('click', function() {

@@ -130,6 +130,14 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                     </select>
                 </div>
 
+                <!-- Import Card Data -->
+                <div class="form-section import-section">
+                    <h3>Import Card Data</h3>
+                    <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">Paste D&D character data to auto-fill the card</p>
+                    <textarea id="importText" rows="6" placeholder="Example:&#10;Elias Thorn – Human Grave Cleric&#10;AC: 18 (Chain Mail + Shield) | HP: 33 (4d8 + 8) | Speed: 30 ft.&#10;STR 16 (+3) DEX 10 (+0) CON 14 (+2) INT 10 (+0) WIS 16 (+3) CHA 8 (-1)&#10;Spells Prepared: Bless, Detect Magic&#10;Features: Channel Divinity&#10;Equipment: Mace, Shield, Holy Symbol"></textarea>
+                    <button id="importBtn" class="btn-primary">Import & Auto-Fill</button>
+                </div>
+
                 <div class="form-section">
                     <label for="cardName">Name</label>
                     <input type="text" id="cardName" placeholder="Enter card name" value="Ancient Red Dragon">
