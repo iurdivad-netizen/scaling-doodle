@@ -987,7 +987,7 @@ header p {
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-image: var(--card-background-image, none);
