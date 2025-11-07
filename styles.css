@@ -1036,6 +1036,43 @@ header p {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
+/* Apply dark gradient overlay to all sections when background is enabled */
+.card.image-as-background .card-stats,
+.card.image-as-background .ability-scores-display,
+.card.image-as-background .additional-stats,
+.card.image-as-background .abilities-section {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    border: 2px solid rgba(139, 69, 19, 0.6);
+    padding: 12px;
+    border-radius: 6px;
+}
+
+/* Text styling for sections with background */
+.card.image-as-background .card-stats .stat-row,
+.card.image-as-background .ability-scores-display .ability-score {
+    background: transparent;
+    border: 1px solid rgba(244, 228, 193, 0.3);
+    color: var(--card-name-color);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .card-stats .stat-row strong,
+.card.image-as-background .ability-scores-display .ability-name {
+    color: var(--card-name-color);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .additional-stats p,
+.card.image-as-background .abilities-section p {
+    color: var(--card-name-color);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Dividers with dark theme */
+.card.image-as-background .divider {
+    background: linear-gradient(to right, transparent, rgba(244, 228, 193, 0.5), transparent);
+}
+
 /* Back Card Styles */
 .card-back {
     background: var(--back-card-bg-color);
