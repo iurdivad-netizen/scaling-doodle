@@ -766,6 +766,11 @@ header p {
     margin-right: -375px;
     padding-top: 40px; /* Space for delete button */
     margin-top: -20px; /* Compensate for padding */
+    z-index: 1; /* Ensure proper stacking context */
+}
+
+.deck-card-container:hover {
+    z-index: 10; /* Lift entire container on hover to keep remove button clickable */
 }
 
 .deck-card-container .card {
@@ -773,13 +778,11 @@ header p {
     height: 1050px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
-    z-index: 1;
 }
 
 .deck-card-container .card:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    z-index: 5;
 }
 
 .remove-card-btn {
