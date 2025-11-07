@@ -1041,7 +1041,7 @@ function loadCardIntoEditor(cardData) {
     loadTemplate(cardData.template);
 
     // Set the layout
-    cardLayoutSelect.value = cardData.layout || 'standard';
+    cardLayoutSelect.value = cardData.layout || 'immersive';
 
     // Restore all form field values
     if (cardData.formFields) {
@@ -1098,6 +1098,17 @@ function loadCardIntoEditor(cardData) {
 
     // Update the preview
     updatePreview();
+
+    // Restore background image styling if it was saved (for immersive layout)
+    if (cardData.hasBackgroundImage && cardData.backgroundImage) {
+        const card = document.getElementById('cardPreview');
+        const root = document.documentElement;
+        card.classList.add('image-as-background');
+        root.style.setProperty('--card-background-image', cardData.backgroundImage);
+        if (cardData.contentOpacity) {
+            root.style.setProperty('--content-opacity', cardData.contentOpacity);
+        }
+    }
 
     // Close the deck modal
     deckModal.classList.remove('active');
