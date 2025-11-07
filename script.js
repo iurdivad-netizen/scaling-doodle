@@ -70,6 +70,7 @@ const templates = {
 
 // DOM Elements
 const cardTemplateSelect = document.getElementById('cardTemplate');
+const cardLayoutSelect = document.getElementById('cardLayout');
 const cardNameInput = document.getElementById('cardName');
 const cardTypeInput = document.getElementById('cardType');
 const imageUploadInput = document.getElementById('imageUpload');
@@ -138,24 +139,47 @@ function loadTemplate(templateId) {
 // Update preview based on current template
 function updatePreview() {
     const templateId = currentTemplate;
+    const layoutStyle = cardLayoutSelect.value;
     let previewHTML = '';
 
-    switch (templateId) {
-        case 'creature':
-            previewHTML = generateCreaturePreview();
-            break;
-        case 'spell':
-            previewHTML = generateSpellPreview();
-            break;
-        case 'item':
-            previewHTML = generateItemPreview();
-            break;
-        case 'ability':
-            previewHTML = generateAbilityPreview();
-            break;
-        case 'equipment':
-            previewHTML = generateEquipmentPreview();
-            break;
+    // Check if immersive layout is selected
+    if (layoutStyle === 'immersive') {
+        switch (templateId) {
+            case 'creature':
+                previewHTML = generateCreaturePreviewImmersive();
+                break;
+            case 'spell':
+                previewHTML = generateSpellPreviewImmersive();
+                break;
+            case 'item':
+                previewHTML = generateItemPreviewImmersive();
+                break;
+            case 'ability':
+                previewHTML = generateAbilityPreviewImmersive();
+                break;
+            case 'equipment':
+                previewHTML = generateEquipmentPreviewImmersive();
+                break;
+        }
+    } else {
+        // Standard layout
+        switch (templateId) {
+            case 'creature':
+                previewHTML = generateCreaturePreview();
+                break;
+            case 'spell':
+                previewHTML = generateSpellPreview();
+                break;
+            case 'item':
+                previewHTML = generateItemPreview();
+                break;
+            case 'ability':
+                previewHTML = generateAbilityPreview();
+                break;
+            case 'equipment':
+                previewHTML = generateEquipmentPreview();
+                break;
+        }
     }
 
     cardPreview.innerHTML = previewHTML;
@@ -166,6 +190,9 @@ function updatePreview() {
         newPreviewImage.src = previewImage.src;
         newPreviewImage.style.display = 'block';
     }
+
+    // Update back card for immersive layout
+    updateBackCard();
 }
 
 // Generate creature card preview
@@ -339,11 +366,208 @@ function generateEquipmentPreview() {
     `;
 }
 
+// ===== IMMERSIVE LAYOUT RENDERING FUNCTIONS =====
+
+// Generate creature card preview with immersive layout (image as background)
+function generateCreaturePreviewImmersive() {
+    const name = document.getElementById('cardName').value || 'Card Name';
+    const type = document.getElementById('cardType').value || 'Type';
+    const subtype = document.getElementById('cardSubtype').value || 'Subtype';
+    const ac = document.getElementById('ac').value || '-';
+    const hp = document.getElementById('hp').value || '-';
+    const speed = document.getElementById('speed').value || '-';
+    const str = document.getElementById('str').value || '-';
+    const dex = document.getElementById('dex').value || '-';
+    const con = document.getElementById('con').value || '-';
+    const int = document.getElementById('int').value || '-';
+    const wis = document.getElementById('wis').value || '-';
+    const cha = document.getElementById('cha').value || '-';
+
+    return `
+        <div class="card-image-background">
+            <img id="previewImage" src="" alt="Card Image">
+        </div>
+        <div class="immersive-overlay">
+            <div class="immersive-name">
+                <h2>${name}</h2>
+            </div>
+            <div class="immersive-type">
+                <span>${type}</span>
+                <span class="separator">•</span>
+                <span>${subtype}</span>
+            </div>
+            <div class="immersive-stats">
+                <div class="stat-item"><strong>AC</strong><span>${ac}</span></div>
+                <div class="stat-item"><strong>HP</strong><span>${hp}</span></div>
+                <div class="stat-item"><strong>Speed</strong><span>${speed}</span></div>
+            </div>
+            <div class="immersive-abilities">
+                <div class="ability-score"><div class="ability-name">STR</div><div class="ability-value">${str}</div></div>
+                <div class="ability-score"><div class="ability-name">DEX</div><div class="ability-value">${dex}</div></div>
+                <div class="ability-score"><div class="ability-name">CON</div><div class="ability-value">${con}</div></div>
+                <div class="ability-score"><div class="ability-name">INT</div><div class="ability-value">${int}</div></div>
+                <div class="ability-score"><div class="ability-name">WIS</div><div class="ability-value">${wis}</div></div>
+                <div class="ability-score"><div class="ability-name">CHA</div><div class="ability-value">${cha}</div></div>
+            </div>
+        </div>
+    `;
+}
+
+// Generate spell card preview with immersive layout
+function generateSpellPreviewImmersive() {
+    const name = document.getElementById('cardName').value || 'Spell Name';
+    const level = document.getElementById('spellLevel')?.value || 'Level';
+    const school = document.getElementById('spellSchool')?.value || 'School';
+    const castingTime = document.getElementById('castingTime')?.value || 'Casting Time';
+    const range = document.getElementById('range')?.value || 'Range';
+
+    return `
+        <div class="card-image-background">
+            <img id="previewImage" src="" alt="Card Image">
+        </div>
+        <div class="immersive-overlay">
+            <div class="immersive-name">
+                <h2>${name}</h2>
+            </div>
+            <div class="immersive-type">
+                <span>${level} ${school}</span>
+            </div>
+            <div class="immersive-spell-info">
+                <div><strong>Casting Time:</strong> ${castingTime}</div>
+                <div><strong>Range:</strong> ${range}</div>
+            </div>
+        </div>
+    `;
+}
+
+// Generate item card preview with immersive layout
+function generateItemPreviewImmersive() {
+    const name = document.getElementById('cardName').value || 'Item Name';
+    const rarity = document.getElementById('itemRarity')?.value || 'Rarity';
+    const itemType = document.getElementById('itemType')?.value || 'Type';
+    const attunement = document.getElementById('attunement')?.value || '';
+
+    return `
+        <div class="card-image-background">
+            <img id="previewImage" src="" alt="Card Image">
+        </div>
+        <div class="immersive-overlay">
+            <div class="immersive-name">
+                <h2>${name}</h2>
+            </div>
+            <div class="immersive-type">
+                <span>${itemType}</span>
+                <span class="separator">•</span>
+                <span>${rarity}</span>
+            </div>
+            ${attunement ? '<div class="immersive-attunement">' + attunement + '</div>' : ''}
+        </div>
+    `;
+}
+
+// Generate ability card preview with immersive layout
+function generateAbilityPreviewImmersive() {
+    const name = document.getElementById('cardName').value || 'Ability Name';
+    const source = document.getElementById('abilitySource')?.value || 'Source';
+    const level = document.getElementById('abilityLevel')?.value || 'Level';
+
+    return `
+        <div class="card-image-background">
+            <img id="previewImage" src="" alt="Card Image">
+        </div>
+        <div class="immersive-overlay">
+            <div class="immersive-name">
+                <h2>${name}</h2>
+            </div>
+            <div class="immersive-type">
+                <span>${source}</span>
+                ${level ? '<span class="separator">•</span><span>' + level + '</span>' : ''}
+            </div>
+        </div>
+    `;
+}
+
+// Generate equipment card preview with immersive layout
+function generateEquipmentPreviewImmersive() {
+    const name = document.getElementById('cardName').value || 'Equipment Name';
+    const equipType = document.getElementById('equipmentType')?.value || 'Type';
+    const cost = document.getElementById('equipmentCost')?.value || '';
+    const weight = document.getElementById('equipmentWeight')?.value || '';
+
+    return `
+        <div class="card-image-background">
+            <img id="previewImage" src="" alt="Card Image">
+        </div>
+        <div class="immersive-overlay">
+            <div class="immersive-name">
+                <h2>${name}</h2>
+            </div>
+            <div class="immersive-type">
+                <span>${equipType}</span>
+            </div>
+            <div class="immersive-equipment-details">
+                ${cost ? '<div><strong>Cost:</strong> ' + cost + '</div>' : ''}
+                ${weight ? '<div><strong>Weight:</strong> ' + weight + '</div>' : ''}
+            </div>
+        </div>
+    `;
+}
+
+// Update back card based on layout and template
+function updateBackCard() {
+    const layoutStyle = cardLayoutSelect.value;
+    const backCardPreviewImage = document.getElementById('backCardPreviewImage');
+    const backCardContent = document.querySelector('.back-card-content');
+
+    if (!backCardContent) return;
+
+    if (layoutStyle === 'immersive') {
+        // For immersive layout, show mirrored background image with additional content
+        const additionalStats = document.getElementById('additionalStats')?.value || '';
+        const description = document.getElementById('description')?.value || '';
+
+        // Create rich back card content
+        backCardContent.innerHTML = `
+            <div class="back-card-background">
+                <img id="backCardPreviewImage" src="" alt="Back Card Design">
+            </div>
+            <div class="back-card-overlay">
+                ${additionalStats ? '<div class="back-additional-stats"><h3>Additional Stats</h3><p>' + additionalStats + '</p></div>' : ''}
+                ${description ? '<div class="back-description"><h3>Description</h3><p>' + description + '</p></div>' : ''}
+            </div>
+        `;
+
+        // Apply mirrored image
+        const newBackImage = document.getElementById('backCardPreviewImage');
+        if (newBackImage && previewImage.src) {
+            newBackImage.src = previewImage.src;
+            newBackImage.style.transform = 'scaleX(-1)'; // Mirror the image
+        }
+    } else {
+        // Standard back card with just the image
+        backCardContent.innerHTML = `
+            <img id="backCardPreviewImage" src="" alt="Back Card Design">
+        `;
+
+        if (backCardPreviewImage && previewImage.src) {
+            const newBackImage = document.getElementById('backCardPreviewImage');
+            if (newBackImage) {
+                newBackImage.src = previewImage.src;
+            }
+        }
+    }
+}
+
 // Attach event listeners
 function attachEventListeners() {
     // Template change
     cardTemplateSelect.addEventListener('change', function() {
         loadTemplate(this.value);
+    });
+
+    // Layout style change
+    cardLayoutSelect.addEventListener('change', function() {
+        updatePreview();
     });
 
     // Image upload handler
@@ -554,6 +778,7 @@ function updateDeckCounter() {
 function captureCardState() {
     const cardData = {
         template: currentTemplate,
+        layout: cardLayoutSelect.value,
         html: cardPreview.innerHTML,
         timestamp: Date.now(),
         name: document.getElementById('cardName').value || 'Unnamed Card',
