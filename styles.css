@@ -1036,6 +1036,154 @@ header p {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
+/* Apply NAME section scheme to stats section */
+.card.image-as-background .card-stats {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.card.image-as-background .card-stats .stat-row {
+    background: rgba(232, 220, 196, 0.15);
+    border-color: rgba(139, 69, 19, 0.5);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .card-stats .stat-row strong {
+    color: var(--card-name-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .card-stats .stat-row span {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Apply NAME section scheme to ability scores */
+.card.image-as-background .ability-scores-display {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.card.image-as-background .ability-scores-display .ability-score {
+    background: rgba(232, 220, 196, 0.15);
+    border-color: rgba(139, 69, 19, 0.5);
+}
+
+.card.image-as-background .ability-scores-display .ability-name {
+    color: var(--card-name-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .ability-scores-display .ability-value {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Apply NAME section scheme to additional stats */
+.card.image-as-background .additional-stats {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    border-color: rgba(139, 69, 19, 0.5);
+}
+
+.card.image-as-background .additional-stats p {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Apply NAME section scheme to abilities section */
+.card.image-as-background .abilities-section {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    border-color: rgba(139, 69, 19, 0.5);
+}
+
+.card.image-as-background .abilities-section p {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Apply NAME section scheme to dividers */
+.card.image-as-background .divider {
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+}
+
+/* Apply NAME section scheme to spell card sections */
+.card.image-as-background .spell-description {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 12px;
+    border-radius: 6px;
+    border: 2px solid rgba(139, 69, 19, 0.5);
+}
+
+.card.image-as-background .spell-description p {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Apply NAME section scheme to item card sections */
+.card.image-as-background .item-attunement {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: var(--card-name-color);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .item-description {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 12px;
+    border-radius: 6px;
+    border: 2px solid rgba(139, 69, 19, 0.5);
+}
+
+.card.image-as-background .item-description p {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Apply NAME section scheme to ability card sections */
+.card.image-as-background .ability-description {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 12px;
+    border-radius: 6px;
+    border: 2px solid rgba(139, 69, 19, 0.5);
+}
+
+.card.image-as-background .ability-description p {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Apply NAME section scheme to equipment card sections */
+.card.image-as-background .equipment-details {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.card.image-as-background .equipment-details div {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .equipment-details strong {
+    color: var(--card-name-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.card.image-as-background .equipment-description {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    padding: 12px;
+    border-radius: 6px;
+    border: 2px solid rgba(139, 69, 19, 0.5);
+}
+
+.card.image-as-background .equipment-description p {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
 /* Back Card Styles */
 .card-back {
     background: var(--back-card-bg-color);
