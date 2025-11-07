@@ -947,7 +947,8 @@ header p {
     gap: 30px;
     justify-content: center;
     align-items: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
 }
 
 .cards-display .card {
@@ -967,10 +968,11 @@ header p {
 }
 
 /* Responsive: stack cards on smaller screens */
-@media (max-width: 900px) {
+@media (max-width: 1600px) {
     .cards-display {
         flex-direction: column;
         align-items: center;
+        overflow-x: visible;
     }
 }
 
