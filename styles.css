@@ -265,11 +265,9 @@ header p {
     padding-bottom: 10px;
 }
 
-/* Card preview container with scaling */
+/* Card preview container - no individual scaling */
 #cardPreview {
-    transform: scale(0.5);
-    transform-origin: top center;
-    margin: 0 auto -262.5px;
+    /* Scaling removed - will be applied to cards-display container */
 }
 
 /* Card Styles - Poker Card Size (2.5" x 3.5" at print resolution) */
@@ -903,9 +901,13 @@ header p {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    #cardPreview {
+    .cards-display .card {
         transform: scale(0.4);
-        margin: 0 auto -315px;
+        margin-bottom: -315px;
+    }
+
+    .cards-display .card:last-child {
+        margin-bottom: 0;
     }
 
     .button-group {
@@ -953,6 +955,9 @@ header p {
 
 .cards-display .card {
     flex-shrink: 0;
+    transform: scale(0.5);
+    transform-origin: top center;
+    margin-bottom: -262.5px;
 }
 
 /* Ensure both cards are same size */
@@ -973,6 +978,14 @@ header p {
         flex-direction: column;
         align-items: center;
         overflow-x: visible;
+    }
+
+    .cards-display .card {
+        margin-bottom: -262.5px;
+    }
+
+    .cards-display .card:last-child {
+        margin-bottom: 0;
     }
 }
 
