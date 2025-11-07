@@ -693,8 +693,8 @@ function importCardData() {
 
     // Switch to creature template if not already
     if (currentTemplate !== 'creature') {
-        cardTemplateSelect.value = 'creature';
         loadTemplate('creature');
+        cardTemplateSelect.value = 'creature';
     }
 
     // Fill in the form fields
@@ -1004,7 +1004,7 @@ function showDeckModal() {
             const removeBtn = document.createElement('button');
             removeBtn.className = 'remove-card-btn';
             removeBtn.innerHTML = '&times;';
-            removeBtn.onclick = () => removeCardFromDeck(index);
+            removeBtn.addEventListener('click', () => removeCardFromDeck(index));
 
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
