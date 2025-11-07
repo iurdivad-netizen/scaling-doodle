@@ -196,12 +196,16 @@ function updatePreview() {
     const savedBackgroundImage = hadBackgroundImage ? root.style.getPropertyValue('--card-background-image') : null;
     const savedContentOpacity = hadBackgroundImage ? root.style.getPropertyValue('--content-opacity') : null;
 
+    // Save the current image src before replacing innerHTML (previewImage reference will become stale)
+    const oldPreviewImage = document.getElementById('previewImage');
+    const savedImageSrc = oldPreviewImage ? oldPreviewImage.src : '';
+
     cardPreview.innerHTML = previewHTML;
 
     // Reattach image if present
     const newPreviewImage = document.getElementById('previewImage');
-    if (newPreviewImage && previewImage.src) {
-        newPreviewImage.src = previewImage.src;
+    if (newPreviewImage && savedImageSrc) {
+        newPreviewImage.src = savedImageSrc;
         newPreviewImage.style.display = 'block';
     }
 
@@ -1190,12 +1194,20 @@ function showDeckModal() {
             cardDiv.style.cursor = 'pointer'; // Show it's clickable
             cardDiv.title = 'Click to edit this card';
 
+            // Restore the front card image if it was saved
+            if (cardData.frontCardImage) {
+                const imgElement = cardDiv.querySelector('#previewImage');
+                if (imgElement) {
+                    imgElement.src = cardData.frontCardImage;
+                }
+            }
+
             // Add click handler to load card into editor
             cardDiv.addEventListener('click', () => {
                 loadCardIntoEditor(cardData);
             });
 
-            // Apply background image styling if it was saved
+            // Apply background image styling if it was saved (for old "image-as-background" feature)
             if (cardData.hasBackgroundImage && cardData.backgroundImage) {
                 cardDiv.classList.add('image-as-background');
                 cardDiv.style.setProperty('--card-background-image', cardData.backgroundImage);
@@ -1356,7 +1368,15 @@ async function exportAllCards() {
             tempCard.style.left = '-9999px';
             tempCard.innerHTML = cardData.html;
 
-            // Apply background image styling if it was saved (for immersive layout cards)
+            // Restore the front card image if it was saved
+            if (cardData.frontCardImage) {
+                const imgElement = tempCard.querySelector('#previewImage');
+                if (imgElement) {
+                    imgElement.src = cardData.frontCardImage;
+                }
+            }
+
+            // Apply background image styling if it was saved (for old "image-as-background" feature)
             if (cardData.hasBackgroundImage && cardData.backgroundImage) {
                 tempCard.classList.add('image-as-background');
                 tempCard.style.setProperty('--card-background-image', cardData.backgroundImage);
