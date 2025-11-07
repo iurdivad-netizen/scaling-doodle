@@ -804,7 +804,12 @@ function captureCardState() {
             ? getComputedStyle(document.documentElement).getPropertyValue('--content-opacity')
             : null,
         backCardImage: window.backCardImageData || '',
-        backCardBgColor: document.getElementById('backCardBgColor').value || '#2c3e50'
+        backCardBgColor: document.getElementById('backCardBgColor').value || '#2c3e50',
+        // Save additional content for back card
+        additionalStats: document.getElementById('additionalStats')?.value || '',
+        description: document.getElementById('description')?.value || '',
+        // Save front card image for back card mirroring
+        frontCardImage: document.getElementById('previewImage')?.src || ''
     };
     return cardData;
 }
@@ -1004,9 +1009,13 @@ function showPrintPreview() {
             const backCardDiv = document.createElement('div');
             backCardDiv.className = 'card card-back';
 
-            // Get back card image and background color for this card
+            // Get back card data for this card
             const backImage = deck[i].backCardImage || '';
             const backBgColor = deck[i].backCardBgColor || '#2c3e50';
+            const layoutStyle = deck[i].layout || 'standard';
+            const additionalStats = deck[i].additionalStats || '';
+            const description = deck[i].description || '';
+            const frontCardImage = deck[i].frontCardImage || '';
 
             // Apply background color
             backCardDiv.style.backgroundColor = backBgColor;
@@ -1015,13 +1024,27 @@ function showPrintPreview() {
             const backCardContent = document.createElement('div');
             backCardContent.className = 'back-card-content';
 
-            // If there's a back card image, display it
-            if (backImage) {
-                const imgElement = document.createElement('img');
-                imgElement.src = backImage;
-                imgElement.alt = 'Back Card Design';
-
-                backCardContent.appendChild(imgElement);
+            // Check if immersive layout and generate rich back card
+            if (layoutStyle === 'immersive' && (additionalStats || description)) {
+                // Create back card with rich content (similar to updateBackCard for immersive)
+                const backCardHTML = `
+                    <div class="back-card-background">
+                        <img src="${backImage || frontCardImage}" alt="Back Card Design" style="${!backImage && frontCardImage ? 'transform: scaleX(-1);' : ''}">
+                    </div>
+                    <div class="back-card-overlay">
+                        ${additionalStats ? '<div class="back-additional-stats"><h3>Additional Stats</h3><p>' + additionalStats + '</p></div>' : ''}
+                        ${description ? '<div class="back-description"><h3>Description</h3><p>' + description + '</p></div>' : ''}
+                    </div>
+                `;
+                backCardContent.innerHTML = backCardHTML;
+            } else {
+                // Standard back card with just the image
+                if (backImage) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = backImage;
+                    imgElement.alt = 'Back Card Design';
+                    backCardContent.appendChild(imgElement);
+                }
             }
 
             backCardDiv.appendChild(backCardContent);
