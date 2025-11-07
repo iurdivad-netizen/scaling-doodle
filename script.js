@@ -76,6 +76,7 @@ const cardTypeInput = document.getElementById('cardType');
 const imageUploadInput = document.getElementById('imageUpload');
 const imageUrlInput = document.getElementById('imageUrl');
 const loadImageBtn = document.getElementById('loadImageBtn');
+const clearImageBtn = document.getElementById('clearImageBtn');
 const imageSourceRadios = document.getElementsByName('imageSource');
 const resetBtn = document.getElementById('resetBtn');
 const exportBtn = document.getElementById('exportBtn');
@@ -867,6 +868,37 @@ function attachEventListeners() {
         } else {
             alert('Please enter an image URL');
         }
+    });
+
+    // Clear image button
+    clearImageBtn.addEventListener('click', function() {
+        // Clear the preview image
+        const img = document.getElementById('previewImage');
+        if (img) {
+            img.src = '';
+            img.style.display = 'none';
+        }
+
+        // Clear the file input
+        imageUploadInput.value = '';
+
+        // Clear the URL input
+        imageUrlInput.value = '';
+
+        // Clear background image if it was set
+        const root = document.documentElement;
+        root.style.setProperty('--card-background-image', 'none');
+        cardPreview.classList.remove('image-as-background');
+
+        // Update back card to reflect removal
+        updateBackCard();
+
+        // Show confirmation
+        const originalText = clearImageBtn.textContent;
+        clearImageBtn.textContent = 'Cleared!';
+        setTimeout(() => {
+            clearImageBtn.textContent = originalText;
+        }, 1000);
     });
 
     // Import button

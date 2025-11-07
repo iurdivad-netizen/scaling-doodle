@@ -152,7 +152,7 @@ header p {
 }
 
 .form-section input[type="file"] {
-    width: 100%;
+    flex: 1;
     padding: 10px;
     border: 2px dashed #e0e0e0;
     border-radius: 6px;
@@ -171,6 +171,41 @@ header p {
 
 .image-options input[type="radio"] {
     margin-right: 5px;
+}
+
+.image-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.image-url-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.clear-image-btn {
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.clear-image-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.clear-image-btn:active {
+    transform: translateY(0);
 }
 
 .stats-grid {
