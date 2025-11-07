@@ -1024,9 +1024,10 @@ function showPrintPreview() {
             const backCardContent = document.createElement('div');
             backCardContent.className = 'back-card-content';
 
-            // Check if immersive layout and generate rich back card
-            if (layoutStyle === 'immersive' && (additionalStats || description)) {
-                // Create back card with rich content (similar to updateBackCard for immersive)
+            // Generate back card to match preview behavior exactly
+            if (layoutStyle === 'immersive') {
+                // For immersive layout, show mirrored background image with additional content
+                // Create rich back card content (matches updateBackCard function)
                 const backCardHTML = `
                     <div class="back-card-background">
                         <img class="back-card-print-image" alt="Back Card Design">
@@ -1038,26 +1039,31 @@ function showPrintPreview() {
                 `;
                 backCardContent.innerHTML = backCardHTML;
 
-                // Apply the image and mirroring after DOM creation
+                // Apply back card image if available
                 const backImgElement = backCardContent.querySelector('.back-card-print-image');
                 if (backImgElement) {
+                    // First check if user uploaded a custom back card image
                     if (backImage) {
-                        // Use custom back card image (no mirroring)
                         backImgElement.src = backImage;
-                    } else if (frontCardImage) {
-                        // Use front card image mirrored
+                    }
+                    // Otherwise use the front card image as mirrored background
+                    else if (frontCardImage) {
                         backImgElement.src = frontCardImage;
-                        backImgElement.style.transform = 'scaleX(-1)';
+                        backImgElement.style.transform = 'scaleX(-1)'; // Mirror the image
                     }
                 }
             } else {
-                // Standard back card with just the image
+                // Standard back card with just the image (matches updateBackCard function)
+                const imgElement = document.createElement('img');
+                imgElement.alt = 'Back Card Design';
+
+                // First check if user uploaded a custom back card image
                 if (backImage) {
-                    const imgElement = document.createElement('img');
                     imgElement.src = backImage;
-                    imgElement.alt = 'Back Card Design';
-                    backCardContent.appendChild(imgElement);
                 }
+                // Otherwise leave it empty (default back card)
+
+                backCardContent.appendChild(imgElement);
             }
 
             backCardDiv.appendChild(backCardContent);
