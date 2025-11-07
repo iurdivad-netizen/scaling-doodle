@@ -516,7 +516,6 @@ function generateEquipmentPreviewImmersive() {
 // Update back card based on layout and template
 function updateBackCard() {
     const layoutStyle = cardLayoutSelect.value;
-    const backCardPreviewImage = document.getElementById('backCardPreviewImage');
     const backCardContent = document.querySelector('.back-card-content');
 
     if (!backCardContent) return;
@@ -537,11 +536,18 @@ function updateBackCard() {
             </div>
         `;
 
-        // Apply mirrored image
+        // Apply back card image if available
         const newBackImage = document.getElementById('backCardPreviewImage');
-        if (newBackImage && previewImage.src) {
-            newBackImage.src = previewImage.src;
-            newBackImage.style.transform = 'scaleX(-1)'; // Mirror the image
+        if (newBackImage) {
+            // First check if user uploaded a custom back card image
+            if (window.backCardImageData) {
+                newBackImage.src = window.backCardImageData;
+            }
+            // Otherwise use the front card image as mirrored background
+            else if (previewImage.src) {
+                newBackImage.src = previewImage.src;
+                newBackImage.style.transform = 'scaleX(-1)'; // Mirror the image
+            }
         }
     } else {
         // Standard back card with just the image
@@ -549,11 +555,13 @@ function updateBackCard() {
             <img id="backCardPreviewImage" src="" alt="Back Card Design">
         `;
 
-        if (backCardPreviewImage && previewImage.src) {
-            const newBackImage = document.getElementById('backCardPreviewImage');
-            if (newBackImage) {
-                newBackImage.src = previewImage.src;
+        const newBackImage = document.getElementById('backCardPreviewImage');
+        if (newBackImage) {
+            // First check if user uploaded a custom back card image
+            if (window.backCardImageData) {
+                newBackImage.src = window.backCardImageData;
             }
+            // Otherwise leave it empty (default back card)
         }
     }
 }
@@ -610,6 +618,9 @@ function attachEventListeners() {
                     if (useImageAsBackground && useImageAsBackground.checked) {
                         document.documentElement.style.setProperty('--card-background-image', `url('${event.target.result}')`);
                     }
+
+                    // Update back card to reflect new front card image
+                    updateBackCard();
                 }
             };
             reader.readAsDataURL(file);
@@ -668,6 +679,9 @@ function attachEventListeners() {
                     if (useImageAsBackground && useImageAsBackground.checked) {
                         document.documentElement.style.setProperty('--card-background-image', `url('${url}')`);
                     }
+
+                    // Update back card to reflect new front card image
+                    updateBackCard();
                 };
             }
         } else {
