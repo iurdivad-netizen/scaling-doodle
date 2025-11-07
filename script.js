@@ -1029,7 +1029,7 @@ function showPrintPreview() {
                 // Create back card with rich content (similar to updateBackCard for immersive)
                 const backCardHTML = `
                     <div class="back-card-background">
-                        <img src="${backImage || frontCardImage}" alt="Back Card Design" style="${!backImage && frontCardImage ? 'transform: scaleX(-1);' : ''}">
+                        <img class="back-card-print-image" alt="Back Card Design">
                     </div>
                     <div class="back-card-overlay">
                         ${additionalStats ? '<div class="back-additional-stats"><h3>Additional Stats</h3><p>' + additionalStats + '</p></div>' : ''}
@@ -1037,6 +1037,19 @@ function showPrintPreview() {
                     </div>
                 `;
                 backCardContent.innerHTML = backCardHTML;
+
+                // Apply the image and mirroring after DOM creation
+                const backImgElement = backCardContent.querySelector('.back-card-print-image');
+                if (backImgElement) {
+                    if (backImage) {
+                        // Use custom back card image (no mirroring)
+                        backImgElement.src = backImage;
+                    } else if (frontCardImage) {
+                        // Use front card image mirrored
+                        backImgElement.src = frontCardImage;
+                        backImgElement.style.transform = 'scaleX(-1)';
+                    }
+                }
             } else {
                 // Standard back card with just the image
                 if (backImage) {
