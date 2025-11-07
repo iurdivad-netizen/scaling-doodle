@@ -800,7 +800,16 @@ function applyTheme(theme) {
 
     // Apply image as background setting
     const card = document.getElementById('cardPreview');
+    const cardImageSection = card.querySelector('.card-image');
+
     if (theme.useImageAsBackground) {
+        // Lock the current height before applying background mode
+        if (cardImageSection) {
+            const currentHeight = cardImageSection.offsetHeight;
+            cardImageSection.style.height = currentHeight + 'px';
+            cardImageSection.style.minHeight = currentHeight + 'px';
+        }
+
         card.classList.add('image-as-background');
         // Set the background image from the current card image
         const cardImage = document.getElementById('previewImage');
@@ -808,6 +817,12 @@ function applyTheme(theme) {
             root.style.setProperty('--card-background-image', `url('${cardImage.src}')`);
         }
     } else {
+        // Remove inline height styles when disabling background mode
+        if (cardImageSection) {
+            cardImageSection.style.height = '';
+            cardImageSection.style.minHeight = '';
+        }
+
         card.classList.remove('image-as-background');
         root.style.setProperty('--card-background-image', 'none');
     }
