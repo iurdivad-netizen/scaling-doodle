@@ -1004,7 +1004,7 @@ header p {
     min-height: var(--card-image-height);
     flex-shrink: 0;
     background: none;
-    border-bottom: none;
+    border-bottom: 2px solid transparent;
 }
 
 .card.image-as-background .card-image img {

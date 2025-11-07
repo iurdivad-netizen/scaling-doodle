@@ -556,7 +556,14 @@ function captureCardState() {
         template: currentTemplate,
         html: cardPreview.innerHTML,
         timestamp: Date.now(),
-        name: document.getElementById('cardName').value || 'Unnamed Card'
+        name: document.getElementById('cardName').value || 'Unnamed Card',
+        hasBackgroundImage: cardPreview.classList.contains('image-as-background'),
+        backgroundImage: cardPreview.classList.contains('image-as-background')
+            ? getComputedStyle(document.documentElement).getPropertyValue('--card-background-image')
+            : null,
+        contentOpacity: cardPreview.classList.contains('image-as-background')
+            ? getComputedStyle(document.documentElement).getPropertyValue('--content-opacity')
+            : null
     };
     return cardData;
 }
@@ -596,6 +603,14 @@ function showDeckModal() {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
             cardDiv.innerHTML = cardData.html;
+
+            // Apply background image styling if it was saved
+            if (cardData.hasBackgroundImage && cardData.backgroundImage) {
+                cardDiv.classList.add('image-as-background');
+                cardDiv.style.setProperty('--card-background-image', cardData.backgroundImage);
+                cardDiv.style.setProperty('--content-opacity', cardData.contentOpacity || '0.3');
+                cardDiv.style.background = 'none';
+            }
 
             cardContainer.appendChild(removeBtn);
             cardContainer.appendChild(cardDiv);
@@ -716,6 +731,14 @@ function showPrintPreview() {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
             cardDiv.innerHTML = deck[i].html;
+
+            // Apply background image styling if it was saved
+            if (deck[i].hasBackgroundImage && deck[i].backgroundImage) {
+                cardDiv.classList.add('image-as-background');
+                cardDiv.style.setProperty('--card-background-image', deck[i].backgroundImage);
+                cardDiv.style.setProperty('--content-opacity', deck[i].contentOpacity || '0.3');
+                cardDiv.style.background = 'none';
+            }
 
             printCard.appendChild(cardDiv);
             printPage.appendChild(printCard);
