@@ -96,10 +96,14 @@ const closeDeckModal = document.getElementById('closeDeckModal');
 const deckGrid = document.getElementById('deckGrid');
 const clearDeckBtn = document.getElementById('clearDeckBtn');
 const exportDeckBtn = document.getElementById('exportDeckBtn');
+const saveDeckFileBtn = document.getElementById('saveDeckFileBtn');
+const loadDeckFileBtn = document.getElementById('loadDeckFileBtn');
+const loadDeckFileInput = document.getElementById('loadDeckFileInput');
 const printModal = document.getElementById('printModal');
 const closePrintModal = document.getElementById('closePrintModal');
 const printContent = document.getElementById('printContent');
 const printBtn = document.getElementById('printBtn');
+const autoSaveNotification = document.getElementById('autoSaveNotification');
 
 // Current template and deck
 let currentTemplate = 'creature';
@@ -907,6 +911,9 @@ function attachEventListeners() {
     printPreviewBtn.addEventListener('click', showPrintPreview);
     clearDeckBtn.addEventListener('click', clearDeck);
     exportDeckBtn.addEventListener('click', exportAllCards);
+    saveDeckFileBtn.addEventListener('click', saveDeckToFile);
+    loadDeckFileBtn.addEventListener('click', () => loadDeckFileInput.click());
+    loadDeckFileInput.addEventListener('change', loadDeckFromFile);
     closeDeckModal.addEventListener('click', () => deckModal.classList.remove('active'));
     closePrintModal.addEventListener('click', () => printModal.classList.remove('active'));
     printBtn.addEventListener('click', () => window.print());
@@ -941,6 +948,21 @@ function loadDeck() {
 // Save deck to localStorage
 function saveDeck() {
     localStorage.setItem('cardDeck', JSON.stringify(deck));
+
+    // Show auto-save notification
+    showAutoSaveNotification();
+}
+
+// Show auto-save notification
+function showAutoSaveNotification() {
+    if (!autoSaveNotification) return;
+
+    autoSaveNotification.classList.add('show');
+
+    // Hide after 2 seconds
+    setTimeout(() => {
+        autoSaveNotification.classList.remove('show');
+    }, 2000);
 }
 
 // Update deck counter
@@ -1164,6 +1186,90 @@ function clearDeck() {
         updateDeckCounter();
         showDeckModal(); // Refresh the modal
     }
+}
+
+// Save deck to JSON file
+function saveDeckToFile() {
+    if (deck.length === 0) {
+        alert('No cards in deck to save.');
+        return;
+    }
+
+    const dataStr = JSON.stringify(deck, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `dnd-card-deck-${Date.now()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    // Visual feedback
+    const originalText = saveDeckFileBtn.textContent;
+    saveDeckFileBtn.textContent = 'Saved!';
+    saveDeckFileBtn.style.background = '#218838';
+    setTimeout(() => {
+        saveDeckFileBtn.textContent = originalText;
+        saveDeckFileBtn.style.background = '';
+    }, 2000);
+}
+
+// Load deck from JSON file
+function loadDeckFromFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const loadedDeck = JSON.parse(e.target.result);
+
+            // Validate that it's an array
+            if (!Array.isArray(loadedDeck)) {
+                alert('Invalid deck file format.');
+                return;
+            }
+
+            // Ask user if they want to replace or append
+            let shouldReplace = true;
+            if (deck.length > 0) {
+                shouldReplace = confirm(
+                    `You have ${deck.length} card(s) in your current deck.\n\n` +
+                    `Click OK to REPLACE your current deck with ${loadedDeck.length} card(s) from the file.\n` +
+                    `Click Cancel to ADD the ${loadedDeck.length} card(s) to your current deck.`
+                );
+            }
+
+            if (shouldReplace) {
+                deck = loadedDeck;
+            } else {
+                deck = deck.concat(loadedDeck);
+            }
+
+            saveDeck();
+            updateDeckCounter();
+            showDeckModal(); // Refresh the modal
+
+            // Visual feedback
+            const originalText = loadDeckFileBtn.textContent;
+            loadDeckFileBtn.textContent = 'Loaded!';
+            loadDeckFileBtn.style.background = '#218838';
+            setTimeout(() => {
+                loadDeckFileBtn.textContent = originalText;
+                loadDeckFileBtn.style.background = '';
+            }, 2000);
+
+        } catch (error) {
+            alert('Error loading deck file. Please make sure it is a valid JSON file.');
+            console.error('Error loading deck:', error);
+        }
+    };
+    reader.readAsText(file);
+
+    // Reset the input so the same file can be loaded again if needed
+    event.target.value = '';
 }
 
 // Export all cards

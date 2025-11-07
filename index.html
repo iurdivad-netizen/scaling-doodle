@@ -464,8 +464,11 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
             <div id="deckGrid" class="deck-grid"></div>
             <div class="modal-actions">
                 <button id="clearDeckBtn" class="btn-secondary">Clear Deck</button>
+                <button id="saveDeckFileBtn" class="btn-primary">Save Deck to File</button>
+                <button id="loadDeckFileBtn" class="btn-primary">Load Deck from File</button>
                 <button id="exportDeckBtn" class="btn-primary">Export All Cards</button>
             </div>
+            <input type="file" id="loadDeckFileInput" accept=".json" style="display: none;">
         </div>
     </div>
 
@@ -482,6 +485,9 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
             </div>
         </div>
     </div>
+
+    <!-- Auto-save notification -->
+    <div id="autoSaveNotification" class="auto-save-notification">Deck auto-saved</div>
 
     <!-- html2canvas library for PNG export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
