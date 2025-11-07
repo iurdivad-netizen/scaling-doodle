@@ -1002,7 +1002,7 @@ function showPrintPreview() {
             printCard.className = 'print-card';
 
             const backCardDiv = document.createElement('div');
-            backCardDiv.className = 'card back-card';
+            backCardDiv.className = 'card card-back';
 
             // Get back card image and background color for this card
             const backImage = deck[i].backCardImage || '';
@@ -1011,32 +1011,20 @@ function showPrintPreview() {
             // Apply background color
             backCardDiv.style.backgroundColor = backBgColor;
 
+            // Create back card content container
+            const backCardContent = document.createElement('div');
+            backCardContent.className = 'back-card-content';
+
             // If there's a back card image, display it
             if (backImage) {
-                const backCardContent = document.createElement('div');
-                backCardContent.className = 'back-card-content';
-                backCardContent.style.cssText = `
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 100%;
-                    height: 100%;
-                    padding: 20px;
-                    box-sizing: border-box;
-                `;
-
                 const imgElement = document.createElement('img');
                 imgElement.src = backImage;
-                imgElement.style.cssText = `
-                    max-width: 100%;
-                    max-height: 100%;
-                    object-fit: contain;
-                `;
+                imgElement.alt = 'Back Card Design';
 
                 backCardContent.appendChild(imgElement);
-                backCardDiv.appendChild(backCardContent);
             }
 
+            backCardDiv.appendChild(backCardContent);
             printCard.appendChild(backCardDiv);
             printPage.appendChild(printCard);
         }
