@@ -856,14 +856,22 @@ header p {
         margin: 0;
     }
 
-    /* Hide all non-print elements */
+    /* Hide everything except the print content */
+    body > *:not(#printModal) {
+        display: none !important;
+    }
+
+    .container,
+    header,
+    .main-content,
     .modal-header,
     .modal-actions {
         display: none !important;
     }
 
-    /* Ensure modal doesn't interfere with print layout */
-    .modal {
+    /* Show only the print modal and its content */
+    #printModal {
+        display: block !important;
         position: static !important;
         width: 100% !important;
         height: 100% !important;
@@ -889,6 +897,10 @@ header p {
         background: white !important;
         padding: 0 !important;
         margin: 0 !important;
+    }
+
+    #printContent {
+        display: block !important;
     }
 
     .print-page {
