@@ -802,7 +802,9 @@ function captureCardState() {
             : null,
         contentOpacity: cardPreview.classList.contains('image-as-background')
             ? getComputedStyle(document.documentElement).getPropertyValue('--content-opacity')
-            : null
+            : null,
+        backCardImage: window.backCardImageData || '',
+        backCardBgColor: document.getElementById('backCardBgColor').value || '#2c3e50'
     };
     return cardData;
 }
@@ -956,6 +958,7 @@ function showPrintPreview() {
     const cardsPerPage = 9; // 3x3 grid
     const totalPages = Math.ceil(deck.length / cardsPerPage);
 
+    // Generate front pages
     for (let page = 0; page < totalPages; page++) {
         const printPage = document.createElement('div');
         printPage.className = 'print-page';
@@ -980,6 +983,61 @@ function showPrintPreview() {
             }
 
             printCard.appendChild(cardDiv);
+            printPage.appendChild(printCard);
+        }
+
+        printContent.appendChild(printPage);
+    }
+
+    // Generate back pages with matching placement
+    for (let page = 0; page < totalPages; page++) {
+        const printPage = document.createElement('div');
+        printPage.className = 'print-page';
+
+        const startIdx = page * cardsPerPage;
+        const endIdx = Math.min(startIdx + cardsPerPage, deck.length);
+
+        for (let i = startIdx; i < endIdx; i++) {
+            const printCard = document.createElement('div');
+            printCard.className = 'print-card';
+
+            const backCardDiv = document.createElement('div');
+            backCardDiv.className = 'card back-card';
+
+            // Get back card image and background color for this card
+            const backImage = deck[i].backCardImage || '';
+            const backBgColor = deck[i].backCardBgColor || '#2c3e50';
+
+            // Apply background color
+            backCardDiv.style.backgroundColor = backBgColor;
+
+            // If there's a back card image, display it
+            if (backImage) {
+                const backCardContent = document.createElement('div');
+                backCardContent.className = 'back-card-content';
+                backCardContent.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+                    height: 100%;
+                    padding: 20px;
+                    box-sizing: border-box;
+                `;
+
+                const imgElement = document.createElement('img');
+                imgElement.src = backImage;
+                imgElement.style.cssText = `
+                    max-width: 100%;
+                    max-height: 100%;
+                    object-fit: contain;
+                `;
+
+                backCardContent.appendChild(imgElement);
+                backCardDiv.appendChild(backCardContent);
+            }
+
+            printCard.appendChild(backCardDiv);
             printPage.appendChild(printCard);
         }
 
