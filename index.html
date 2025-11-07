@@ -14,6 +14,99 @@
         </header>
 
         <div class="main-content">
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <h2>Card Preview</h2>
+                <div class="cards-display">
+                    <div id="cardPreview" class="card card-front">
+                    <div class="card-image">
+                        <img id="previewImage" src="" alt="Card Image">
+                        <div class="card-name-overlay">
+                            <h2 id="previewName">Ancient Red Dragon</h2>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-type">
+                            <span id="previewType">Gargantuan Dragon</span>
+                            <span class="separator">•</span>
+                            <span id="previewSubtype">Chaotic Evil</span>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="card-stats">
+                            <div class="stat-row">
+                                <strong>Armor Class:</strong> <span id="previewAC">22</span>
+                            </div>
+                            <div class="stat-row">
+                                <strong>Hit Points:</strong> <span id="previewHP">546 (28d20 + 252)</span>
+                            </div>
+                            <div class="stat-row">
+                                <strong>Speed:</strong> <span id="previewSpeed">40 ft., climb 40 ft., fly 80 ft.</span>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="ability-scores-display">
+                            <div class="ability-score">
+                                <div class="ability-name">STR</div>
+                                <div class="ability-value" id="previewStr">30 (+10)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">DEX</div>
+                                <div class="ability-value" id="previewDex">10 (+0)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">CON</div>
+                                <div class="ability-value" id="previewCon">29 (+9)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">INT</div>
+                                <div class="ability-value" id="previewInt">18 (+4)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">WIS</div>
+                                <div class="ability-value" id="previewWis">15 (+2)</div>
+                            </div>
+                            <div class="ability-score">
+                                <div class="ability-name">CHA</div>
+                                <div class="ability-value" id="previewCha">23 (+6)</div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="additional-stats">
+                            <p id="previewAdditionalStats">Saving Throws: Dex +7, Con +16, Wis +9, Cha +13
+Skills: Perception +16, Stealth +7
+Damage Immunities: Fire
+Senses: Blindsight 60 ft., Darkvision 120 ft.
+Languages: Common, Draconic
+Challenge: 24 (62,000 XP)</p>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="abilities-section">
+                            <p id="previewAbilities">Legendary Resistance (3/Day): If the dragon fails a saving throw, it can choose to succeed instead.
+
+Fire Aura: At the start of each of the dragon's turns, each creature within 10 feet of it takes 14 (4d6) fire damage.
+
+Multiattack: The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back Card -->
+                <div class="card card-back">
+                    <div class="back-card-content">
+                        <img id="backCardPreviewImage" src="" alt="Back Card Design">
+                    </div>
+                </div>
+            </div>
+            </div>
+
             <!-- Editor Panel -->
             <div class="editor-panel">
                 <h2>Card Editor</h2>
@@ -349,99 +442,6 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
 
                     </div>
                 </div>
-            </div>
-
-            <!-- Preview Panel -->
-            <div class="preview-panel">
-                <h2>Card Preview</h2>
-                <div class="cards-display">
-                    <div id="cardPreview" class="card card-front">
-                    <div class="card-image">
-                        <img id="previewImage" src="" alt="Card Image">
-                        <div class="card-name-overlay">
-                            <h2 id="previewName">Ancient Red Dragon</h2>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="card-type">
-                            <span id="previewType">Gargantuan Dragon</span>
-                            <span class="separator">•</span>
-                            <span id="previewSubtype">Chaotic Evil</span>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="card-stats">
-                            <div class="stat-row">
-                                <strong>Armor Class:</strong> <span id="previewAC">22</span>
-                            </div>
-                            <div class="stat-row">
-                                <strong>Hit Points:</strong> <span id="previewHP">546 (28d20 + 252)</span>
-                            </div>
-                            <div class="stat-row">
-                                <strong>Speed:</strong> <span id="previewSpeed">40 ft., climb 40 ft., fly 80 ft.</span>
-                            </div>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="ability-scores-display">
-                            <div class="ability-score">
-                                <div class="ability-name">STR</div>
-                                <div class="ability-value" id="previewStr">30 (+10)</div>
-                            </div>
-                            <div class="ability-score">
-                                <div class="ability-name">DEX</div>
-                                <div class="ability-value" id="previewDex">10 (+0)</div>
-                            </div>
-                            <div class="ability-score">
-                                <div class="ability-name">CON</div>
-                                <div class="ability-value" id="previewCon">29 (+9)</div>
-                            </div>
-                            <div class="ability-score">
-                                <div class="ability-name">INT</div>
-                                <div class="ability-value" id="previewInt">18 (+4)</div>
-                            </div>
-                            <div class="ability-score">
-                                <div class="ability-name">WIS</div>
-                                <div class="ability-value" id="previewWis">15 (+2)</div>
-                            </div>
-                            <div class="ability-score">
-                                <div class="ability-name">CHA</div>
-                                <div class="ability-value" id="previewCha">23 (+6)</div>
-                            </div>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="additional-stats">
-                            <p id="previewAdditionalStats">Saving Throws: Dex +7, Con +16, Wis +9, Cha +13
-Skills: Perception +16, Stealth +7
-Damage Immunities: Fire
-Senses: Blindsight 60 ft., Darkvision 120 ft.
-Languages: Common, Draconic
-Challenge: 24 (62,000 XP)</p>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="abilities-section">
-                            <p id="previewAbilities">Legendary Resistance (3/Day): If the dragon fails a saving throw, it can choose to succeed instead.
-
-Fire Aura: At the start of each of the dragon's turns, each creature within 10 feet of it takes 14 (4d6) fire damage.
-
-Multiattack: The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Back Card -->
-                <div class="card card-back">
-                    <div class="back-card-content">
-                        <img id="backCardPreviewImage" src="" alt="Back Card Design">
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
     </div>
