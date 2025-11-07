@@ -1232,20 +1232,35 @@ function loadDeckFromFile(event) {
                 return;
             }
 
+            // Validate each card has required properties
+            const validatedDeck = loadedDeck.filter(card => {
+                return card && card.template && card.layout && card.html && card.name;
+            });
+
+            // Warn if some cards were invalid
+            if (validatedDeck.length < loadedDeck.length) {
+                alert(`Warning: ${loadedDeck.length - validatedDeck.length} invalid card(s) were skipped during import.`);
+            }
+
+            if (validatedDeck.length === 0) {
+                alert('No valid cards found in the deck file.');
+                return;
+            }
+
             // Ask user if they want to replace or append
             let shouldReplace = true;
             if (deck.length > 0) {
                 shouldReplace = confirm(
                     `You have ${deck.length} card(s) in your current deck.\n\n` +
-                    `Click OK to REPLACE your current deck with ${loadedDeck.length} card(s) from the file.\n` +
-                    `Click Cancel to ADD the ${loadedDeck.length} card(s) to your current deck.`
+                    `Click OK to REPLACE your current deck with ${validatedDeck.length} card(s) from the file.\n` +
+                    `Click Cancel to ADD the ${validatedDeck.length} card(s) to your current deck.`
                 );
             }
 
             if (shouldReplace) {
-                deck = loadedDeck;
+                deck = validatedDeck;
             } else {
-                deck = deck.concat(loadedDeck);
+                deck = deck.concat(validatedDeck);
             }
 
             saveDeck();
@@ -1297,6 +1312,14 @@ async function exportAllCards() {
             tempCard.style.position = 'absolute';
             tempCard.style.left = '-9999px';
             tempCard.innerHTML = cardData.html;
+
+            // Apply background image styling if it was saved (for immersive layout cards)
+            if (cardData.hasBackgroundImage && cardData.backgroundImage) {
+                tempCard.classList.add('image-as-background');
+                tempCard.style.setProperty('--card-background-image', cardData.backgroundImage);
+                tempCard.style.setProperty('--content-opacity', cardData.contentOpacity || '0.3');
+            }
+
             document.body.appendChild(tempCard);
 
             const canvas = await html2canvas(tempCard, {
@@ -1513,7 +1536,7 @@ function applyTheme(theme) {
 
     // Apply image as background setting
     const card = document.getElementById('cardPreview');
-    const cardImageSection = card.querySelector('.card-image');
+    const cardImageSection = card.querySelector('.card-image') || card.querySelector('.card-image-background');
 
     if (theme.useImageAsBackground) {
         // Lock the current height before applying background mode
