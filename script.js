@@ -1278,13 +1278,6 @@ function initCustomization() {
         }
     });
 
-    // Flip card button
-    document.getElementById('flipCardBtn').addEventListener('click', function() {
-        const cardContainer = document.querySelector('.card-container');
-        cardContainer.classList.toggle('flipped');
-        this.textContent = cardContainer.classList.contains('flipped') ? 'Show Front' : 'Show Back';
-    });
-
     // Theme management buttons
     document.getElementById('saveThemeBtn').addEventListener('click', saveTheme);
     document.getElementById('loadThemeBtn').addEventListener('click', loadTheme);
