@@ -190,6 +190,12 @@ function updatePreview() {
         }
     }
 
+    // Store whether background image was enabled before updating
+    const hadBackgroundImage = cardPreview.classList.contains('image-as-background');
+    const root = document.documentElement;
+    const savedBackgroundImage = hadBackgroundImage ? root.style.getPropertyValue('--card-background-image') : null;
+    const savedContentOpacity = hadBackgroundImage ? root.style.getPropertyValue('--content-opacity') : null;
+
     cardPreview.innerHTML = previewHTML;
 
     // Reattach image if present
@@ -197,6 +203,15 @@ function updatePreview() {
     if (newPreviewImage && previewImage.src) {
         newPreviewImage.src = previewImage.src;
         newPreviewImage.style.display = 'block';
+    }
+
+    // Restore background image styling if it was enabled
+    if (hadBackgroundImage && savedBackgroundImage) {
+        cardPreview.classList.add('image-as-background');
+        root.style.setProperty('--card-background-image', savedBackgroundImage);
+        if (savedContentOpacity) {
+            root.style.setProperty('--content-opacity', savedContentOpacity);
+        }
     }
 
     // Update back card for immersive layout
@@ -947,10 +962,27 @@ function loadDeck() {
 
 // Save deck to localStorage
 function saveDeck() {
-    localStorage.setItem('cardDeck', JSON.stringify(deck));
+    try {
+        localStorage.setItem('cardDeck', JSON.stringify(deck));
 
-    // Show auto-save notification
-    showAutoSaveNotification();
+        // Show auto-save notification
+        showAutoSaveNotification();
+    } catch (e) {
+        if (e.name === 'QuotaExceededError' || e.code === 22) {
+            alert('Deck is too large to save! Background images take up a lot of space. Try:\n\n' +
+                  '1. Exporting your deck to a file\n' +
+                  '2. Using smaller images\n' +
+                  '3. Using fewer cards with background images\n\n' +
+                  'The card was NOT saved to your deck.');
+
+            // Remove the last added card that caused the quota error
+            deck.pop();
+            updateDeckCounter();
+        } else {
+            alert('Failed to save deck: ' + e.message);
+            console.error('saveDeck error:', e);
+        }
+    }
 }
 
 // Show auto-save notification
