@@ -106,9 +106,16 @@ const printContent = document.getElementById('printContent');
 const printBtn = document.getElementById('printBtn');
 const autoSaveNotification = document.getElementById('autoSaveNotification');
 
+// Print alignment controls
+const alignLeftBtn = document.getElementById('alignLeft');
+const alignRightBtn = document.getElementById('alignRight');
+const resetAlignmentBtn = document.getElementById('resetAlignment');
+const alignmentValueSpan = document.getElementById('alignmentValue');
+
 // Current template and deck
 let currentTemplate = 'creature';
 let deck = [];
+let printAlignment = -2; // Default alignment in pixels
 
 // Initialize
 async function init() {
@@ -117,6 +124,7 @@ async function init() {
     attachEventListeners();
     await loadDeck();
     updateDeckCounter();
+    loadPrintAlignment();
 }
 
 // Load template and show/hide appropriate fields
@@ -969,6 +977,11 @@ function attachEventListeners() {
     closePrintModal.addEventListener('click', () => printModal.classList.remove('active'));
     printBtn.addEventListener('click', () => window.print());
 
+    // Print alignment controls
+    alignLeftBtn.addEventListener('click', adjustAlignmentLeft);
+    alignRightBtn.addEventListener('click', adjustAlignmentRight);
+    resetAlignmentBtn.addEventListener('click', resetPrintAlignment);
+
     // Close modals on outside click
     deckModal.addEventListener('click', (e) => {
         if (e.target === deckModal) {
@@ -1685,7 +1698,63 @@ function showPrintPreview() {
         printContent.appendChild(printPage);
     }
 
+    // Apply current alignment to all print cards
+    applyPrintAlignment();
+
     printModal.classList.add('active');
+}
+
+// Print Alignment Functions
+
+// Load saved alignment from localStorage
+function loadPrintAlignment() {
+    const saved = localStorage.getItem('printAlignment');
+    if (saved !== null) {
+        printAlignment = parseInt(saved);
+    }
+    updateAlignmentDisplay();
+}
+
+// Save alignment to localStorage
+function savePrintAlignment() {
+    localStorage.setItem('printAlignment', printAlignment.toString());
+}
+
+// Update alignment display
+function updateAlignmentDisplay() {
+    alignmentValueSpan.textContent = printAlignment + 'px';
+}
+
+// Apply alignment to all print cards
+function applyPrintAlignment() {
+    const allPrintCards = document.querySelectorAll('.print-card .card');
+    allPrintCards.forEach(card => {
+        card.style.marginLeft = printAlignment + 'px';
+    });
+}
+
+// Adjust alignment left (more negative)
+function adjustAlignmentLeft() {
+    printAlignment -= 1;
+    updateAlignmentDisplay();
+    applyPrintAlignment();
+    savePrintAlignment();
+}
+
+// Adjust alignment right (more positive)
+function adjustAlignmentRight() {
+    printAlignment += 1;
+    updateAlignmentDisplay();
+    applyPrintAlignment();
+    savePrintAlignment();
+}
+
+// Reset alignment to default
+function resetPrintAlignment() {
+    printAlignment = -2;
+    updateAlignmentDisplay();
+    applyPrintAlignment();
+    savePrintAlignment();
 }
 
 // Card Customization System
