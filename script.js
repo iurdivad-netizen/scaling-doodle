@@ -1727,10 +1727,9 @@ function updateAlignmentDisplay() {
 
 // Apply alignment to all print cards
 function applyPrintAlignment() {
-    const allPrintCards = document.querySelectorAll('.print-card .card');
-    allPrintCards.forEach(card => {
-        card.style.marginLeft = printAlignment + 'px';
-    });
+    // Set the CSS variable on the root element
+    // This applies to both preview and actual print output
+    document.documentElement.style.setProperty('--print-alignment', printAlignment + 'px');
 }
 
 // Adjust alignment left (more negative)
