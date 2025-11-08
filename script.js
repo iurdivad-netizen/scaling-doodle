@@ -1765,6 +1765,8 @@ const defaultTheme = {
     cardHeaderSize: 0.95,
     cardDescriptionSize: 0.9,
     cardStatLabelSize: 0.95,
+    cardAbilityNameSize: 0.85,
+    cardAbilityValueSize: 0.8,
     cardImageHeight: 240,
     sectionSpacing: 12,
     cardBgColor: '#f9f6f0',
@@ -1792,6 +1794,8 @@ function applyTheme(theme) {
     root.style.setProperty('--card-description-size', theme.cardDescriptionSize + 'em');
     root.style.setProperty('--card-stat-label-size', theme.cardStatLabelSize + 'em');
     root.style.setProperty('--card-stat-value-size', theme.cardStatLabelSize + 'em');
+    root.style.setProperty('--card-ability-name-size', theme.cardAbilityNameSize + 'em');
+    root.style.setProperty('--card-ability-value-size', theme.cardAbilityValueSize + 'em');
 
     root.style.setProperty('--card-image-height', theme.cardImageHeight + 'px');
     root.style.setProperty('--section-spacing', theme.sectionSpacing + 'px');
@@ -1850,6 +1854,12 @@ function updateCustomizationUI(theme) {
     document.getElementById('cardStatLabelSize').value = theme.cardStatLabelSize;
     document.getElementById('cardStatLabelSizeValue').textContent = theme.cardStatLabelSize;
 
+    document.getElementById('cardAbilityNameSize').value = theme.cardAbilityNameSize || 0.85;
+    document.getElementById('cardAbilityNameSizeValue').textContent = theme.cardAbilityNameSize || 0.85;
+
+    document.getElementById('cardAbilityValueSize').value = theme.cardAbilityValueSize || 0.8;
+    document.getElementById('cardAbilityValueSizeValue').textContent = theme.cardAbilityValueSize || 0.8;
+
     document.getElementById('cardImageHeight').value = theme.cardImageHeight;
     document.getElementById('cardImageHeightValue').textContent = theme.cardImageHeight;
 
@@ -1877,6 +1887,8 @@ function getCurrentTheme() {
         cardHeaderSize: parseFloat(document.getElementById('cardHeaderSize').value),
         cardDescriptionSize: parseFloat(document.getElementById('cardDescriptionSize').value),
         cardStatLabelSize: parseFloat(document.getElementById('cardStatLabelSize').value),
+        cardAbilityNameSize: parseFloat(document.getElementById('cardAbilityNameSize').value),
+        cardAbilityValueSize: parseFloat(document.getElementById('cardAbilityValueSize').value),
         cardImageHeight: parseInt(document.getElementById('cardImageHeight').value),
         sectionSpacing: parseInt(document.getElementById('sectionSpacing').value),
         cardBgColor: document.getElementById('cardBgColor').value,
@@ -1997,7 +2009,9 @@ function initCustomization() {
         { id: 'cardNameSize', valueId: 'cardNameSizeValue' },
         { id: 'cardHeaderSize', valueId: 'cardHeaderSizeValue' },
         { id: 'cardDescriptionSize', valueId: 'cardDescriptionSizeValue' },
-        { id: 'cardStatLabelSize', valueId: 'cardStatLabelSizeValue' }
+        { id: 'cardStatLabelSize', valueId: 'cardStatLabelSizeValue' },
+        { id: 'cardAbilityNameSize', valueId: 'cardAbilityNameSizeValue' },
+        { id: 'cardAbilityValueSize', valueId: 'cardAbilityValueSizeValue' }
     ];
 
     fontSizeInputs.forEach(input => {
