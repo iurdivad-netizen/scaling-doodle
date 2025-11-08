@@ -1794,8 +1794,8 @@ function applyTheme(theme) {
     root.style.setProperty('--card-description-size', theme.cardDescriptionSize + 'em');
     root.style.setProperty('--card-stat-label-size', theme.cardStatLabelSize + 'em');
     root.style.setProperty('--card-stat-value-size', theme.cardStatLabelSize + 'em');
-    root.style.setProperty('--card-ability-name-size', theme.cardAbilityNameSize + 'em');
-    root.style.setProperty('--card-ability-value-size', theme.cardAbilityValueSize + 'em');
+    root.style.setProperty('--card-ability-name-size', (theme.cardAbilityNameSize || 0.85) + 'em');
+    root.style.setProperty('--card-ability-value-size', (theme.cardAbilityValueSize || 0.8) + 'em');
 
     root.style.setProperty('--card-image-height', theme.cardImageHeight + 'px');
     root.style.setProperty('--section-spacing', theme.sectionSpacing + 'px');
