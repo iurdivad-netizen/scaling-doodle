@@ -871,6 +871,63 @@ header p {
     cursor: pointer;
 }
 
+/* Print Alignment Controls */
+.print-alignment-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.print-alignment-controls label {
+    font-weight: 600;
+    color: #333;
+    margin-right: 10px;
+}
+
+.alignment-btn {
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.2s ease, transform 0.1s ease;
+    min-width: 40px;
+}
+
+.alignment-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.alignment-btn:active {
+    transform: translateY(0);
+}
+
+.alignment-btn.reset {
+    background: #6c757d;
+    margin-left: 10px;
+}
+
+.alignment-btn.reset:hover {
+    background: #545b62;
+}
+
+#alignmentValue {
+    font-weight: bold;
+    color: #007bff;
+    min-width: 50px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
 /* Print Preview Styles */
 .print-preview {
     background: white;
@@ -930,7 +987,8 @@ header p {
     header,
     .main-content,
     .modal-header,
-    .modal-actions {
+    .modal-actions,
+    .print-alignment-controls {
         display: none !important;
     }
 
