@@ -2170,6 +2170,24 @@ function loadCharacterList() {
 
     console.log('Found', creatureCards.length, 'creature cards');
 
+    // Verify all cards have IDs and assign if missing
+    let needsRefresh = false;
+    creatureCards.forEach((card, index) => {
+        if (!card.id) {
+            console.warn('Card missing ID, assigning now:', card.formFields?.cardName);
+            cardIdCounter++;
+            card.id = 'card_' + cardIdCounter + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            needsRefresh = true;
+        }
+    });
+
+    if (needsRefresh) {
+        console.log('Some cards were missing IDs, saving deck...');
+        saveDeck();
+    }
+
+    console.log('All creature card IDs:', creatureCards.map(c => ({ name: c.formFields?.cardName, id: c.id })));
+
     if (creatureCards.length === 0) {
         characterList.innerHTML = '<p class="no-characters">No creature cards in deck. Add creature cards in the Card Builder tab.</p>';
         return;
@@ -2178,6 +2196,12 @@ function loadCharacterList() {
     characterList.innerHTML = '';
 
     creatureCards.forEach((card, index) => {
+        // Verify card has ID before proceeding
+        if (!card.id) {
+            console.error('Card still has no ID after assignment!', card);
+            return;
+        }
+
         const isInParty = adventureParty.some(p => p.cardId === card.id);
 
         const listItem = document.createElement('div');
@@ -2190,25 +2214,21 @@ function loadCharacterList() {
             </div>
         `;
 
-        // Capture card in closure properly by creating a new scope
-        const currentCard = card; // Create a reference in this iteration's scope
+        // Use the card directly from closure - no need to look it up
         const checkbox = listItem.querySelector('.char-checkbox');
         checkbox.addEventListener('change', function(e) {
             e.stopPropagation();
-            const cardId = this.getAttribute('data-card-id');
-            console.log('=== Checkbox changed ===');
-            console.log('Card from closure:', currentCard.formFields?.cardName, 'ID:', currentCard.id);
-            console.log('Card ID from attribute:', cardId);
-            console.log('IDs match:', currentCard.id === cardId);
 
-            // Use the card directly from the closure - we have access to it
-            // This is more reliable than searching through the deck
+            console.log('=== Checkbox changed ===');
+            console.log('Card:', card.formFields?.cardName, 'ID:', card.id);
+
+            // Use the card directly from the closure
             if (this.checked) {
                 console.log('Adding character to party...');
-                addCharacterToParty(currentCard);
+                addCharacterToParty(card);
             } else {
                 console.log('Removing character from party...');
-                removeCharacterFromParty(cardId);
+                removeCharacterFromParty(card.id);
             }
         });
 
