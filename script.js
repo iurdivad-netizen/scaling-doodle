@@ -2576,17 +2576,33 @@ async function loadAdventure(fileData) {
         // Ensure all cards in deck have IDs before matching
         await ensureAllCardsHaveIDs();
 
+        console.log('Loading adventure with', saveData.party.length, 'saved characters');
+        console.log('Current deck has', deck.length, 'cards');
+        console.log('Deck IDs:', deck.map(c => ({ name: c.formFields?.cardName, id: c.id })));
+        console.log('Saved party IDs:', saveData.party.map(p => ({ name: p.cardName, id: p.cardId })));
+
         // Clear current party
         adventureParty = [];
 
         // Restore party members
         saveData.party.forEach(savedMember => {
-            // Find the card in the deck by ID
-            const card = deck.find(c => c.id === savedMember.cardId);
+            // Try to find the card in the deck by ID first
+            let card = deck.find(c => c.id === savedMember.cardId);
+
+            // If not found by ID, try to match by name (fallback for when IDs change)
+            if (!card && savedMember.cardName) {
+                card = deck.find(c =>
+                    c.formFields?.cardName === savedMember.cardName &&
+                    c.template === 'creature'
+                );
+                if (card) {
+                    console.log(`Matched card by name: ${savedMember.cardName} (old ID: ${savedMember.cardId}, new ID: ${card.id})`);
+                }
+            }
 
             if (card) {
                 adventureParty.push({
-                    cardId: savedMember.cardId,
+                    cardId: card.id, // Use the current card's ID, not the saved one
                     card: card,
                     currentHP: savedMember.currentHP,
                     maxHP: savedMember.maxHP,
