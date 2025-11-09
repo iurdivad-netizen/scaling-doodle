@@ -2184,9 +2184,18 @@ function loadCharacterList() {
 
 // Add character to adventure party
 function addCharacterToParty(card) {
+    console.log('addCharacterToParty called with card:', card);
+
     // Check if already in party
     if (adventureParty.some(p => p.cardId === card.id)) {
-        console.log('Character already in party:', card.formFields.cardName);
+        console.log('Character already in party:', card.formFields?.cardName || card.name);
+        return;
+    }
+
+    // Verify card has necessary fields
+    if (!card.formFields) {
+        console.error('Card missing formFields:', card);
+        alert('Error: Card data is corrupted. Please try refreshing the character list.');
         return;
     }
 
@@ -2196,15 +2205,18 @@ function addCharacterToParty(card) {
     const maxHP = hpMatch ? parseInt(hpMatch[1]) : 0;
 
     // Add to party with initial state
-    adventureParty.push({
+    const partyMember = {
         cardId: card.id,
         card: card,
         currentHP: maxHP,
         maxHP: maxHP,
         notes: ''
-    });
+    };
+
+    adventureParty.push(partyMember);
 
     console.log('Added character to party:', card.formFields.cardName, 'Total party members:', adventureParty.length);
+    console.log('Adventure party state:', adventureParty);
 
     // Update the checkbox visual state
     const checkbox = document.querySelector(`.char-checkbox[data-card-id="${card.id}"]`);
@@ -2234,7 +2246,13 @@ function removeCharacterFromParty(cardId) {
 
 // Update adventure party display
 function updateAdventurePartyDisplay() {
+    console.log('updateAdventurePartyDisplay called, party size:', adventureParty.length);
     const container = document.getElementById('adventurePartyContainer');
+
+    if (!container) {
+        console.error('Adventure party container not found!');
+        return;
+    }
 
     if (adventureParty.length === 0) {
         container.innerHTML = '<p class="no-characters">No characters selected for this adventure. Select characters from the list on the right.</p>';
@@ -2244,7 +2262,14 @@ function updateAdventurePartyDisplay() {
     container.innerHTML = '';
 
     adventureParty.forEach((member, index) => {
+        console.log('Rendering party member:', index, member);
         const card = member.card;
+
+        if (!card || !card.formFields) {
+            console.error('Invalid party member card data:', member);
+            return;
+        }
+
         const charCard = document.createElement('div');
         charCard.className = 'party-character-card';
         charCard.innerHTML = `
@@ -2307,6 +2332,8 @@ function updateAdventurePartyDisplay() {
 
         container.appendChild(charCard);
     });
+
+    console.log('Rendered', adventureParty.length, 'party character cards');
 
     // Add event listeners after rendering
     attachPartyEventListeners();
