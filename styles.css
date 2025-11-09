@@ -1706,7 +1706,7 @@ header p {
 }
 
 .immersive-abilities .ability-name {
-    font-size: 0.75em;
+    font-size: var(--card-ability-name-size);
     font-weight: bold;
     color: #ffd700;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
@@ -1714,7 +1714,7 @@ header p {
 }
 
 .immersive-abilities .ability-value {
-    font-size: 1.1em;
+    font-size: var(--card-ability-value-size);
     font-weight: bold;
     color: #ffffff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
