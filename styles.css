@@ -2936,6 +2936,221 @@ header p {
     color: #721c24;
 }
 
+/* Combat Actions */
+.combat-actions {
+    margin-top: 15px;
+    border-top: 2px dashed #8b4513;
+    padding-top: 12px;
+}
+
+.combat-action-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.combat-action-header strong {
+    color: #8b4513;
+    font-size: 1.1em;
+}
+
+.toggle-actions-btn {
+    background: #8b4513;
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background 0.3s;
+}
+
+.toggle-actions-btn:hover {
+    background: #6d3610;
+}
+
+.combat-action-panel {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.attack-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.attack-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.attack-row label {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.attack-target-select,
+.attack-bonus-input,
+.damage-dice-input {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+}
+
+.attack-bonus-input,
+.damage-dice-input {
+    font-weight: bold;
+}
+
+.btn-roll-attack,
+.btn-roll-damage {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-roll-attack {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+}
+
+.btn-roll-attack:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #2472a4 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-roll-damage {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.btn-roll-damage:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Combat Log */
+.combat-log-panel {
+    background: white;
+    border: 3px solid #8b4513;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.combat-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.combat-log-header h3 {
+    color: #8b4513;
+    font-size: 1.5em;
+    margin: 0;
+    border-bottom: 2px solid #8b4513;
+    padding-bottom: 10px;
+    flex: 1;
+}
+
+.btn-secondary-small {
+    background: #95a5a6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-secondary-small:hover {
+    background: #7f8c8d;
+}
+
+.combat-log {
+    background: #f9f6f0;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+}
+
+.no-log {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+    font-style: italic;
+}
+
+.combat-log-entry {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border-left: 4px solid #ddd;
+    background: white;
+    line-height: 1.6;
+}
+
+.log-time {
+    color: #888;
+    font-size: 0.85em;
+    margin-right: 8px;
+}
+
+.log-message {
+    color: #333;
+}
+
+.combat-log-entry.combat-log-info {
+    border-left-color: #3498db;
+    background: #ebf5fb;
+}
+
+.combat-log-entry.combat-log-hit {
+    border-left-color: #2ecc71;
+    background: #eafaf1;
+}
+
+.combat-log-entry.combat-log-miss {
+    border-left-color: #95a5a6;
+    background: #f4f6f7;
+}
+
+.combat-log-entry.combat-log-damage {
+    border-left-color: #e67e22;
+    background: #fef5e7;
+}
+
+.combat-log-entry.combat-log-critical {
+    border-left-color: #e74c3c;
+    background: #fadbd8;
+    font-weight: bold;
+}
+
 /* Add Enemy Modal */
 .enemy-selection-content {
     display: grid;
