@@ -2160,17 +2160,22 @@ function loadCharacterList() {
             </div>
         `;
 
+        // Capture card in closure properly by creating a new scope
+        const currentCard = card; // Create a reference in this iteration's scope
         const checkbox = listItem.querySelector('.char-checkbox');
         checkbox.addEventListener('change', function(e) {
             e.stopPropagation();
             const cardId = this.getAttribute('data-card-id');
-            console.log('Checkbox changed for card:', card.formFields?.cardName, 'ID:', cardId);
+            console.log('=== Checkbox changed ===');
+            console.log('Card from closure:', currentCard.formFields?.cardName, 'ID:', currentCard.id);
+            console.log('Card ID from attribute:', cardId);
+            console.log('IDs match:', currentCard.id === cardId);
 
             // Use the card directly from the closure - we have access to it
             // This is more reliable than searching through the deck
             if (this.checked) {
                 console.log('Adding character to party...');
-                addCharacterToParty(card);
+                addCharacterToParty(currentCard);
             } else {
                 console.log('Removing character from party...');
                 removeCharacterFromParty(cardId);
@@ -2183,7 +2188,10 @@ function loadCharacterList() {
 
 // Add character to adventure party
 function addCharacterToParty(card) {
-    console.log('addCharacterToParty called with card:', card);
+    console.log('=== addCharacterToParty called ===');
+    console.log('Card:', card.formFields?.cardName, 'ID:', card.id);
+    console.log('Current party size:', adventureParty.length);
+    console.log('Current party IDs:', adventureParty.map(p => ({ name: p.card.formFields.cardName, id: p.cardId })));
 
     // Check if already in party
     if (adventureParty.some(p => p.cardId === card.id)) {
@@ -2214,8 +2222,9 @@ function addCharacterToParty(card) {
 
     adventureParty.push(partyMember);
 
-    console.log('Added character to party:', card.formFields.cardName, 'Total party members:', adventureParty.length);
-    console.log('Adventure party state:', adventureParty);
+    console.log('Successfully added:', card.formFields.cardName);
+    console.log('New party size:', adventureParty.length);
+    console.log('Full adventure party:', adventureParty);
 
     // Update the checkbox visual state
     const checkbox = document.querySelector(`.char-checkbox[data-card-id="${card.id}"]`);
