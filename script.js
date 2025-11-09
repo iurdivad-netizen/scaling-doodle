@@ -2137,7 +2137,7 @@ function loadCharacterList() {
         const listItem = document.createElement('div');
         listItem.className = 'character-list-item' + (isInParty ? ' in-party' : '');
         listItem.innerHTML = `
-            <input type="checkbox" class="char-checkbox" ${isInParty ? 'checked' : ''} data-card-index="${index}">
+            <input type="checkbox" class="char-checkbox" ${isInParty ? 'checked' : ''} data-card-id="${card.id}">
             <div class="char-details">
                 <div class="char-name">${card.formFields.cardName || 'Unnamed Character'}</div>
                 <div class="char-info">AC: ${card.formFields.ac || '--'} | HP: ${card.formFields.hp || '--'}</div>
@@ -2147,10 +2147,18 @@ function loadCharacterList() {
         const checkbox = listItem.querySelector('.char-checkbox');
         checkbox.addEventListener('change', function(e) {
             e.stopPropagation();
+            const cardId = this.getAttribute('data-card-id');
+            const targetCard = deck.find(c => c.id === cardId);
+
+            if (!targetCard) {
+                console.error('Card not found:', cardId);
+                return;
+            }
+
             if (this.checked) {
-                addCharacterToParty(card);
+                addCharacterToParty(targetCard);
             } else {
-                removeCharacterFromParty(card.id);
+                removeCharacterFromParty(cardId);
             }
         });
 
@@ -2162,6 +2170,7 @@ function loadCharacterList() {
 function addCharacterToParty(card) {
     // Check if already in party
     if (adventureParty.some(p => p.cardId === card.id)) {
+        console.log('Character already in party:', card.formFields.cardName);
         return;
     }
 
@@ -2179,19 +2188,31 @@ function addCharacterToParty(card) {
         notes: ''
     });
 
-    console.log('Added character to party:', card.formFields.cardName);
+    console.log('Added character to party:', card.formFields.cardName, 'Total party members:', adventureParty.length);
+
+    // Update the checkbox visual state
+    const checkbox = document.querySelector(`.char-checkbox[data-card-id="${card.id}"]`);
+    if (checkbox) {
+        checkbox.closest('.character-list-item').classList.add('in-party');
+    }
+
     updateAdventurePartyDisplay();
-    loadCharacterList(); // Refresh list to show updated checkboxes
 }
 
 // Remove character from adventure party
 function removeCharacterFromParty(cardId) {
     const index = adventureParty.findIndex(p => p.cardId === cardId);
     if (index !== -1) {
-        console.log('Removed character from party:', adventureParty[index].card.formFields.cardName);
+        console.log('Removed character from party:', adventureParty[index].card.formFields.cardName, 'Remaining:', adventureParty.length - 1);
         adventureParty.splice(index, 1);
+
+        // Update the checkbox visual state
+        const checkbox = document.querySelector(`.char-checkbox[data-card-id="${cardId}"]`);
+        if (checkbox) {
+            checkbox.closest('.character-list-item').classList.remove('in-party');
+        }
+
         updateAdventurePartyDisplay();
-        loadCharacterList(); // Refresh list to show updated checkboxes
     }
 }
 
@@ -2470,7 +2491,18 @@ function loadAdventure(fileData) {
         });
 
         updateAdventurePartyDisplay();
-        loadCharacterList();
+
+        // Update checkbox states for loaded characters
+        document.querySelectorAll('.char-checkbox').forEach(checkbox => {
+            const cardId = checkbox.getAttribute('data-card-id');
+            const isInParty = adventureParty.some(p => p.cardId === cardId);
+            checkbox.checked = isInParty;
+            if (isInParty) {
+                checkbox.closest('.character-list-item').classList.add('in-party');
+            } else {
+                checkbox.closest('.character-list-item').classList.remove('in-party');
+            }
+        });
 
         const foundCount = adventureParty.length;
         const totalCount = saveData.party.length;
