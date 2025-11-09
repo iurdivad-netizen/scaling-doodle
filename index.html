@@ -478,99 +478,18 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
         <!-- Adventure Tracker Tab -->
         <div id="adventure-tracker-tab" class="tab-content">
             <div class="adventure-main-content">
-                <!-- Character Card Display -->
+                <!-- Adventure Party Display -->
                 <div class="adventure-card-panel">
-                    <h2>Active Character</h2>
-                    <div class="adventure-card-display">
-                        <div id="adventureCardPreview" class="adventure-card">
-                            <div class="adventure-card-header">
-                                <h2 id="adventureCharName">Select a character from your deck</h2>
-                                <div class="adventure-char-type" id="adventureCharType"></div>
-                            </div>
-
-                            <div class="adventure-stats-section">
-                                <div class="adventure-hp-tracker">
-                                    <h3>Hit Points</h3>
-                                    <div class="hp-display">
-                                        <div class="hp-current-container">
-                                            <label>Current HP</label>
-                                            <div class="hp-control">
-                                                <button class="hp-btn decrease" id="hpDecrease">−</button>
-                                                <input type="number" id="currentHP" value="0" class="hp-input">
-                                                <button class="hp-btn increase" id="hpIncrease">+</button>
-                                            </div>
-                                        </div>
-                                        <div class="hp-divider">/</div>
-                                        <div class="hp-max-container">
-                                            <label>Max HP</label>
-                                            <input type="number" id="maxHP" value="0" class="hp-input" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="hp-quick-controls">
-                                        <button class="quick-hp-btn" data-amount="-10">-10</button>
-                                        <button class="quick-hp-btn" data-amount="-5">-5</button>
-                                        <button class="quick-hp-btn" data-amount="-1">-1</button>
-                                        <button class="quick-hp-btn" data-amount="1">+1</button>
-                                        <button class="quick-hp-btn" data-amount="5">+5</button>
-                                        <button class="quick-hp-btn" data-amount="10">+10</button>
-                                    </div>
-                                    <div class="hp-bar-container">
-                                        <div class="hp-bar">
-                                            <div id="hpBarFill" class="hp-bar-fill" style="width: 100%"></div>
-                                        </div>
-                                        <div class="hp-percentage" id="hpPercentage">100%</div>
-                                    </div>
-                                    <button id="fullHealBtn" class="btn-primary full-heal-btn">Full Heal</button>
-                                </div>
-
-                                <div class="adventure-quick-stats">
-                                    <h3>Quick Stats</h3>
-                                    <div class="quick-stat-item">
-                                        <span class="stat-label">Armor Class:</span>
-                                        <span id="adventureAC" class="stat-value">--</span>
-                                    </div>
-                                    <div class="quick-stat-item">
-                                        <span class="stat-label">Speed:</span>
-                                        <span id="adventureSpeed" class="stat-value">--</span>
-                                    </div>
-                                </div>
-
-                                <div class="adventure-ability-scores">
-                                    <h3>Ability Scores</h3>
-                                    <div class="adventure-abilities-grid">
-                                        <div class="adventure-ability">
-                                            <div class="ability-name">STR</div>
-                                            <div class="ability-value" id="adventureStr">--</div>
-                                        </div>
-                                        <div class="adventure-ability">
-                                            <div class="ability-name">DEX</div>
-                                            <div class="ability-value" id="adventureDex">--</div>
-                                        </div>
-                                        <div class="adventure-ability">
-                                            <div class="ability-name">CON</div>
-                                            <div class="ability-value" id="adventureCon">--</div>
-                                        </div>
-                                        <div class="adventure-ability">
-                                            <div class="ability-name">INT</div>
-                                            <div class="ability-value" id="adventureInt">--</div>
-                                        </div>
-                                        <div class="adventure-ability">
-                                            <div class="ability-name">WIS</div>
-                                            <div class="ability-value" id="adventureWis">--</div>
-                                        </div>
-                                        <div class="adventure-ability">
-                                            <div class="ability-name">CHA</div>
-                                            <div class="ability-value" id="adventureCha">--</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="adventure-notes-section">
-                                <h3>Adventure Notes</h3>
-                                <textarea id="adventureNotes" rows="6" placeholder="Track conditions, buffs, debuffs, and other notes..."></textarea>
-                            </div>
+                    <div class="adventure-header">
+                        <h2>Adventure Party</h2>
+                        <div class="adventure-controls">
+                            <button id="saveAdventureBtn" class="btn-secondary">💾 Save Adventure</button>
+                            <button id="loadAdventureBtn" class="btn-secondary">📂 Load Adventure</button>
+                            <input type="file" id="loadAdventureFile" accept=".json" style="display: none;">
                         </div>
+                    </div>
+                    <div id="adventurePartyContainer" class="adventure-party-container">
+                        <p class="no-characters">No characters selected for this adventure. Select characters from the list on the right.</p>
                     </div>
                 </div>
 
@@ -578,7 +497,7 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                 <div class="character-selection-panel">
                     <div class="character-header">
                         <button id="refreshCharactersBtn" class="btn-refresh">↻</button>
-                        <h2>Select Character</h2>
+                        <h2>Available Characters</h2>
                     </div>
                     <div id="characterList" class="character-list">
                         <p class="no-characters">No characters in deck. Add characters in the Card Builder tab.</p>
