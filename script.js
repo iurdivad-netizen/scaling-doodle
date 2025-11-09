@@ -2079,8 +2079,204 @@ function initCustomization() {
     document.getElementById('resetThemeBtn').addEventListener('click', resetTheme);
 }
 
+// ===== Tab Switching Functionality =====
+function initTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+
+            // Remove active class from all buttons and tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+            // Add active class to clicked button and corresponding tab
+            this.classList.add('active');
+            document.getElementById(`${targetTab}-tab`).classList.add('active');
+
+            // If switching to adventure tracker, refresh character list
+            if (targetTab === 'adventure-tracker') {
+                loadCharacterList();
+            }
+        });
+    });
+}
+
+// ===== Adventure Tracker State =====
+let currentAdventureCharacter = null;
+let adventureState = {
+    currentHP: 0,
+    maxHP: 0,
+    notes: ''
+};
+
+// Load character list from deck
+function loadCharacterList() {
+    const characterList = document.getElementById('characterList');
+
+    if (!deck || deck.length === 0) {
+        characterList.innerHTML = '<p class="no-characters">No characters in deck. Add characters in the Card Builder tab.</p>';
+        return;
+    }
+
+    // Filter to only show creature cards (characters/monsters)
+    const creatureCards = deck.filter(card => card.template === 'creature');
+
+    if (creatureCards.length === 0) {
+        characterList.innerHTML = '<p class="no-characters">No creature cards in deck. Add creature cards in the Card Builder tab.</p>';
+        return;
+    }
+
+    characterList.innerHTML = '';
+
+    creatureCards.forEach((card, index) => {
+        const listItem = document.createElement('div');
+        listItem.className = 'character-list-item';
+        listItem.innerHTML = `
+            <div class="char-name">${card.formData.cardName || 'Unnamed Character'}</div>
+            <div class="char-info">AC: ${card.formData.ac || '--'} | HP: ${card.formData.hp || '--'}</div>
+        `;
+
+        listItem.addEventListener('click', function() {
+            // Remove active class from all items
+            document.querySelectorAll('.character-list-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            this.classList.add('active');
+
+            // Load character into adventure tracker
+            loadCharacterIntoAdventure(card);
+        });
+
+        characterList.appendChild(listItem);
+    });
+}
+
+// Load character into adventure tracker
+function loadCharacterIntoAdventure(card) {
+    currentAdventureCharacter = card;
+
+    // Update character info
+    document.getElementById('adventureCharName').textContent = card.formData.cardName || 'Unknown Character';
+    document.getElementById('adventureCharType').textContent =
+        `${card.formData.cardType || ''} ${card.formData.cardSubtype ? '• ' + card.formData.cardSubtype : ''}`.trim();
+
+    // Parse HP from the card (e.g., "546 (28d20 + 252)")
+    const hpText = card.formData.hp || '0';
+    const hpMatch = hpText.match(/^(\d+)/);
+    const maxHP = hpMatch ? parseInt(hpMatch[1]) : 0;
+
+    // Set HP values
+    adventureState.maxHP = maxHP;
+    adventureState.currentHP = maxHP;
+
+    document.getElementById('maxHP').value = maxHP;
+    document.getElementById('currentHP').value = maxHP;
+    updateHPBar();
+
+    // Update stats
+    document.getElementById('adventureAC').textContent = card.formData.ac || '--';
+    document.getElementById('adventureSpeed').textContent = card.formData.speed || '--';
+
+    // Update ability scores
+    document.getElementById('adventureStr').textContent = card.formData.str || '--';
+    document.getElementById('adventureDex').textContent = card.formData.dex || '--';
+    document.getElementById('adventureCon').textContent = card.formData.con || '--';
+    document.getElementById('adventureInt').textContent = card.formData.int || '--';
+    document.getElementById('adventureWis').textContent = card.formData.wis || '--';
+    document.getElementById('adventureCha').textContent = card.formData.cha || '--';
+
+    // Clear notes
+    document.getElementById('adventureNotes').value = '';
+    adventureState.notes = '';
+}
+
+// HP Tracking Functions
+function updateHPBar() {
+    const currentHP = adventureState.currentHP;
+    const maxHP = adventureState.maxHP;
+
+    if (maxHP === 0) {
+        document.getElementById('hpBarFill').style.width = '0%';
+        document.getElementById('hpPercentage').textContent = '0%';
+        return;
+    }
+
+    const percentage = Math.max(0, Math.min(100, (currentHP / maxHP) * 100));
+    const hpBarFill = document.getElementById('hpBarFill');
+
+    hpBarFill.style.width = percentage + '%';
+    document.getElementById('hpPercentage').textContent = Math.round(percentage) + '%';
+
+    // Update color based on HP percentage
+    if (percentage <= 25) {
+        hpBarFill.style.background = '#dc3545'; // Red
+    } else if (percentage <= 50) {
+        hpBarFill.style.background = '#ffc107'; // Yellow/Orange
+    } else {
+        hpBarFill.style.background = '#28a745'; // Green
+    }
+}
+
+function updateCurrentHP(amount) {
+    const currentHP = parseInt(document.getElementById('currentHP').value) || 0;
+    const newHP = Math.max(0, Math.min(adventureState.maxHP, currentHP + amount));
+
+    adventureState.currentHP = newHP;
+    document.getElementById('currentHP').value = newHP;
+    updateHPBar();
+}
+
+function initAdventureTracker() {
+    // HP increase/decrease buttons
+    document.getElementById('hpIncrease').addEventListener('click', function() {
+        updateCurrentHP(1);
+    });
+
+    document.getElementById('hpDecrease').addEventListener('click', function() {
+        updateCurrentHP(-1);
+    });
+
+    // Current HP input
+    document.getElementById('currentHP').addEventListener('input', function() {
+        let value = parseInt(this.value) || 0;
+        value = Math.max(0, Math.min(adventureState.maxHP, value));
+        adventureState.currentHP = value;
+        this.value = value;
+        updateHPBar();
+    });
+
+    // Quick HP buttons
+    document.querySelectorAll('.quick-hp-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const amount = parseInt(this.getAttribute('data-amount'));
+            updateCurrentHP(amount);
+        });
+    });
+
+    // Full heal button
+    document.getElementById('fullHealBtn').addEventListener('click', function() {
+        adventureState.currentHP = adventureState.maxHP;
+        document.getElementById('currentHP').value = adventureState.maxHP;
+        updateHPBar();
+    });
+
+    // Refresh character list button
+    document.getElementById('refreshCharactersBtn').addEventListener('click', loadCharacterList);
+
+    // Adventure notes
+    document.getElementById('adventureNotes').addEventListener('input', function() {
+        adventureState.notes = this.value;
+    });
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     init();
     initCustomization();
+    initTabs();
+    initAdventureTracker();
 });
