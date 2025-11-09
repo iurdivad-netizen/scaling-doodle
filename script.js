@@ -1116,6 +1116,21 @@ async function loadDeck() {
             deck = [];
         }
     }
+
+    // Ensure all cards have unique IDs (for backward compatibility)
+    let needsSave = false;
+    deck.forEach((card, index) => {
+        if (!card.id) {
+            card.id = 'card_' + Date.now() + '_' + index + '_' + Math.random().toString(36).substr(2, 9);
+            needsSave = true;
+            console.log('Assigned ID to existing card:', card.name, 'ID:', card.id);
+        }
+    });
+
+    // Save if we added IDs
+    if (needsSave) {
+        await saveDeck();
+    }
 }
 
 // Save deck to IndexedDB
@@ -1196,6 +1211,7 @@ function captureCardState() {
     };
 
     const cardData = {
+        id: 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9), // Generate unique ID
         template: currentTemplate,
         layout: cardLayoutSelect.value,
         html: cardPreview.innerHTML,
