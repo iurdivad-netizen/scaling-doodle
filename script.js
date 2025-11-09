@@ -2700,6 +2700,9 @@ function createCombatantCard(combatant, type) {
     const maxHP = combatant.maxHP;
     const initiative = combatant.initiative || 0;
 
+    // Create target options for attacks
+    const targetOptions = createTargetOptions(combatant.id || combatant.cardId, type);
+
     card.innerHTML = `
         <div class="combatant-header">
             <h4 class="combatant-name">${name}</h4>
@@ -2723,9 +2726,63 @@ function createCombatantCard(combatant, type) {
                 </div>
             </div>
         </div>
+        <div class="combat-actions">
+            <div class="combat-action-header">
+                <strong>⚔️ Combat Actions</strong>
+                <button class="toggle-actions-btn" data-id="${combatant.id || combatant.cardId}">▼</button>
+            </div>
+            <div class="combat-action-panel" style="display: none;">
+                <div class="attack-controls">
+                    <div class="attack-row">
+                        <label>Target:</label>
+                        <select class="attack-target-select" data-attacker-id="${combatant.id || combatant.cardId}" data-attacker-type="${type}" data-attacker-name="${name}">
+                            ${targetOptions}
+                        </select>
+                    </div>
+                    <div class="attack-row">
+                        <label>Attack Bonus:</label>
+                        <input type="number" class="attack-bonus-input" value="0" placeholder="+0">
+                    </div>
+                    <div class="attack-row">
+                        <button class="btn-roll-attack" data-attacker-id="${combatant.id || combatant.cardId}" data-attacker-type="${type}" data-attacker-name="${name}">🎲 Roll Attack</button>
+                    </div>
+                    <div class="attack-row">
+                        <label>Damage Dice:</label>
+                        <input type="text" class="damage-dice-input" value="1d8" placeholder="1d8+3">
+                    </div>
+                    <div class="attack-row">
+                        <button class="btn-roll-damage" data-attacker-id="${combatant.id || combatant.cardId}" data-attacker-type="${type}" data-attacker-name="${name}">💥 Roll Damage</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     `;
 
     return card;
+}
+
+function createTargetOptions(selfId, selfType) {
+    let options = '<option value="">Select Target...</option>';
+
+    // If this is a party member, add enemies as targets
+    if (selfType === 'party') {
+        combatState.enemies.forEach(enemy => {
+            if (enemy.currentHP > 0) {
+                options += `<option value="${enemy.id}|enemy|${enemy.name}|${enemy.ac}">${enemy.name} (AC ${enemy.ac})</option>`;
+            }
+        });
+    } else {
+        // If this is an enemy, add party members as targets
+        adventureParty.forEach(member => {
+            if (member.currentHP > 0) {
+                const ac = member.card.formFields.ac;
+                const name = member.card.formFields.cardName;
+                options += `<option value="${member.cardId}|party|${name}|${ac}">${name} (AC ${ac})</option>`;
+            }
+        });
+    }
+
+    return options;
 }
 
 function showAddEnemyModal() {
@@ -2876,6 +2933,9 @@ function startCombat() {
         return;
     }
 
+    // Clear previous combat log
+    clearCombatLog();
+
     // Roll initiative for everyone who doesn't have one
     adventureParty.forEach(member => {
         if (!member.initiative || member.initiative === 0) {
@@ -2898,10 +2958,175 @@ function startCombat() {
     updateCombatControls();
     loadPartyCombatants();
     loadEnemyCombatants();
+
+    // Log combat start
+    addCombatLog('⚔️ <strong>Combat has begun!</strong> Round 1 starts.', 'info');
 }
 
 function rollD20() {
     return Math.floor(Math.random() * 20) + 1;
+}
+
+// Comprehensive dice rolling functions
+function rollDie(sides) {
+    return Math.floor(Math.random() * sides) + 1;
+}
+
+function rollDice(count, sides) {
+    let total = 0;
+    const rolls = [];
+    for (let i = 0; i < count; i++) {
+        const roll = rollDie(sides);
+        rolls.push(roll);
+        total += roll;
+    }
+    return { total, rolls };
+}
+
+// Parse and roll dice notation (e.g., "2d6+3", "1d20", "3d8-2")
+function parseDiceNotation(notation) {
+    const match = notation.trim().match(/^(\d+)d(\d+)([+-]\d+)?$/i);
+    if (!match) {
+        return null;
+    }
+
+    const count = parseInt(match[1]);
+    const sides = parseInt(match[2]);
+    const modifier = match[3] ? parseInt(match[3]) : 0;
+
+    const diceResult = rollDice(count, sides);
+    const total = diceResult.total + modifier;
+
+    return {
+        count,
+        sides,
+        modifier,
+        rolls: diceResult.rolls,
+        total,
+        notation
+    };
+}
+
+// Combat log storage
+let combatLog = [];
+
+function addCombatLog(message, type = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    combatLog.push({
+        timestamp,
+        message,
+        type // 'info', 'hit', 'miss', 'damage', 'critical'
+    });
+    displayCombatLog();
+}
+
+function displayCombatLog() {
+    const container = document.getElementById('combatLog');
+    if (!container) return;
+
+    // Show last 20 entries
+    const recentLogs = combatLog.slice(-20).reverse();
+
+    container.innerHTML = recentLogs.map(log => `
+        <div class="combat-log-entry combat-log-${log.type}">
+            <span class="log-time">[${log.timestamp}]</span>
+            <span class="log-message">${log.message}</span>
+        </div>
+    `).join('');
+
+    // Auto-scroll to top (since we reversed)
+    container.scrollTop = 0;
+}
+
+function clearCombatLog() {
+    combatLog = [];
+    const container = document.getElementById('combatLog');
+    if (container) {
+        container.innerHTML = '<p class="no-log">Combat log will appear here...</p>';
+    }
+}
+
+// Attack roll function
+function performAttack(attackerId, attackerType, attackerName, targetId, targetType, targetName, attackBonus, targetAC) {
+    const roll = rollD20();
+    const total = roll + attackBonus;
+    const isCritical = roll === 20;
+    const isCriticalMiss = roll === 1;
+    const isHit = isCritical || (total >= targetAC && !isCriticalMiss);
+
+    let logMessage = `<strong>${attackerName}</strong> attacks <strong>${targetName}</strong>: `;
+    logMessage += `rolled ${roll} + ${attackBonus} = ${total} vs AC ${targetAC}`;
+
+    if (isCritical) {
+        addCombatLog(logMessage + ' - <strong>CRITICAL HIT!</strong>', 'critical');
+        return { hit: true, critical: true, roll, total, targetId, targetType };
+    } else if (isCriticalMiss) {
+        addCombatLog(logMessage + ' - <strong>Critical Miss!</strong>', 'miss');
+        return { hit: false, critical: false, roll, total, targetId, targetType };
+    } else if (isHit) {
+        addCombatLog(logMessage + ' - <strong>Hit!</strong>', 'hit');
+        return { hit: true, critical: false, roll, total, targetId, targetType };
+    } else {
+        addCombatLog(logMessage + ' - Miss', 'miss');
+        return { hit: false, critical: false, roll, total, targetId, targetType };
+    }
+}
+
+// Damage roll function
+function rollDamage(attackerName, targetId, targetType, targetName, diceNotation, isCritical = false) {
+    let result = parseDiceNotation(diceNotation);
+
+    if (!result) {
+        alert('Invalid dice notation. Use format like "1d8+3"');
+        return;
+    }
+
+    // Double dice on critical hit
+    if (isCritical) {
+        const critResult = rollDice(result.count * 2, result.sides);
+        result.rolls = critResult.rolls;
+        result.total = critResult.total + result.modifier;
+    }
+
+    const rollsText = result.rolls.join(' + ');
+    const modText = result.modifier !== 0 ? ` ${result.modifier >= 0 ? '+' : ''}${result.modifier}` : '';
+
+    let logMessage = `<strong>${attackerName}</strong> deals ${result.total} damage to <strong>${targetName}</strong>`;
+    logMessage += ` (${rollsText}${modText})`;
+    if (isCritical) {
+        logMessage += ' <strong>[CRITICAL]</strong>';
+    }
+
+    addCombatLog(logMessage, 'damage');
+
+    // Apply damage
+    applyDamage(targetId, targetType, result.total);
+
+    return result;
+}
+
+function applyDamage(targetId, targetType, damage) {
+    if (targetType === 'party') {
+        const member = adventureParty.find(m => m.cardId === targetId);
+        if (member) {
+            const newHP = Math.max(0, member.currentHP - damage);
+            updateCombatantHP(targetId, targetType, newHP);
+
+            if (newHP === 0) {
+                addCombatLog(`<strong>${member.card.formFields.cardName}</strong> is down!`, 'info');
+            }
+        }
+    } else {
+        const enemy = combatState.enemies.find(e => e.id === targetId);
+        if (enemy) {
+            const newHP = Math.max(0, enemy.currentHP - damage);
+            updateCombatantHP(targetId, targetType, newHP);
+
+            if (newHP === 0) {
+                addCombatLog(`<strong>${enemy.name}</strong> is defeated!`, 'info');
+            }
+        }
+    }
 }
 
 function updateInitiativeOrder() {
@@ -2995,15 +3220,24 @@ function nextTurn() {
     if (combatState.currentTurnIndex >= combatState.initiativeOrder.length) {
         combatState.currentTurnIndex = 0;
         combatState.round++;
+        addCombatLog(`📜 <strong>Round ${combatState.round} begins!</strong>`, 'info');
     }
 
     displayInitiativeOrder();
+
+    // Log whose turn it is
+    const currentCombatant = combatState.initiativeOrder[combatState.currentTurnIndex];
+    if (currentCombatant) {
+        addCombatLog(`🎯 It's <strong>${currentCombatant.name}</strong>'s turn.`, 'info');
+    }
 }
 
 function endCombat() {
     if (!confirm('End combat? All initiative and combat state will be reset.')) {
         return;
     }
+
+    addCombatLog('🏁 <strong>Combat has ended!</strong>', 'info');
 
     combatState.active = false;
     combatState.round = 0;
@@ -3067,6 +3301,83 @@ function attachCombatEventListeners() {
             const cardId = e.target.dataset.cardId;
             addEnemyFromDeck(cardId);
         }
+
+        // Toggle combat actions panel
+        if (e.target.classList.contains('toggle-actions-btn')) {
+            const card = e.target.closest('.combatant-card');
+            const panel = card.querySelector('.combat-action-panel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                e.target.textContent = '▲';
+            } else {
+                panel.style.display = 'none';
+                e.target.textContent = '▼';
+            }
+        }
+
+        // Roll attack
+        if (e.target.classList.contains('btn-roll-attack')) {
+            const attackerId = e.target.dataset.attackerId;
+            const attackerType = e.target.dataset.attackerType;
+            const attackerName = e.target.dataset.attackerName;
+
+            const card = e.target.closest('.combatant-card');
+            const targetSelect = card.querySelector('.attack-target-select');
+            const attackBonusInput = card.querySelector('.attack-bonus-input');
+
+            const targetValue = targetSelect.value;
+            if (!targetValue) {
+                alert('Please select a target!');
+                return;
+            }
+
+            const [targetId, targetType, targetName, targetAC] = targetValue.split('|');
+            const attackBonus = parseInt(attackBonusInput.value) || 0;
+
+            const result = performAttack(attackerId, attackerType, attackerName, targetId, targetType, targetName, attackBonus, parseInt(targetAC));
+
+            // Store attack result for damage roll
+            card.dataset.lastAttackResult = JSON.stringify(result);
+        }
+
+        // Roll damage
+        if (e.target.classList.contains('btn-roll-damage')) {
+            const attackerName = e.target.dataset.attackerName;
+
+            const card = e.target.closest('.combatant-card');
+            const targetSelect = card.querySelector('.attack-target-select');
+            const damageDiceInput = card.querySelector('.damage-dice-input');
+
+            const targetValue = targetSelect.value;
+            if (!targetValue) {
+                alert('Please select a target!');
+                return;
+            }
+
+            const [targetId, targetType, targetName] = targetValue.split('|');
+            const diceNotation = damageDiceInput.value.trim();
+
+            if (!diceNotation) {
+                alert('Please enter damage dice (e.g., "1d8+3")');
+                return;
+            }
+
+            // Check if there was a recent attack and if it was critical
+            let isCritical = false;
+            if (card.dataset.lastAttackResult) {
+                try {
+                    const lastAttack = JSON.parse(card.dataset.lastAttackResult);
+                    isCritical = lastAttack.critical;
+                } catch (e) {
+                    // Ignore parse errors
+                }
+            }
+
+            rollDamage(attackerName, targetId, targetType, targetName, diceNotation, isCritical);
+
+            // Clear last attack result
+            delete card.dataset.lastAttackResult;
+        }
     });
 
     // HP input changes
@@ -3101,6 +3412,9 @@ function initCombat() {
     document.getElementById('startCombatBtn').addEventListener('click', startCombat);
     document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
     document.getElementById('endCombatBtn').addEventListener('click', endCombat);
+
+    // Clear combat log
+    document.getElementById('clearCombatLogBtn').addEventListener('click', clearCombatLog);
 
     // Attach combat event listeners
     attachCombatEventListeners();
