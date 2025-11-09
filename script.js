@@ -2164,16 +2164,15 @@ function loadCharacterList() {
         checkbox.addEventListener('change', function(e) {
             e.stopPropagation();
             const cardId = this.getAttribute('data-card-id');
-            const targetCard = deck.find(c => c.id === cardId);
+            console.log('Checkbox changed for card:', card.formFields?.cardName, 'ID:', cardId);
 
-            if (!targetCard) {
-                console.error('Card not found:', cardId);
-                return;
-            }
-
+            // Use the card directly from the closure - we have access to it
+            // This is more reliable than searching through the deck
             if (this.checked) {
-                addCharacterToParty(targetCard);
+                console.log('Adding character to party...');
+                addCharacterToParty(card);
             } else {
+                console.log('Removing character from party...');
                 removeCharacterFromParty(cardId);
             }
         });
