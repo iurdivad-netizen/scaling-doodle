@@ -2545,7 +2545,8 @@ function saveAdventure() {
             notes: member.notes,
             // Store card data for reference
             cardName: member.card.formFields.cardName
-        }))
+        })),
+        combatLog: combatLog // Save the combat log
     };
 
     // Create and download JSON file
@@ -2626,6 +2627,17 @@ async function loadAdventure(fileData) {
                 checkbox.closest('.character-list-item').classList.remove('in-party');
             }
         });
+
+        // Restore combat log if it exists in save data
+        if (saveData.combatLog && Array.isArray(saveData.combatLog)) {
+            combatLog = saveData.combatLog;
+            displayCombatLog();
+            console.log('Combat log restored:', combatLog.length, 'entries');
+        } else {
+            // Clear combat log if none was saved
+            clearCombatLog();
+            console.log('No combat log found in save data');
+        }
 
         const foundCount = adventureParty.length;
         const totalCount = saveData.party.length;
