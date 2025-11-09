@@ -2156,6 +2156,12 @@ function initTabs() {
             if (targetTab === 'adventure-tracker') {
                 loadCharacterList();
             }
+
+            // If switching to encounters/combat, load combatants
+            if (targetTab === 'encounters-combat') {
+                loadPartyCombatants();
+                loadEnemyCombatants();
+            }
         });
     });
 }
@@ -2617,6 +2623,478 @@ function loadAdventure(fileData) {
     }
 }
 
+// ===================================
+// ENCOUNTERS & COMBAT SYSTEM
+// ===================================
+
+let combatState = {
+    active: false,
+    round: 0,
+    currentTurnIndex: 0,
+    enemies: [],
+    initiativeOrder: []
+};
+
+let enemyIdCounter = 0;
+
+function loadPartyCombatants() {
+    const container = document.getElementById('partyCombatants');
+
+    if (adventureParty.length === 0) {
+        container.innerHTML = '<p class="no-combatants">No party members. Add characters in the Adventure Tracker tab.</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+    adventureParty.forEach(member => {
+        const combatantCard = createCombatantCard(member, 'party');
+        container.appendChild(combatantCard);
+    });
+}
+
+function loadEnemyCombatants() {
+    const container = document.getElementById('enemyCombatants');
+
+    if (combatState.enemies.length === 0) {
+        container.innerHTML = '<p class="no-combatants">No enemies added yet.</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+    combatState.enemies.forEach(enemy => {
+        const combatantCard = createCombatantCard(enemy, 'enemy');
+        container.appendChild(combatantCard);
+    });
+}
+
+function createCombatantCard(combatant, type) {
+    const card = document.createElement('div');
+    card.className = 'combatant-card';
+    card.dataset.combatantId = combatant.id || combatant.cardId;
+    card.dataset.combatantType = type;
+
+    const isEnemy = type === 'enemy';
+    const cardData = isEnemy ? combatant : combatant.card;
+    const name = isEnemy ? combatant.name : cardData.formFields.cardName;
+    const ac = isEnemy ? combatant.ac : cardData.formFields.ac;
+    const currentHP = combatant.currentHP;
+    const maxHP = combatant.maxHP;
+    const initiative = combatant.initiative || 0;
+
+    card.innerHTML = `
+        <div class="combatant-header">
+            <h4 class="combatant-name">${name}</h4>
+            ${isEnemy ? `<button class="remove-enemy-btn" data-enemy-id="${combatant.id}">✕</button>` : ''}
+        </div>
+        <div class="combatant-stats">
+            <span class="combatant-stat">AC: ${ac}</span>
+            <span class="combatant-stat">Initiative: <input type="number" class="initiative-input" value="${initiative}" data-id="${combatant.id || combatant.cardId}" data-type="${type}"></span>
+        </div>
+        <div class="combatant-hp">
+            <div class="hp-controls">
+                <button class="hp-btn-combat decrease" data-id="${combatant.id || combatant.cardId}" data-type="${type}">−</button>
+                <input type="number" class="combat-hp-input" value="${currentHP}" data-id="${combatant.id || combatant.cardId}" data-type="${type}">
+                <span class="hp-divider">/</span>
+                <span class="combat-max-hp">${maxHP}</span>
+                <button class="hp-btn-combat increase" data-id="${combatant.id || combatant.cardId}" data-type="${type}">+</button>
+            </div>
+            <div class="combat-hp-bar-container">
+                <div class="combat-hp-bar">
+                    <div class="combat-hp-bar-fill" style="width: ${(currentHP/maxHP)*100}%"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return card;
+}
+
+function showAddEnemyModal() {
+    const modal = document.getElementById('addEnemyModal');
+    const deckList = document.getElementById('enemyDeckList');
+
+    // Populate deck list
+    deckList.innerHTML = '';
+    if (deck.length === 0) {
+        deckList.innerHTML = '<p class="no-enemies">No creatures in deck</p>';
+    } else {
+        deck.forEach(card => {
+            const item = document.createElement('div');
+            item.className = 'enemy-deck-item';
+            item.innerHTML = `
+                <span class="enemy-name">${card.formFields.cardName}</span>
+                <span class="enemy-stats">AC: ${card.formFields.ac} | HP: ${card.formFields.hp}</span>
+                <button class="btn-add-this-enemy" data-card-id="${card.id}">Add</button>
+            `;
+            deckList.appendChild(item);
+        });
+    }
+
+    modal.style.display = 'block';
+}
+
+function addEnemyFromDeck(cardId) {
+    const card = deck.find(c => c.id === cardId);
+    if (!card) return;
+
+    // Parse HP (handle formats like "546 (28d20 + 252)" or just "50")
+    const hpText = card.formFields.hp;
+    let maxHP = 0;
+    const hpMatch = hpText.match(/^(\d+)/);
+    if (hpMatch) {
+        maxHP = parseInt(hpMatch[1]);
+    }
+
+    const enemy = {
+        id: `enemy-${++enemyIdCounter}`,
+        cardId: card.id,
+        card: card,
+        name: card.formFields.cardName,
+        ac: card.formFields.ac,
+        currentHP: maxHP,
+        maxHP: maxHP,
+        initiative: 0,
+        dexMod: parseDexMod(card.formFields.dex)
+    };
+
+    combatState.enemies.push(enemy);
+    loadEnemyCombatants();
+    closeAddEnemyModal();
+}
+
+function addQuickEnemy() {
+    const name = document.getElementById('quickEnemyName').value.trim();
+    const ac = document.getElementById('quickEnemyAC').value;
+    const hp = parseInt(document.getElementById('quickEnemyHP').value);
+    const dexMod = parseInt(document.getElementById('quickEnemyDex').value) || 0;
+
+    if (!name || !ac || !hp) {
+        alert('Please fill in all enemy fields');
+        return;
+    }
+
+    const enemy = {
+        id: `enemy-${++enemyIdCounter}`,
+        name: name,
+        ac: ac,
+        currentHP: hp,
+        maxHP: hp,
+        initiative: 0,
+        dexMod: dexMod
+    };
+
+    combatState.enemies.push(enemy);
+    loadEnemyCombatants();
+
+    // Clear form
+    document.getElementById('quickEnemyName').value = '';
+    document.getElementById('quickEnemyAC').value = '';
+    document.getElementById('quickEnemyHP').value = '';
+    document.getElementById('quickEnemyDex').value = '0';
+
+    closeAddEnemyModal();
+}
+
+function parseDexMod(dexString) {
+    // Parse strings like "10 (+0)" or "14 (+2)"
+    const match = dexString.match(/\(([+-]?\d+)\)/);
+    return match ? parseInt(match[1]) : 0;
+}
+
+function removeEnemy(enemyId) {
+    combatState.enemies = combatState.enemies.filter(e => e.id !== enemyId);
+    loadEnemyCombatants();
+
+    // If combat is active, update initiative order
+    if (combatState.active) {
+        updateInitiativeOrder();
+    }
+}
+
+function closeAddEnemyModal() {
+    document.getElementById('addEnemyModal').style.display = 'none';
+}
+
+function updateCombatantHP(id, type, newHP) {
+    if (type === 'party') {
+        const member = adventureParty.find(m => m.cardId === id);
+        if (member) {
+            member.currentHP = Math.max(0, Math.min(newHP, member.maxHP));
+            updateAdventurePartyDisplay();
+        }
+    } else {
+        const enemy = combatState.enemies.find(e => e.id === id);
+        if (enemy) {
+            enemy.currentHP = Math.max(0, Math.min(newHP, enemy.maxHP));
+        }
+    }
+
+    loadPartyCombatants();
+    loadEnemyCombatants();
+
+    if (combatState.active) {
+        updateInitiativeOrder();
+    }
+}
+
+function updateInitiative(id, type, initiative) {
+    if (type === 'party') {
+        const member = adventureParty.find(m => m.cardId === id);
+        if (member) {
+            member.initiative = parseInt(initiative) || 0;
+        }
+    } else {
+        const enemy = combatState.enemies.find(e => e.id === id);
+        if (enemy) {
+            enemy.initiative = parseInt(initiative) || 0;
+        }
+    }
+}
+
+function startCombat() {
+    if (adventureParty.length === 0 && combatState.enemies.length === 0) {
+        alert('Add party members and/or enemies before starting combat!');
+        return;
+    }
+
+    // Roll initiative for everyone who doesn't have one
+    adventureParty.forEach(member => {
+        if (!member.initiative || member.initiative === 0) {
+            const dexMod = parseDexMod(member.card.formFields.dex);
+            member.initiative = rollD20() + dexMod;
+        }
+    });
+
+    combatState.enemies.forEach(enemy => {
+        if (!enemy.initiative || enemy.initiative === 0) {
+            enemy.initiative = rollD20() + (enemy.dexMod || 0);
+        }
+    });
+
+    combatState.active = true;
+    combatState.round = 1;
+    combatState.currentTurnIndex = 0;
+
+    updateInitiativeOrder();
+    updateCombatControls();
+    loadPartyCombatants();
+    loadEnemyCombatants();
+}
+
+function rollD20() {
+    return Math.floor(Math.random() * 20) + 1;
+}
+
+function updateInitiativeOrder() {
+    const allCombatants = [];
+
+    // Add party members
+    adventureParty.forEach(member => {
+        allCombatants.push({
+            id: member.cardId,
+            name: member.card.formFields.cardName,
+            initiative: member.initiative || 0,
+            currentHP: member.currentHP,
+            maxHP: member.maxHP,
+            type: 'party'
+        });
+    });
+
+    // Add enemies
+    combatState.enemies.forEach(enemy => {
+        allCombatants.push({
+            id: enemy.id,
+            name: enemy.name,
+            initiative: enemy.initiative || 0,
+            currentHP: enemy.currentHP,
+            maxHP: enemy.maxHP,
+            type: 'enemy'
+        });
+    });
+
+    // Sort by initiative (highest first), then by dex mod as tiebreaker
+    allCombatants.sort((a, b) => b.initiative - a.initiative);
+
+    combatState.initiativeOrder = allCombatants;
+    displayInitiativeOrder();
+}
+
+function displayInitiativeOrder() {
+    const container = document.getElementById('initiativeOrder');
+
+    if (!combatState.active || combatState.initiativeOrder.length === 0) {
+        container.innerHTML = '<p class="no-initiative">Start combat to roll initiative</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+    combatState.initiativeOrder.forEach((combatant, index) => {
+        const item = document.createElement('div');
+        item.className = 'initiative-item';
+        if (index === combatState.currentTurnIndex) {
+            item.classList.add('current-turn');
+        }
+        if (combatant.currentHP <= 0) {
+            item.classList.add('defeated');
+        }
+
+        const hpPercent = (combatant.currentHP / combatant.maxHP) * 100;
+        const hpClass = hpPercent > 50 ? 'hp-good' : hpPercent > 25 ? 'hp-warning' : 'hp-danger';
+
+        item.innerHTML = `
+            <div class="initiative-info">
+                <span class="initiative-number">${combatant.initiative}</span>
+                <span class="initiative-name ${combatant.type === 'enemy' ? 'enemy-name' : 'party-name'}">${combatant.name}</span>
+            </div>
+            <div class="initiative-hp ${hpClass}">${combatant.currentHP}/${combatant.maxHP}</div>
+        `;
+
+        container.appendChild(item);
+    });
+
+    updateCurrentTurnDisplay();
+}
+
+function updateCurrentTurnDisplay() {
+    if (!combatState.active || combatState.initiativeOrder.length === 0) {
+        document.getElementById('currentRound').textContent = '-';
+        document.getElementById('currentTurnName').textContent = '-';
+        return;
+    }
+
+    const currentCombatant = combatState.initiativeOrder[combatState.currentTurnIndex];
+    document.getElementById('currentRound').textContent = combatState.round;
+    document.getElementById('currentTurnName').textContent = currentCombatant ? currentCombatant.name : '-';
+}
+
+function nextTurn() {
+    if (!combatState.active) return;
+
+    combatState.currentTurnIndex++;
+
+    // If we've gone through everyone, start a new round
+    if (combatState.currentTurnIndex >= combatState.initiativeOrder.length) {
+        combatState.currentTurnIndex = 0;
+        combatState.round++;
+    }
+
+    displayInitiativeOrder();
+}
+
+function endCombat() {
+    if (!confirm('End combat? All initiative and combat state will be reset.')) {
+        return;
+    }
+
+    combatState.active = false;
+    combatState.round = 0;
+    combatState.currentTurnIndex = 0;
+
+    // Reset initiatives
+    adventureParty.forEach(member => member.initiative = 0);
+    combatState.enemies.forEach(enemy => enemy.initiative = 0);
+
+    updateCombatControls();
+    loadPartyCombatants();
+    loadEnemyCombatants();
+    displayInitiativeOrder();
+}
+
+function updateCombatControls() {
+    const startBtn = document.getElementById('startCombatBtn');
+    const nextBtn = document.getElementById('nextTurnBtn');
+    const endBtn = document.getElementById('endCombatBtn');
+
+    if (combatState.active) {
+        startBtn.disabled = true;
+        nextBtn.disabled = false;
+        endBtn.disabled = false;
+    } else {
+        startBtn.disabled = false;
+        nextBtn.disabled = true;
+        endBtn.disabled = true;
+    }
+}
+
+function attachCombatEventListeners() {
+    // HP controls
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('hp-btn-combat')) {
+            const id = e.target.dataset.id;
+            const type = e.target.dataset.type;
+            const isIncrease = e.target.classList.contains('increase');
+
+            if (type === 'party') {
+                const member = adventureParty.find(m => m.cardId === id);
+                if (member) {
+                    const newHP = member.currentHP + (isIncrease ? 1 : -1);
+                    updateCombatantHP(id, type, newHP);
+                }
+            } else {
+                const enemy = combatState.enemies.find(e => e.id === id);
+                if (enemy) {
+                    const newHP = enemy.currentHP + (isIncrease ? 1 : -1);
+                    updateCombatantHP(id, type, newHP);
+                }
+            }
+        }
+
+        if (e.target.classList.contains('remove-enemy-btn')) {
+            const enemyId = e.target.dataset.enemyId;
+            removeEnemy(enemyId);
+        }
+
+        if (e.target.classList.contains('btn-add-this-enemy')) {
+            const cardId = e.target.dataset.cardId;
+            addEnemyFromDeck(cardId);
+        }
+    });
+
+    // HP input changes
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('combat-hp-input')) {
+            const id = e.target.dataset.id;
+            const type = e.target.dataset.type;
+            const newHP = parseInt(e.target.value) || 0;
+            updateCombatantHP(id, type, newHP);
+        }
+
+        if (e.target.classList.contains('initiative-input')) {
+            const id = e.target.dataset.id;
+            const type = e.target.dataset.type;
+            const initiative = e.target.value;
+            updateInitiative(id, type, initiative);
+        }
+    });
+}
+
+function initCombat() {
+    // Add enemy button
+    document.getElementById('addEnemyBtn').addEventListener('click', showAddEnemyModal);
+
+    // Close enemy modal
+    document.getElementById('closeEnemyModal').addEventListener('click', closeAddEnemyModal);
+
+    // Quick add enemy
+    document.getElementById('addQuickEnemyBtn').addEventListener('click', addQuickEnemy);
+
+    // Combat controls
+    document.getElementById('startCombatBtn').addEventListener('click', startCombat);
+    document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
+    document.getElementById('endCombatBtn').addEventListener('click', endCombat);
+
+    // Attach combat event listeners
+    attachCombatEventListeners();
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        const modal = document.getElementById('addEnemyModal');
+        if (e.target === modal) {
+            closeAddEnemyModal();
+        }
+    });
+}
+
 function initAdventureTracker() {
     // Refresh character list button
     document.getElementById('refreshCharactersBtn').addEventListener('click', loadCharacterList);
@@ -2650,4 +3128,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     initCustomization();
     initTabs();
     initAdventureTracker();
+    initCombat();
 });

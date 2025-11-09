@@ -17,6 +17,7 @@
         <div class="tab-navigation">
             <button class="tab-button active" data-tab="card-builder">Card Builder</button>
             <button class="tab-button" data-tab="adventure-tracker">Adventure Tracker</button>
+            <button class="tab-button" data-tab="encounters-combat">Encounters/Combat</button>
         </div>
 
         <!-- Card Builder Tab -->
@@ -506,6 +507,58 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
             </div>
         </div>
         <!-- End Adventure Tracker Tab -->
+
+        <!-- Encounters/Combat Tab -->
+        <div id="encounters-combat-tab" class="tab-content">
+            <div class="combat-main-content">
+                <!-- Combat Controls -->
+                <div class="combat-controls-panel">
+                    <div class="combat-header">
+                        <h2>Encounters & Combat</h2>
+                        <div class="combat-action-btns">
+                            <button id="startCombatBtn" class="btn-primary">⚔️ Start Combat</button>
+                            <button id="nextTurnBtn" class="btn-secondary" disabled>Next Turn</button>
+                            <button id="endCombatBtn" class="btn-secondary" disabled>End Combat</button>
+                        </div>
+                    </div>
+                    <div class="combat-round-info">
+                        <span>Round: <strong id="currentRound">-</strong></span>
+                        <span>Current Turn: <strong id="currentTurnName">-</strong></span>
+                    </div>
+                </div>
+
+                <!-- Combat Area -->
+                <div class="combat-area">
+                    <!-- Party Combatants -->
+                    <div class="combat-section">
+                        <h3>Party Members</h3>
+                        <div id="partyCombatants" class="combatants-list">
+                            <p class="no-combatants">No party members. Add characters in the Adventure Tracker tab.</p>
+                        </div>
+                    </div>
+
+                    <!-- Enemy Combatants -->
+                    <div class="combat-section">
+                        <div class="combat-section-header">
+                            <h3>Enemies</h3>
+                            <button id="addEnemyBtn" class="btn-add-enemy">+ Add Enemy</button>
+                        </div>
+                        <div id="enemyCombatants" class="combatants-list">
+                            <p class="no-combatants">No enemies added yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Initiative Order -->
+                <div class="initiative-panel">
+                    <h3>Initiative Order</h3>
+                    <div id="initiativeOrder" class="initiative-list">
+                        <p class="no-initiative">Start combat to roll initiative</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Encounters/Combat Tab -->
     </div>
 
     <!-- Deck Modal -->
@@ -543,6 +596,32 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
             <div id="printContent"></div>
             <div class="modal-actions">
                 <button id="printBtn" class="btn-primary">Print</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Enemy Modal -->
+    <div id="addEnemyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Enemy</h2>
+                <button class="modal-close" id="closeEnemyModal">&times;</button>
+            </div>
+            <div class="enemy-selection-content">
+                <div class="enemy-option">
+                    <h3>Select from Deck</h3>
+                    <div id="enemyDeckList" class="enemy-deck-list"></div>
+                </div>
+                <div class="enemy-option">
+                    <h3>Quick Add Enemy</h3>
+                    <div class="quick-enemy-form">
+                        <input type="text" id="quickEnemyName" placeholder="Enemy Name" value="">
+                        <input type="number" id="quickEnemyAC" placeholder="AC" value="">
+                        <input type="number" id="quickEnemyHP" placeholder="HP" value="">
+                        <input type="number" id="quickEnemyDex" placeholder="DEX Modifier" value="0">
+                        <button id="addQuickEnemyBtn" class="btn-primary">Add Enemy</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
