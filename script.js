@@ -2116,12 +2116,17 @@ function loadCharacterList() {
     const characterList = document.getElementById('characterList');
 
     if (!deck || deck.length === 0) {
+        console.log('Deck is empty or not loaded');
         characterList.innerHTML = '<p class="no-characters">No characters in deck. Add characters in the Card Builder tab.</p>';
         return;
     }
 
+    console.log('Loading character list from deck with', deck.length, 'cards');
+
     // Filter to only show creature cards (characters/monsters)
     const creatureCards = deck.filter(card => card.template === 'creature');
+
+    console.log('Found', creatureCards.length, 'creature cards');
 
     if (creatureCards.length === 0) {
         characterList.innerHTML = '<p class="no-characters">No creature cards in deck. Add creature cards in the Card Builder tab.</p>';
@@ -2158,6 +2163,9 @@ function loadCharacterList() {
 // Load character into adventure tracker
 function loadCharacterIntoAdventure(card) {
     currentAdventureCharacter = card;
+
+    console.log('Loading character into adventure tracker:', card);
+    console.log('Card formFields:', card.formFields);
 
     // Update character info
     document.getElementById('adventureCharName').textContent = card.formFields.cardName || 'Unknown Character';
@@ -2274,8 +2282,8 @@ function initAdventureTracker() {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    init();
+document.addEventListener('DOMContentLoaded', async function() {
+    await init();
     initCustomization();
     initTabs();
     initAdventureTracker();
