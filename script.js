@@ -2564,7 +2564,7 @@ function saveAdventure() {
 }
 
 // Load adventure state from JSON file
-function loadAdventure(fileData) {
+async function loadAdventure(fileData) {
     try {
         const saveData = JSON.parse(fileData);
 
@@ -2572,6 +2572,9 @@ function loadAdventure(fileData) {
             alert('Invalid adventure file format.');
             return;
         }
+
+        // Ensure all cards in deck have IDs before matching
+        await ensureAllCardsHaveIDs();
 
         // Clear current party
         adventureParty = [];
@@ -3112,8 +3115,8 @@ function initAdventureTracker() {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(event) {
-                loadAdventure(event.target.result);
+            reader.onload = async function(event) {
+                await loadAdventure(event.target.result);
             };
             reader.readAsText(file);
         }
