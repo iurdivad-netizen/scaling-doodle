@@ -2104,12 +2104,8 @@ function initTabs() {
 }
 
 // ===== Adventure Tracker State =====
-let currentAdventureCharacter = null;
-let adventureState = {
-    currentHP: 0,
-    maxHP: 0,
-    notes: ''
-};
+// Adventure party tracking - array of characters with their states
+let adventureParty = [];
 
 // Load character list from deck
 function loadCharacterList() {
@@ -2136,148 +2132,385 @@ function loadCharacterList() {
     characterList.innerHTML = '';
 
     creatureCards.forEach((card, index) => {
+        const isInParty = adventureParty.some(p => p.cardId === card.id);
+
         const listItem = document.createElement('div');
-        listItem.className = 'character-list-item';
+        listItem.className = 'character-list-item' + (isInParty ? ' in-party' : '');
         listItem.innerHTML = `
-            <div class="char-name">${card.formFields.cardName || 'Unnamed Character'}</div>
-            <div class="char-info">AC: ${card.formFields.ac || '--'} | HP: ${card.formFields.hp || '--'}</div>
+            <input type="checkbox" class="char-checkbox" ${isInParty ? 'checked' : ''} data-card-index="${index}">
+            <div class="char-details">
+                <div class="char-name">${card.formFields.cardName || 'Unnamed Character'}</div>
+                <div class="char-info">AC: ${card.formFields.ac || '--'} | HP: ${card.formFields.hp || '--'}</div>
+            </div>
         `;
 
-        listItem.addEventListener('click', function() {
-            // Remove active class from all items
-            document.querySelectorAll('.character-list-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Add active class to clicked item
-            this.classList.add('active');
-
-            // Load character into adventure tracker
-            loadCharacterIntoAdventure(card);
+        const checkbox = listItem.querySelector('.char-checkbox');
+        checkbox.addEventListener('change', function(e) {
+            e.stopPropagation();
+            if (this.checked) {
+                addCharacterToParty(card);
+            } else {
+                removeCharacterFromParty(card.id);
+            }
         });
 
         characterList.appendChild(listItem);
     });
 }
 
-// Load character into adventure tracker
-function loadCharacterIntoAdventure(card) {
-    currentAdventureCharacter = card;
+// Add character to adventure party
+function addCharacterToParty(card) {
+    // Check if already in party
+    if (adventureParty.some(p => p.cardId === card.id)) {
+        return;
+    }
 
-    console.log('Loading character into adventure tracker:', card);
-    console.log('Card formFields:', card.formFields);
-
-    // Update character info
-    document.getElementById('adventureCharName').textContent = card.formFields.cardName || 'Unknown Character';
-    document.getElementById('adventureCharType').textContent =
-        `${card.formFields.cardType || ''} ${card.formFields.cardSubtype ? '• ' + card.formFields.cardSubtype : ''}`.trim();
-
-    // Parse HP from the card (e.g., "546 (28d20 + 252)")
+    // Parse max HP from card
     const hpText = card.formFields.hp || '0';
     const hpMatch = hpText.match(/^(\d+)/);
     const maxHP = hpMatch ? parseInt(hpMatch[1]) : 0;
 
-    // Set HP values
-    adventureState.maxHP = maxHP;
-    adventureState.currentHP = maxHP;
+    // Add to party with initial state
+    adventureParty.push({
+        cardId: card.id,
+        card: card,
+        currentHP: maxHP,
+        maxHP: maxHP,
+        notes: ''
+    });
 
-    document.getElementById('maxHP').value = maxHP;
-    document.getElementById('currentHP').value = maxHP;
-    updateHPBar();
-
-    // Update stats
-    document.getElementById('adventureAC').textContent = card.formFields.ac || '--';
-    document.getElementById('adventureSpeed').textContent = card.formFields.speed || '--';
-
-    // Update ability scores
-    document.getElementById('adventureStr').textContent = card.formFields.str || '--';
-    document.getElementById('adventureDex').textContent = card.formFields.dex || '--';
-    document.getElementById('adventureCon').textContent = card.formFields.con || '--';
-    document.getElementById('adventureInt').textContent = card.formFields.int || '--';
-    document.getElementById('adventureWis').textContent = card.formFields.wis || '--';
-    document.getElementById('adventureCha').textContent = card.formFields.cha || '--';
-
-    // Clear notes
-    document.getElementById('adventureNotes').value = '';
-    adventureState.notes = '';
+    console.log('Added character to party:', card.formFields.cardName);
+    updateAdventurePartyDisplay();
+    loadCharacterList(); // Refresh list to show updated checkboxes
 }
 
-// HP Tracking Functions
-function updateHPBar() {
-    const currentHP = adventureState.currentHP;
-    const maxHP = adventureState.maxHP;
+// Remove character from adventure party
+function removeCharacterFromParty(cardId) {
+    const index = adventureParty.findIndex(p => p.cardId === cardId);
+    if (index !== -1) {
+        console.log('Removed character from party:', adventureParty[index].card.formFields.cardName);
+        adventureParty.splice(index, 1);
+        updateAdventurePartyDisplay();
+        loadCharacterList(); // Refresh list to show updated checkboxes
+    }
+}
 
-    if (maxHP === 0) {
-        document.getElementById('hpBarFill').style.width = '0%';
-        document.getElementById('hpPercentage').textContent = '0%';
+// Update adventure party display
+function updateAdventurePartyDisplay() {
+    const container = document.getElementById('adventurePartyContainer');
+
+    if (adventureParty.length === 0) {
+        container.innerHTML = '<p class="no-characters">No characters selected for this adventure. Select characters from the list on the right.</p>';
         return;
     }
 
-    const percentage = Math.max(0, Math.min(100, (currentHP / maxHP) * 100));
-    const hpBarFill = document.getElementById('hpBarFill');
+    container.innerHTML = '';
 
-    hpBarFill.style.width = percentage + '%';
-    document.getElementById('hpPercentage').textContent = Math.round(percentage) + '%';
+    adventureParty.forEach((member, index) => {
+        const card = member.card;
+        const charCard = document.createElement('div');
+        charCard.className = 'party-character-card';
+        charCard.innerHTML = `
+            <div class="party-char-header">
+                <div>
+                    <h3 class="party-char-name">${card.formFields.cardName || 'Unnamed Character'}</h3>
+                    <div class="party-char-type">${card.formFields.cardType || ''} ${card.formFields.cardSubtype ? '• ' + card.formFields.cardSubtype : ''}</div>
+                </div>
+                <button class="remove-from-party-btn" data-index="${index}" title="Remove from party">✕</button>
+            </div>
 
-    // Update color based on HP percentage
-    if (percentage <= 25) {
-        hpBarFill.style.background = '#dc3545'; // Red
-    } else if (percentage <= 50) {
-        hpBarFill.style.background = '#ffc107'; // Yellow/Orange
-    } else {
-        hpBarFill.style.background = '#28a745'; // Green
+            <div class="party-char-stats">
+                <div class="party-stat">
+                    <span class="stat-label">AC:</span>
+                    <span class="stat-value">${card.formFields.ac || '--'}</span>
+                </div>
+                <div class="party-stat">
+                    <span class="stat-label">Speed:</span>
+                    <span class="stat-value">${card.formFields.speed || '--'}</span>
+                </div>
+            </div>
+
+            <div class="party-abilities">
+                <div class="party-ability"><span>STR</span> ${card.formFields.str || '--'}</div>
+                <div class="party-ability"><span>DEX</span> ${card.formFields.dex || '--'}</div>
+                <div class="party-ability"><span>CON</span> ${card.formFields.con || '--'}</div>
+                <div class="party-ability"><span>INT</span> ${card.formFields.int || '--'}</div>
+                <div class="party-ability"><span>WIS</span> ${card.formFields.wis || '--'}</div>
+                <div class="party-ability"><span>CHA</span> ${card.formFields.cha || '--'}</div>
+            </div>
+
+            <div class="party-hp-section">
+                <h4>Hit Points</h4>
+                <div class="party-hp-controls">
+                    <button class="hp-btn decrease" data-index="${index}">−</button>
+                    <input type="number" class="party-hp-input" value="${member.currentHP}" data-index="${index}">
+                    <span class="hp-divider">/</span>
+                    <span class="party-max-hp">${member.maxHP}</span>
+                    <button class="hp-btn increase" data-index="${index}">+</button>
+                </div>
+                <div class="party-hp-bar-container">
+                    <div class="party-hp-bar">
+                        <div class="party-hp-bar-fill" data-index="${index}"></div>
+                    </div>
+                </div>
+                <div class="party-hp-quick">
+                    <button class="quick-hp-btn" data-index="${index}" data-amount="-10">-10</button>
+                    <button class="quick-hp-btn" data-index="${index}" data-amount="-5">-5</button>
+                    <button class="quick-hp-btn" data-index="${index}" data-amount="5">+5</button>
+                    <button class="quick-hp-btn" data-index="${index}" data-amount="10">+10</button>
+                    <button class="full-heal-btn" data-index="${index}">Full Heal</button>
+                </div>
+            </div>
+
+            <div class="party-notes-section">
+                <h4>Notes</h4>
+                <textarea class="party-notes" data-index="${index}" rows="3" placeholder="Conditions, buffs, debuffs...">${member.notes}</textarea>
+            </div>
+        `;
+
+        container.appendChild(charCard);
+    });
+
+    // Add event listeners after rendering
+    attachPartyEventListeners();
+    updateAllHPBars();
+}
+
+// Update HP bar for a specific party member
+function updatePartyMemberHPBar(index) {
+    const member = adventureParty[index];
+    if (!member) return;
+
+    const percentage = Math.max(0, Math.min(100, (member.currentHP / member.maxHP) * 100));
+    const hpBarFill = document.querySelector(`.party-hp-bar-fill[data-index="${index}"]`);
+
+    if (hpBarFill) {
+        hpBarFill.style.width = percentage + '%';
+
+        // Update color based on HP percentage
+        if (percentage <= 25) {
+            hpBarFill.style.background = '#dc3545'; // Red
+        } else if (percentage <= 50) {
+            hpBarFill.style.background = '#ffc107'; // Yellow
+        } else {
+            hpBarFill.style.background = '#28a745'; // Green
+        }
     }
 }
 
-function updateCurrentHP(amount) {
-    const currentHP = parseInt(document.getElementById('currentHP').value) || 0;
-    const newHP = Math.max(0, Math.min(adventureState.maxHP, currentHP + amount));
-
-    adventureState.currentHP = newHP;
-    document.getElementById('currentHP').value = newHP;
-    updateHPBar();
+// Update all HP bars
+function updateAllHPBars() {
+    adventureParty.forEach((member, index) => {
+        updatePartyMemberHPBar(index);
+    });
 }
 
-function initAdventureTracker() {
-    // HP increase/decrease buttons
-    document.getElementById('hpIncrease').addEventListener('click', function() {
-        updateCurrentHP(1);
-    });
+// Update party member HP
+function updatePartyMemberHP(index, amount) {
+    const member = adventureParty[index];
+    if (!member) return;
 
-    document.getElementById('hpDecrease').addEventListener('click', function() {
-        updateCurrentHP(-1);
-    });
+    const newHP = Math.max(0, Math.min(member.maxHP, member.currentHP + amount));
+    member.currentHP = newHP;
 
-    // Current HP input
-    document.getElementById('currentHP').addEventListener('input', function() {
-        let value = parseInt(this.value) || 0;
-        value = Math.max(0, Math.min(adventureState.maxHP, value));
-        adventureState.currentHP = value;
-        this.value = value;
-        updateHPBar();
-    });
+    const hpInput = document.querySelector(`.party-hp-input[data-index="${index}"]`);
+    if (hpInput) {
+        hpInput.value = newHP;
+    }
 
-    // Quick HP buttons
-    document.querySelectorAll('.quick-hp-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const amount = parseInt(this.getAttribute('data-amount'));
-            updateCurrentHP(amount);
+    updatePartyMemberHPBar(index);
+}
+
+// Attach event listeners to party controls
+function attachPartyEventListeners() {
+    // Remove from party buttons
+    document.querySelectorAll('.remove-from-party-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const member = adventureParty[index];
+            if (member) {
+                removeCharacterFromParty(member.cardId);
+            }
         });
     });
 
-    // Full heal button
-    document.getElementById('fullHealBtn').addEventListener('click', function() {
-        adventureState.currentHP = adventureState.maxHP;
-        document.getElementById('currentHP').value = adventureState.maxHP;
-        updateHPBar();
+    // HP increase buttons
+    document.querySelectorAll('.hp-btn.increase').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            updatePartyMemberHP(index, 1);
+        });
     });
 
+    // HP decrease buttons
+    document.querySelectorAll('.hp-btn.decrease').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            updatePartyMemberHP(index, -1);
+        });
+    });
+
+    // HP input changes
+    document.querySelectorAll('.party-hp-input').forEach(input => {
+        input.addEventListener('input', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const member = adventureParty[index];
+            if (member) {
+                let value = parseInt(this.value) || 0;
+                value = Math.max(0, Math.min(member.maxHP, value));
+                member.currentHP = value;
+                this.value = value;
+                updatePartyMemberHPBar(index);
+            }
+        });
+    });
+
+    // Quick HP buttons
+    document.querySelectorAll('.quick-hp-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const amount = parseInt(this.getAttribute('data-amount'));
+            updatePartyMemberHP(index, amount);
+        });
+    });
+
+    // Full heal buttons
+    document.querySelectorAll('.full-heal-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const member = adventureParty[index];
+            if (member) {
+                member.currentHP = member.maxHP;
+                const hpInput = document.querySelector(`.party-hp-input[data-index="${index}"]`);
+                if (hpInput) {
+                    hpInput.value = member.maxHP;
+                }
+                updatePartyMemberHPBar(index);
+            }
+        });
+    });
+
+    // Notes textareas
+    document.querySelectorAll('.party-notes').forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const member = adventureParty[index];
+            if (member) {
+                member.notes = this.value;
+            }
+        });
+    });
+}
+
+// Save adventure state to JSON file
+function saveAdventure() {
+    if (adventureParty.length === 0) {
+        alert('No characters in the adventure party to save.');
+        return;
+    }
+
+    // Create save data with only necessary information
+    const saveData = {
+        version: '1.0',
+        timestamp: new Date().toISOString(),
+        party: adventureParty.map(member => ({
+            cardId: member.cardId,
+            currentHP: member.currentHP,
+            maxHP: member.maxHP,
+            notes: member.notes,
+            // Store card data for reference
+            cardName: member.card.formFields.cardName
+        }))
+    };
+
+    // Create and download JSON file
+    const dataStr = JSON.stringify(saveData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `adventure_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    console.log('Adventure saved:', saveData);
+}
+
+// Load adventure state from JSON file
+function loadAdventure(fileData) {
+    try {
+        const saveData = JSON.parse(fileData);
+
+        if (!saveData.party || !Array.isArray(saveData.party)) {
+            alert('Invalid adventure file format.');
+            return;
+        }
+
+        // Clear current party
+        adventureParty = [];
+
+        // Restore party members
+        saveData.party.forEach(savedMember => {
+            // Find the card in the deck by ID
+            const card = deck.find(c => c.id === savedMember.cardId);
+
+            if (card) {
+                adventureParty.push({
+                    cardId: savedMember.cardId,
+                    card: card,
+                    currentHP: savedMember.currentHP,
+                    maxHP: savedMember.maxHP,
+                    notes: savedMember.notes || ''
+                });
+            } else {
+                console.warn(`Card not found in deck: ${savedMember.cardName} (ID: ${savedMember.cardId})`);
+            }
+        });
+
+        updateAdventurePartyDisplay();
+        loadCharacterList();
+
+        const foundCount = adventureParty.length;
+        const totalCount = saveData.party.length;
+        if (foundCount < totalCount) {
+            alert(`Adventure loaded! ${foundCount}/${totalCount} characters found in your deck. Some characters may be missing.`);
+        } else {
+            alert(`Adventure loaded successfully! ${foundCount} characters restored.`);
+        }
+
+        console.log('Adventure loaded:', saveData);
+    } catch (error) {
+        console.error('Error loading adventure:', error);
+        alert('Failed to load adventure file. Please make sure the file is valid.');
+    }
+}
+
+function initAdventureTracker() {
     // Refresh character list button
     document.getElementById('refreshCharactersBtn').addEventListener('click', loadCharacterList);
 
-    // Adventure notes
-    document.getElementById('adventureNotes').addEventListener('input', function() {
-        adventureState.notes = this.value;
+    // Save adventure button
+    document.getElementById('saveAdventureBtn').addEventListener('click', saveAdventure);
+
+    // Load adventure button
+    document.getElementById('loadAdventureBtn').addEventListener('click', function() {
+        document.getElementById('loadAdventureFile').click();
+    });
+
+    // File input for loading
+    document.getElementById('loadAdventureFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                loadAdventure(event.target.result);
+            };
+            reader.readAsText(file);
+        }
+        // Reset the input so the same file can be loaded again
+        this.value = '';
     });
 }
 
