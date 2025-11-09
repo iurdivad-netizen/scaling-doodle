@@ -1,4 +1,7 @@
 // Template Definitions
+// Global counter for unique card IDs
+let cardIdCounter = 0;
+
 const templates = {
     creature: {
         name: 'Creature/Monster',
@@ -1119,13 +1122,36 @@ async function loadDeck() {
 
     // Ensure all cards have unique IDs (for backward compatibility)
     let needsSave = false;
+
+    // First, find the highest counter value in existing IDs to avoid conflicts
+    let maxCounter = 0;
+    deck.forEach(card => {
+        if (card.id) {
+            const match = card.id.match(/^card_(\d+)_/);
+            if (match) {
+                const counter = parseInt(match[1]);
+                if (counter > maxCounter) {
+                    maxCounter = counter;
+                }
+            }
+        }
+    });
+
+    // Set the global counter to be higher than any existing
+    cardIdCounter = maxCounter;
+
+    // Assign IDs to cards that don't have them
     deck.forEach((card, index) => {
         if (!card.id) {
-            card.id = 'card_' + Date.now() + '_' + index + '_' + Math.random().toString(36).substr(2, 9);
+            cardIdCounter++;
+            card.id = 'card_' + cardIdCounter + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             needsSave = true;
             console.log('Assigned ID to existing card:', card.name, 'ID:', card.id);
         }
     });
+
+    console.log('Deck loaded. Card ID counter initialized to:', cardIdCounter);
+    console.log('All card IDs:', deck.map(c => ({ name: c.name, id: c.id })));
 
     // Save if we added IDs
     if (needsSave) {
@@ -1210,8 +1236,12 @@ function captureCardState() {
         backCardBgColor: root.style.getPropertyValue('--back-card-bg-color') || defaultTheme.backCardBgColor
     };
 
+    // Generate truly unique ID with counter
+    cardIdCounter++;
+    const uniqueId = 'card_' + cardIdCounter + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
     const cardData = {
-        id: 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9), // Generate unique ID
+        id: uniqueId,
         template: currentTemplate,
         layout: cardLayoutSelect.value,
         html: cardPreview.innerHTML,
