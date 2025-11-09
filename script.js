@@ -1120,7 +1120,12 @@ async function loadDeck() {
         }
     }
 
-    // Ensure all cards have unique IDs (for backward compatibility)
+    // Ensure all cards have unique IDs
+    await ensureAllCardsHaveIDs();
+}
+
+// Helper function to ensure all cards in deck have unique IDs
+async function ensureAllCardsHaveIDs() {
     let needsSave = false;
 
     // First, find the highest counter value in existing IDs to avoid conflicts
@@ -1138,7 +1143,9 @@ async function loadDeck() {
     });
 
     // Set the global counter to be higher than any existing
-    cardIdCounter = maxCounter;
+    if (maxCounter > cardIdCounter) {
+        cardIdCounter = maxCounter;
+    }
 
     // Assign IDs to cards that don't have them
     deck.forEach((card, index) => {
@@ -1146,16 +1153,17 @@ async function loadDeck() {
             cardIdCounter++;
             card.id = 'card_' + cardIdCounter + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             needsSave = true;
-            console.log('Assigned ID to existing card:', card.name, 'ID:', card.id);
+            console.log('Assigned ID to card:', card.name, 'ID:', card.id);
         }
     });
 
-    console.log('Deck loaded. Card ID counter initialized to:', cardIdCounter);
-    console.log('All card IDs:', deck.map(c => ({ name: c.name, id: c.id })));
+    console.log('Deck processed. Card ID counter:', cardIdCounter);
+    console.log('Total cards with IDs:', deck.filter(c => c.id).length, '/', deck.length);
 
     // Save if we added IDs
     if (needsSave) {
         await saveDeck();
+        console.log('Deck saved after ID assignment');
     }
 }
 
@@ -1516,7 +1524,10 @@ function loadDeckFromFile(event) {
                 deck = deck.concat(validatedDeck);
             }
 
-            await saveDeck();
+            // Ensure all imported cards have unique IDs
+            console.log('Ensuring all imported cards have IDs...');
+            await ensureAllCardsHaveIDs();
+
             updateDeckCounter();
             showDeckModal(); // Refresh the modal
 
@@ -2154,7 +2165,7 @@ function initTabs() {
 let adventureParty = [];
 
 // Load character list from deck
-function loadCharacterList() {
+async function loadCharacterList() {
     const characterList = document.getElementById('characterList');
 
     if (!deck || deck.length === 0) {
@@ -2165,27 +2176,13 @@ function loadCharacterList() {
 
     console.log('Loading character list from deck with', deck.length, 'cards');
 
+    // Ensure all cards have IDs before rendering (safety check)
+    await ensureAllCardsHaveIDs();
+
     // Filter to only show creature cards (characters/monsters)
     const creatureCards = deck.filter(card => card.template === 'creature');
 
     console.log('Found', creatureCards.length, 'creature cards');
-
-    // Verify all cards have IDs and assign if missing
-    let needsRefresh = false;
-    creatureCards.forEach((card, index) => {
-        if (!card.id) {
-            console.warn('Card missing ID, assigning now:', card.formFields?.cardName);
-            cardIdCounter++;
-            card.id = 'card_' + cardIdCounter + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            needsRefresh = true;
-        }
-    });
-
-    if (needsRefresh) {
-        console.log('Some cards were missing IDs, saving deck...');
-        saveDeck();
-    }
-
     console.log('All creature card IDs:', creatureCards.map(c => ({ name: c.formFields?.cardName, id: c.id })));
 
     if (creatureCards.length === 0) {
@@ -2198,7 +2195,7 @@ function loadCharacterList() {
     creatureCards.forEach((card, index) => {
         // Verify card has ID before proceeding
         if (!card.id) {
-            console.error('Card still has no ID after assignment!', card);
+            console.error('Card has no ID even after ensureAllCardsHaveIDs()!', card);
             return;
         }
 
