@@ -2134,8 +2134,8 @@ function loadCharacterList() {
         const listItem = document.createElement('div');
         listItem.className = 'character-list-item';
         listItem.innerHTML = `
-            <div class="char-name">${card.formData.cardName || 'Unnamed Character'}</div>
-            <div class="char-info">AC: ${card.formData.ac || '--'} | HP: ${card.formData.hp || '--'}</div>
+            <div class="char-name">${card.formFields.cardName || 'Unnamed Character'}</div>
+            <div class="char-info">AC: ${card.formFields.ac || '--'} | HP: ${card.formFields.hp || '--'}</div>
         `;
 
         listItem.addEventListener('click', function() {
@@ -2160,12 +2160,12 @@ function loadCharacterIntoAdventure(card) {
     currentAdventureCharacter = card;
 
     // Update character info
-    document.getElementById('adventureCharName').textContent = card.formData.cardName || 'Unknown Character';
+    document.getElementById('adventureCharName').textContent = card.formFields.cardName || 'Unknown Character';
     document.getElementById('adventureCharType').textContent =
-        `${card.formData.cardType || ''} ${card.formData.cardSubtype ? '• ' + card.formData.cardSubtype : ''}`.trim();
+        `${card.formFields.cardType || ''} ${card.formFields.cardSubtype ? '• ' + card.formFields.cardSubtype : ''}`.trim();
 
     // Parse HP from the card (e.g., "546 (28d20 + 252)")
-    const hpText = card.formData.hp || '0';
+    const hpText = card.formFields.hp || '0';
     const hpMatch = hpText.match(/^(\d+)/);
     const maxHP = hpMatch ? parseInt(hpMatch[1]) : 0;
 
@@ -2178,16 +2178,16 @@ function loadCharacterIntoAdventure(card) {
     updateHPBar();
 
     // Update stats
-    document.getElementById('adventureAC').textContent = card.formData.ac || '--';
-    document.getElementById('adventureSpeed').textContent = card.formData.speed || '--';
+    document.getElementById('adventureAC').textContent = card.formFields.ac || '--';
+    document.getElementById('adventureSpeed').textContent = card.formFields.speed || '--';
 
     // Update ability scores
-    document.getElementById('adventureStr').textContent = card.formData.str || '--';
-    document.getElementById('adventureDex').textContent = card.formData.dex || '--';
-    document.getElementById('adventureCon').textContent = card.formData.con || '--';
-    document.getElementById('adventureInt').textContent = card.formData.int || '--';
-    document.getElementById('adventureWis').textContent = card.formData.wis || '--';
-    document.getElementById('adventureCha').textContent = card.formData.cha || '--';
+    document.getElementById('adventureStr').textContent = card.formFields.str || '--';
+    document.getElementById('adventureDex').textContent = card.formFields.dex || '--';
+    document.getElementById('adventureCon').textContent = card.formFields.con || '--';
+    document.getElementById('adventureInt').textContent = card.formFields.int || '--';
+    document.getElementById('adventureWis').textContent = card.formFields.wis || '--';
+    document.getElementById('adventureCha').textContent = card.formFields.cha || '--';
 
     // Clear notes
     document.getElementById('adventureNotes').value = '';
