@@ -2692,6 +2692,9 @@ function loadPartyCombatants() {
         const combatantCard = createCombatantCard(member, 'party');
         container.appendChild(combatantCard);
     });
+
+    // Highlight active turn after loading
+    highlightActiveTurn();
 }
 
 function loadEnemyCombatants() {
@@ -2707,6 +2710,34 @@ function loadEnemyCombatants() {
         const combatantCard = createCombatantCard(enemy, 'enemy');
         container.appendChild(combatantCard);
     });
+
+    // Highlight active turn after loading
+    highlightActiveTurn();
+}
+
+function highlightActiveTurn() {
+    // Remove active-turn class from all combatant cards
+    document.querySelectorAll('.combatant-card').forEach(card => {
+        card.classList.remove('active-turn');
+    });
+
+    // Only highlight if combat is active
+    if (!combatState.active || combatState.initiativeOrder.length === 0) {
+        return;
+    }
+
+    // Get current turn's combatant
+    const currentCombatant = combatState.initiativeOrder[combatState.currentTurnIndex];
+    if (!currentCombatant) return;
+
+    // Find and highlight the matching card
+    const activeCard = document.querySelector(
+        `.combatant-card[data-combatant-id="${currentCombatant.id}"][data-combatant-type="${currentCombatant.type}"]`
+    );
+
+    if (activeCard) {
+        activeCard.classList.add('active-turn');
+    }
 }
 
 function createCombatantCard(combatant, type) {
@@ -3001,8 +3032,13 @@ function startCombat() {
     loadPartyCombatants();
     loadEnemyCombatants();
 
-    // Log combat start
+    // Log combat start and first turn
     addCombatLog(`⚔️ <strong>Combat ${combatCounter} has begun!</strong> Round 1 starts.`, 'info');
+
+    const firstCombatant = combatState.initiativeOrder[0];
+    if (firstCombatant) {
+        addCombatLog(`🎯 It's <strong>${firstCombatant.name}</strong>'s turn.`, 'info');
+    }
 }
 
 function rollD20() {
@@ -3276,6 +3312,9 @@ function nextTurn() {
     }
 
     displayInitiativeOrder();
+
+    // Highlight the active turn
+    highlightActiveTurn();
 
     // Log whose turn it is
     const currentCombatant = combatState.initiativeOrder[combatState.currentTurnIndex];
