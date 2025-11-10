@@ -2702,6 +2702,13 @@ header p {
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
+.combatant-card.active-turn {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffe9a3 100%);
+    border: 3px solid #d4af37;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    transform: scale(1.02);
+}
+
 .combatant-header {
     display: flex;
     justify-content: space-between;
