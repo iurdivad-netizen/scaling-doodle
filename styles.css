@@ -2703,10 +2703,20 @@ header p {
 }
 
 .combatant-card.active-turn {
-    background: linear-gradient(135deg, #fff9e6 0%, #ffe9a3 100%);
-    border: 3px solid #d4af37;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    background: linear-gradient(135deg, #fff9e6 0%, #ffe9a3 100%) !important;
+    border: 3px solid #d4af37 !important;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4) !important;
     transform: scale(1.02);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(212, 175, 55, 0.7);
+    }
 }
 
 .combatant-header {

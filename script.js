@@ -2716,6 +2716,8 @@ function loadEnemyCombatants() {
 }
 
 function highlightActiveTurn() {
+    console.log('highlightActiveTurn called, combat active:', combatState.active);
+
     // Remove active-turn class from all combatant cards
     document.querySelectorAll('.combatant-card').forEach(card => {
         card.classList.remove('active-turn');
@@ -2723,20 +2725,31 @@ function highlightActiveTurn() {
 
     // Only highlight if combat is active
     if (!combatState.active || combatState.initiativeOrder.length === 0) {
+        console.log('Combat not active or no initiative order');
         return;
     }
 
     // Get current turn's combatant
     const currentCombatant = combatState.initiativeOrder[combatState.currentTurnIndex];
-    if (!currentCombatant) return;
+    console.log('Current turn index:', combatState.currentTurnIndex, 'Current combatant:', currentCombatant);
+
+    if (!currentCombatant) {
+        console.log('No current combatant found');
+        return;
+    }
 
     // Find and highlight the matching card
-    const activeCard = document.querySelector(
-        `.combatant-card[data-combatant-id="${currentCombatant.id}"][data-combatant-type="${currentCombatant.type}"]`
-    );
+    const selector = `.combatant-card[data-combatant-id="${currentCombatant.id}"][data-combatant-type="${currentCombatant.type}"]`;
+    console.log('Looking for card with selector:', selector);
+
+    const activeCard = document.querySelector(selector);
+    console.log('Found card:', activeCard);
 
     if (activeCard) {
         activeCard.classList.add('active-turn');
+        console.log('Added active-turn class to:', currentCombatant.name);
+    } else {
+        console.warn('Could not find card for combatant:', currentCombatant.name, 'with id:', currentCombatant.id, 'type:', currentCombatant.type);
     }
 }
 
