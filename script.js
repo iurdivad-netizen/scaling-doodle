@@ -2550,7 +2550,9 @@ function saveAdventure() {
             // Store card data for reference
             cardName: member.card.formFields.cardName
         })),
-        combatLog: combatLog // Save the combat log
+        combatLog: combatLog, // Save the combat log
+        combatCounter: combatCounter, // Save combat counter
+        actionSequence: actionSequence // Save action sequence
     };
 
     // Create and download JSON file
@@ -2635,15 +2637,11 @@ async function loadAdventure(fileData) {
         // Restore combat log if it exists in save data
         if (saveData.combatLog && Array.isArray(saveData.combatLog)) {
             combatLog = saveData.combatLog;
-            // Restore sequence counter from the max sequence in loaded log
-            if (combatLog.length > 0) {
-                const maxSequence = Math.max(...combatLog.map(entry => entry.sequence || 0));
-                combatLogSequence = maxSequence;
-            } else {
-                combatLogSequence = 0;
-            }
+            // Restore combat counter and action sequence
+            combatCounter = saveData.combatCounter || 0;
+            actionSequence = saveData.actionSequence || 0;
             displayCombatLog();
-            console.log('Combat log restored:', combatLog.length, 'entries, sequence:', combatLogSequence);
+            console.log('Combat log restored:', combatLog.length, 'entries, combat:', combatCounter, 'action:', actionSequence);
         } else {
             // Clear combat log if none was saved
             clearCombatLog();
@@ -2976,8 +2974,9 @@ function startCombat() {
         return;
     }
 
-    // Clear previous combat log
-    clearCombatLog();
+    // Start new combat session: increment combat counter and reset action sequence
+    combatCounter++;
+    actionSequence = 0;
 
     // Roll initiative for everyone who doesn't have one
     adventureParty.forEach(member => {
@@ -3003,7 +3002,7 @@ function startCombat() {
     loadEnemyCombatants();
 
     // Log combat start
-    addCombatLog('⚔️ <strong>Combat has begun!</strong> Round 1 starts.', 'info');
+    addCombatLog(`⚔️ <strong>Combat ${combatCounter} has begun!</strong> Round 1 starts.`, 'info');
 }
 
 function rollD20() {
@@ -3052,13 +3051,17 @@ function parseDiceNotation(notation) {
 
 // Combat log storage
 let combatLog = [];
-let combatLogSequence = 0;
+let combatCounter = 0; // Tracks which combat session (1, 2, 3, etc.)
+let actionSequence = 0; // Tracks actions within current combat (1, 2, 3, etc.)
 
 function addCombatLog(message, type = 'info') {
     const timestamp = new Date().toLocaleTimeString();
-    combatLogSequence++;
+    actionSequence++;
+    const sequenceNumber = `${combatCounter}.${actionSequence}`;
     combatLog.push({
-        sequence: combatLogSequence,
+        sequence: sequenceNumber,
+        combatNumber: combatCounter,
+        actionNumber: actionSequence,
         timestamp,
         message,
         type // 'info', 'hit', 'miss', 'damage', 'critical'
@@ -3087,7 +3090,8 @@ function displayCombatLog() {
 
 function clearCombatLog() {
     combatLog = [];
-    combatLogSequence = 0;
+    combatCounter = 0;
+    actionSequence = 0;
     const container = document.getElementById('combatLog');
     if (container) {
         container.innerHTML = '<p class="no-log">Combat log will appear here...</p>';
