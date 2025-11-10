@@ -2295,6 +2295,10 @@ function removeCharacterFromParty(cardId) {
         console.log('Removed character from party:', adventureParty[index].card.formFields.cardName, 'Remaining:', adventureParty.length - 1);
         adventureParty.splice(index, 1);
 
+        // Clean up combat state for this character
+        delete combatState.openActionPanels[cardId];
+        delete combatState.selectedTargets[cardId];
+
         // Update the checkbox visual state
         const checkbox = document.querySelector(`.char-checkbox[data-card-id="${cardId}"]`);
         if (checkbox) {
@@ -2670,7 +2674,9 @@ let combatState = {
     round: 0,
     currentTurnIndex: 0,
     enemies: [],
-    initiativeOrder: []
+    initiativeOrder: [],
+    openActionPanels: {}, // Track which combat action panels are open (combatantId: true/false)
+    selectedTargets: {} // Track selected targets for each combatant (combatantId: targetValue)
 };
 
 let enemyIdCounter = 0;
@@ -2708,7 +2714,8 @@ function loadEnemyCombatants() {
 function createCombatantCard(combatant, type) {
     const card = document.createElement('div');
     card.className = 'combatant-card';
-    card.dataset.combatantId = combatant.id || combatant.cardId;
+    const combatantId = combatant.id || combatant.cardId;
+    card.dataset.combatantId = combatantId;
     card.dataset.combatantType = type;
 
     const isEnemy = type === 'enemy';
@@ -2719,8 +2726,13 @@ function createCombatantCard(combatant, type) {
     const maxHP = combatant.maxHP;
     const initiative = combatant.initiative || 0;
 
+    // Check if this combatant's action panel should be open
+    const isPanelOpen = combatState.openActionPanels[combatantId] || false;
+    const panelDisplay = isPanelOpen ? 'block' : 'none';
+    const toggleArrow = isPanelOpen ? '▲' : '▼';
+
     // Create target options for attacks
-    const targetOptions = createTargetOptions(combatant.id || combatant.cardId, type);
+    const targetOptions = createTargetOptions(combatantId, type);
 
     card.innerHTML = `
         <div class="combatant-header">
@@ -2729,15 +2741,15 @@ function createCombatantCard(combatant, type) {
         </div>
         <div class="combatant-stats">
             <span class="combatant-stat">AC: ${ac}</span>
-            <span class="combatant-stat">Initiative: <input type="number" class="initiative-input" value="${initiative}" data-id="${combatant.id || combatant.cardId}" data-type="${type}"></span>
+            <span class="combatant-stat">Initiative: <input type="number" class="initiative-input" value="${initiative}" data-id="${combatantId}" data-type="${type}"></span>
         </div>
         <div class="combatant-hp">
             <div class="hp-controls">
-                <button class="hp-btn-combat decrease" data-id="${combatant.id || combatant.cardId}" data-type="${type}">−</button>
-                <input type="number" class="combat-hp-input" value="${currentHP}" data-id="${combatant.id || combatant.cardId}" data-type="${type}">
+                <button class="hp-btn-combat decrease" data-id="${combatantId}" data-type="${type}">−</button>
+                <input type="number" class="combat-hp-input" value="${currentHP}" data-id="${combatantId}" data-type="${type}">
                 <span class="hp-divider">/</span>
                 <span class="combat-max-hp">${maxHP}</span>
-                <button class="hp-btn-combat increase" data-id="${combatant.id || combatant.cardId}" data-type="${type}">+</button>
+                <button class="hp-btn-combat increase" data-id="${combatantId}" data-type="${type}">+</button>
             </div>
             <div class="combat-hp-bar-container">
                 <div class="combat-hp-bar">
@@ -2748,13 +2760,13 @@ function createCombatantCard(combatant, type) {
         <div class="combat-actions">
             <div class="combat-action-header">
                 <strong>⚔️ Combat Actions</strong>
-                <button class="toggle-actions-btn" data-id="${combatant.id || combatant.cardId}">▼</button>
+                <button class="toggle-actions-btn" data-id="${combatantId}">${toggleArrow}</button>
             </div>
-            <div class="combat-action-panel" style="display: none;">
+            <div class="combat-action-panel" style="display: ${panelDisplay};">
                 <div class="attack-controls">
                     <div class="attack-row">
                         <label>Target:</label>
-                        <select class="attack-target-select" data-attacker-id="${combatant.id || combatant.cardId}" data-attacker-type="${type}" data-attacker-name="${name}">
+                        <select class="attack-target-select" data-attacker-id="${combatantId}" data-attacker-type="${type}" data-attacker-name="${name}">
                             ${targetOptions}
                         </select>
                     </div>
@@ -2763,19 +2775,26 @@ function createCombatantCard(combatant, type) {
                         <input type="number" class="attack-bonus-input" value="0" placeholder="+0">
                     </div>
                     <div class="attack-row">
-                        <button class="btn-roll-attack" data-attacker-id="${combatant.id || combatant.cardId}" data-attacker-type="${type}" data-attacker-name="${name}">🎲 Roll Attack</button>
+                        <button class="btn-roll-attack" data-attacker-id="${combatantId}" data-attacker-type="${type}" data-attacker-name="${name}">🎲 Roll Attack</button>
                     </div>
                     <div class="attack-row">
                         <label>Damage Dice:</label>
                         <input type="text" class="damage-dice-input" value="1d8" placeholder="1d8+3">
                     </div>
                     <div class="attack-row">
-                        <button class="btn-roll-damage" data-attacker-id="${combatant.id || combatant.cardId}" data-attacker-type="${type}" data-attacker-name="${name}">💥 Roll Damage</button>
+                        <button class="btn-roll-damage" data-attacker-id="${combatantId}" data-attacker-type="${type}" data-attacker-name="${name}">💥 Roll Damage</button>
                     </div>
                 </div>
             </div>
         </div>
     `;
+
+    // Restore selected target if one exists
+    const savedTarget = combatState.selectedTargets[combatantId];
+    if (savedTarget) {
+        const targetSelect = card.querySelector('.attack-target-select');
+        targetSelect.value = savedTarget;
+    }
 
     return card;
 }
@@ -2898,6 +2917,11 @@ function parseDexMod(dexString) {
 
 function removeEnemy(enemyId) {
     combatState.enemies = combatState.enemies.filter(e => e.id !== enemyId);
+
+    // Clean up state for this enemy
+    delete combatState.openActionPanels[enemyId];
+    delete combatState.selectedTargets[enemyId];
+
     loadEnemyCombatants();
 
     // If combat is active, update initiative order
@@ -3330,12 +3354,16 @@ function attachCombatEventListeners() {
         if (e.target.classList.contains('toggle-actions-btn')) {
             const card = e.target.closest('.combatant-card');
             const panel = card.querySelector('.combat-action-panel');
+            const combatantId = e.target.dataset.id;
+
             if (panel.style.display === 'none') {
                 panel.style.display = 'block';
                 e.target.textContent = '▲';
+                combatState.openActionPanels[combatantId] = true;
             } else {
                 panel.style.display = 'none';
                 e.target.textContent = '▼';
+                combatState.openActionPanels[combatantId] = false;
             }
         }
 
@@ -3418,6 +3446,13 @@ function attachCombatEventListeners() {
             const type = e.target.dataset.type;
             const initiative = e.target.value;
             updateInitiative(id, type, initiative);
+        }
+
+        // Save selected target when it changes
+        if (e.target.classList.contains('attack-target-select')) {
+            const attackerId = e.target.dataset.attackerId;
+            const targetValue = e.target.value;
+            combatState.selectedTargets[attackerId] = targetValue;
         }
     });
 }
