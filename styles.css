@@ -3115,6 +3115,14 @@ header p {
     line-height: 1.6;
 }
 
+.log-sequence {
+    color: #8b4513;
+    font-weight: bold;
+    font-size: 0.85em;
+    margin-right: 8px;
+    font-family: monospace;
+}
+
 .log-time {
     color: #888;
     font-size: 0.85em;
