@@ -2629,6 +2629,7 @@ header p {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
+    grid-column: 1;
 }
 
 .combat-section {
@@ -2836,10 +2837,7 @@ header p {
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 20px;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
+    grid-column: 2;
 }
 
 .initiative-panel h3 {
@@ -3057,7 +3055,7 @@ header p {
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-top: 20px;
+    grid-column: 2;
 }
 
 .combat-log-header {
@@ -3252,9 +3250,10 @@ header p {
         grid-template-columns: 1fr;
     }
 
-    .initiative-panel {
-        position: static;
-        max-height: none;
+    .combat-area,
+    .initiative-panel,
+    .combat-log-panel {
+        grid-column: 1;
     }
 }
 
