@@ -2631,8 +2631,15 @@ async function loadAdventure(fileData) {
         // Restore combat log if it exists in save data
         if (saveData.combatLog && Array.isArray(saveData.combatLog)) {
             combatLog = saveData.combatLog;
+            // Restore sequence counter from the max sequence in loaded log
+            if (combatLog.length > 0) {
+                const maxSequence = Math.max(...combatLog.map(entry => entry.sequence || 0));
+                combatLogSequence = maxSequence;
+            } else {
+                combatLogSequence = 0;
+            }
             displayCombatLog();
-            console.log('Combat log restored:', combatLog.length, 'entries');
+            console.log('Combat log restored:', combatLog.length, 'entries, sequence:', combatLogSequence);
         } else {
             // Clear combat log if none was saved
             clearCombatLog();
@@ -3021,10 +3028,13 @@ function parseDiceNotation(notation) {
 
 // Combat log storage
 let combatLog = [];
+let combatLogSequence = 0;
 
 function addCombatLog(message, type = 'info') {
     const timestamp = new Date().toLocaleTimeString();
+    combatLogSequence++;
     combatLog.push({
+        sequence: combatLogSequence,
         timestamp,
         message,
         type // 'info', 'hit', 'miss', 'damage', 'critical'
@@ -3041,6 +3051,7 @@ function displayCombatLog() {
 
     container.innerHTML = recentLogs.map(log => `
         <div class="combat-log-entry combat-log-${log.type}">
+            <span class="log-sequence">#${log.sequence}</span>
             <span class="log-time">[${log.timestamp}]</span>
             <span class="log-message">${log.message}</span>
         </div>
@@ -3052,6 +3063,7 @@ function displayCombatLog() {
 
 function clearCombatLog() {
     combatLog = [];
+    combatLogSequence = 0;
     const container = document.getElementById('combatLog');
     if (container) {
         container.innerHTML = '<p class="no-log">Combat log will appear here...</p>';
