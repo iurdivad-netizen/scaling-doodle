@@ -673,9 +673,10 @@ function generateThreeColumnFront(templateId) {
         const wis = document.getElementById('wis').value || '-';
         const cha = document.getElementById('cha').value || '-';
 
-        // Get initiative, proficiency, and saving throws from dedicated fields
+        // Get initiative, proficiency, passive perception, and saving throws from dedicated fields
         const initiative = document.getElementById('initiative')?.value || '+0';
         const proficiency = document.getElementById('proficiency')?.value || '+2';
+        const passivePerception = document.getElementById('passivePerception')?.value || '';
         const savingThrows = document.getElementById('savingThrows')?.value || '';
 
         return `
@@ -702,7 +703,7 @@ function generateThreeColumnFront(templateId) {
                         <strong>Speed:</strong><span>${speed}</span>
                     </div>
                     <div class="stat-row">
-                        <strong>Initiative:</strong><span>${initiative}</span>
+                        <strong>Init:</strong><span>${initiative}</span>
                     </div>
                     <div class="stat-row">
                         <strong>Prof:</strong><span>${proficiency}</span>
