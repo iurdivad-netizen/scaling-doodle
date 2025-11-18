@@ -2634,31 +2634,33 @@ function applyTheme(theme) {
 
     // Apply image as background setting
     const card = document.getElementById('cardPreview');
-    const cardImageSection = card.querySelector('.card-image') || card.querySelector('.card-image-background');
+    if (card) {
+        const cardImageSection = card.querySelector('.card-image') || card.querySelector('.card-image-background');
 
-    if (theme.useImageAsBackground) {
-        // Lock the current height before applying background mode
-        if (cardImageSection) {
-            const currentHeight = cardImageSection.offsetHeight;
-            cardImageSection.style.height = currentHeight + 'px';
-            cardImageSection.style.minHeight = currentHeight + 'px';
-        }
+        if (theme.useImageAsBackground) {
+            // Lock the current height before applying background mode
+            if (cardImageSection) {
+                const currentHeight = cardImageSection.offsetHeight;
+                cardImageSection.style.height = currentHeight + 'px';
+                cardImageSection.style.minHeight = currentHeight + 'px';
+            }
 
-        card.classList.add('image-as-background');
-        // Set the background image from the current card image
-        const cardImage = document.getElementById('previewImage');
-        if (cardImage && cardImage.src) {
-            root.style.setProperty('--card-background-image', `url('${cardImage.src}')`);
-        }
-    } else {
-        // Remove inline height styles when disabling background mode
-        if (cardImageSection) {
-            cardImageSection.style.height = '';
-            cardImageSection.style.minHeight = '';
-        }
+            card.classList.add('image-as-background');
+            // Set the background image from the current card image
+            const cardImage = document.getElementById('previewImage');
+            if (cardImage && cardImage.src) {
+                root.style.setProperty('--card-background-image', `url('${cardImage.src}')`);
+            }
+        } else {
+            // Remove inline height styles when disabling background mode
+            if (cardImageSection) {
+                cardImageSection.style.height = '';
+                cardImageSection.style.minHeight = '';
+            }
 
-        card.classList.remove('image-as-background');
-        root.style.setProperty('--card-background-image', 'none');
+            card.classList.remove('image-as-background');
+            root.style.setProperty('--card-background-image', 'none');
+        }
     }
 }
 
@@ -2705,25 +2707,43 @@ function updateCustomizationUI(theme) {
 
 // Get current theme from UI controls
 function getCurrentTheme() {
+    const fontFamilyElement = document.getElementById('fontFamily');
+    const cardNameSizeElement = document.getElementById('cardNameSize');
+    const cardHeaderSizeElement = document.getElementById('cardHeaderSize');
+    const cardDescriptionSizeElement = document.getElementById('cardDescriptionSize');
+    const cardStatLabelSizeElement = document.getElementById('cardStatLabelSize');
+    const cardAbilityNameSizeElement = document.getElementById('cardAbilityNameSize');
+    const cardAbilityValueSizeElement = document.getElementById('cardAbilityValueSize');
+    const cardImageHeightElement = document.getElementById('cardImageHeight');
+    const sectionSpacingElement = document.getElementById('sectionSpacing');
+    const cardBgColorElement = document.getElementById('cardBgColor');
+    const cardBorderColorElement = document.getElementById('cardBorderColor');
+    const cardTextColorElement = document.getElementById('cardTextColor');
+    const cardLabelColorElement = document.getElementById('cardLabelColor');
+    const cardNameColorElement = document.getElementById('cardNameColor');
+    const useImageAsBackgroundElement = document.getElementById('useImageAsBackground');
+    const contentOpacityElement = document.getElementById('contentOpacity');
+    const backCardBgColorElement = document.getElementById('backCardBgColor');
+
     return {
-        fontFamily: document.getElementById('fontFamily').value,
-        cardNameSize: parseFloat(document.getElementById('cardNameSize').value),
-        cardHeaderSize: parseFloat(document.getElementById('cardHeaderSize').value),
-        cardDescriptionSize: parseFloat(document.getElementById('cardDescriptionSize').value),
-        cardStatLabelSize: parseFloat(document.getElementById('cardStatLabelSize').value),
-        cardAbilityNameSize: parseFloat(document.getElementById('cardAbilityNameSize').value),
-        cardAbilityValueSize: parseFloat(document.getElementById('cardAbilityValueSize').value),
-        cardImageHeight: parseInt(document.getElementById('cardImageHeight').value),
-        sectionSpacing: parseInt(document.getElementById('sectionSpacing').value),
-        cardBgColor: document.getElementById('cardBgColor').value,
-        cardBorderColor: document.getElementById('cardBorderColor').value,
-        cardTextColor: document.getElementById('cardTextColor').value,
-        cardLabelColor: document.getElementById('cardLabelColor').value,
-        cardNameColor: document.getElementById('cardNameColor').value,
-        useImageAsBackground: document.getElementById('useImageAsBackground').checked,
-        contentOpacity: parseFloat(document.getElementById('contentOpacity').value),
+        fontFamily: fontFamilyElement ? fontFamilyElement.value : 'Georgia, serif',
+        cardNameSize: cardNameSizeElement ? parseFloat(cardNameSizeElement.value) : 2.4,
+        cardHeaderSize: cardHeaderSizeElement ? parseFloat(cardHeaderSizeElement.value) : 1.2,
+        cardDescriptionSize: cardDescriptionSizeElement ? parseFloat(cardDescriptionSizeElement.value) : 1.0,
+        cardStatLabelSize: cardStatLabelSizeElement ? parseFloat(cardStatLabelSizeElement.value) : 0.9,
+        cardAbilityNameSize: cardAbilityNameSizeElement ? parseFloat(cardAbilityNameSizeElement.value) : 0.85,
+        cardAbilityValueSize: cardAbilityValueSizeElement ? parseFloat(cardAbilityValueSizeElement.value) : 0.8,
+        cardImageHeight: cardImageHeightElement ? parseInt(cardImageHeightElement.value) : 240,
+        sectionSpacing: sectionSpacingElement ? parseInt(sectionSpacingElement.value) : 12,
+        cardBgColor: cardBgColorElement ? cardBgColorElement.value : '#2c3e50',
+        cardBorderColor: cardBorderColorElement ? cardBorderColorElement.value : '#7f8c8d',
+        cardTextColor: cardTextColorElement ? cardTextColorElement.value : '#ecf0f1',
+        cardLabelColor: cardLabelColorElement ? cardLabelColorElement.value : '#95a5a6',
+        cardNameColor: cardNameColorElement ? cardNameColorElement.value : '#f1c40f',
+        useImageAsBackground: useImageAsBackgroundElement ? useImageAsBackgroundElement.checked : false,
+        contentOpacity: contentOpacityElement ? parseFloat(contentOpacityElement.value) : 0.3,
         backCardImage: window.backCardImageData || '',
-        backCardBgColor: document.getElementById('backCardBgColor').value
+        backCardBgColor: backCardBgColorElement ? backCardBgColorElement.value : '#2c3e50'
     };
 }
 
@@ -3019,22 +3039,30 @@ function initCustomization() {
     }
 
     // Toggle customization panel
-    document.getElementById('toggleCustomization').addEventListener('click', function() {
-        const panel = document.getElementById('customizationPanel');
-        if (panel.style.display === 'none') {
-            panel.style.display = 'block';
-            this.textContent = 'Hide';
-        } else {
-            panel.style.display = 'none';
-            this.textContent = 'Show';
-        }
-    });
+    const toggleCustomizationElement = document.getElementById('toggleCustomization');
+    if (toggleCustomizationElement) {
+        toggleCustomizationElement.addEventListener('click', function() {
+            const panel = document.getElementById('customizationPanel');
+            if (panel) {
+                if (panel.style.display === 'none') {
+                    panel.style.display = 'block';
+                    this.textContent = 'Hide';
+                } else {
+                    panel.style.display = 'none';
+                    this.textContent = 'Show';
+                }
+            }
+        });
+    }
 
     // Font family change
-    document.getElementById('fontFamily').addEventListener('change', function() {
-        const theme = getCurrentTheme();
-        applyTheme(theme);
-    });
+    const fontFamilyElement = document.getElementById('fontFamily');
+    if (fontFamilyElement) {
+        fontFamilyElement.addEventListener('change', function() {
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+        });
+    }
 
     // Font size sliders
     const fontSizeInputs = [
@@ -3048,11 +3076,16 @@ function initCustomization() {
 
     fontSizeInputs.forEach(input => {
         const element = document.getElementById(input.id);
-        element.addEventListener('input', function() {
-            document.getElementById(input.valueId).textContent = this.value;
-            const theme = getCurrentTheme();
-            applyTheme(theme);
-        });
+        if (element) {
+            element.addEventListener('input', function() {
+                const valueElement = document.getElementById(input.valueId);
+                if (valueElement) {
+                    valueElement.textContent = this.value;
+                }
+                const theme = getCurrentTheme();
+                applyTheme(theme);
+            });
+        }
     });
 
     // Section size sliders
@@ -3063,52 +3096,86 @@ function initCustomization() {
 
     sectionSizeInputs.forEach(input => {
         const element = document.getElementById(input.id);
-        element.addEventListener('input', function() {
-            document.getElementById(input.valueId).textContent = this.value;
-            const theme = getCurrentTheme();
-            applyTheme(theme);
-        });
+        if (element) {
+            element.addEventListener('input', function() {
+                const valueElement = document.getElementById(input.valueId);
+                if (valueElement) {
+                    valueElement.textContent = this.value;
+                }
+                const theme = getCurrentTheme();
+                applyTheme(theme);
+            });
+        }
     });
 
     // Color pickers
     const colorInputs = ['cardBgColor', 'cardBorderColor', 'cardTextColor', 'cardLabelColor', 'cardNameColor', 'backCardBgColor'];
     colorInputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', function() {
-            const theme = getCurrentTheme();
-            applyTheme(theme);
-        });
-    });
-
-    // Image as background checkbox
-    document.getElementById('useImageAsBackground').addEventListener('change', function() {
-        const theme = getCurrentTheme();
-        applyTheme(theme);
-    });
-
-    // Content opacity slider
-    document.getElementById('contentOpacity').addEventListener('input', function() {
-        document.getElementById('contentOpacityValue').textContent = parseFloat(this.value).toFixed(2);
-        const theme = getCurrentTheme();
-        applyTheme(theme);
-    });
-
-    // Back card image upload
-    document.getElementById('backCardImageUpload').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                window.backCardImageData = event.target.result;
-                document.getElementById('backCardPreviewImage').src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', function() {
+                const theme = getCurrentTheme();
+                applyTheme(theme);
+            });
         }
     });
 
+    // Image as background checkbox
+    const useImageAsBackgroundElement = document.getElementById('useImageAsBackground');
+    if (useImageAsBackgroundElement) {
+        useImageAsBackgroundElement.addEventListener('change', function() {
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+        });
+    }
+
+    // Content opacity slider
+    const contentOpacityElement = document.getElementById('contentOpacity');
+    if (contentOpacityElement) {
+        contentOpacityElement.addEventListener('input', function() {
+            const valueElement = document.getElementById('contentOpacityValue');
+            if (valueElement) {
+                valueElement.textContent = parseFloat(this.value).toFixed(2);
+            }
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+        });
+    }
+
+    // Back card image upload
+    const backCardImageUploadElement = document.getElementById('backCardImageUpload');
+    if (backCardImageUploadElement) {
+        backCardImageUploadElement.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    window.backCardImageData = event.target.result;
+                    const previewImage = document.getElementById('backCardPreviewImage');
+                    if (previewImage) {
+                        previewImage.src = event.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
     // Theme management buttons
-    document.getElementById('saveThemeBtn').addEventListener('click', saveTheme);
-    document.getElementById('loadThemeBtn').addEventListener('click', loadTheme);
-    document.getElementById('resetThemeBtn').addEventListener('click', resetTheme);
+    const saveThemeBtn = document.getElementById('saveThemeBtn');
+    if (saveThemeBtn) {
+        saveThemeBtn.addEventListener('click', saveTheme);
+    }
+
+    const loadThemeBtn = document.getElementById('loadThemeBtn');
+    if (loadThemeBtn) {
+        loadThemeBtn.addEventListener('click', loadTheme);
+    }
+
+    const resetThemeBtn = document.getElementById('resetThemeBtn');
+    if (resetThemeBtn) {
+        resetThemeBtn.addEventListener('click', resetTheme);
+    }
 }
 
 // ===== Tab Switching Functionality =====
