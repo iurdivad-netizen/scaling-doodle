@@ -3061,6 +3061,7 @@ function initCustomization() {
         fontFamilyElement.addEventListener('change', function() {
             const theme = getCurrentTheme();
             applyTheme(theme);
+            updatePreview(); // Force preview update to apply theme changes
         });
     }
 
@@ -3084,6 +3085,7 @@ function initCustomization() {
                 }
                 const theme = getCurrentTheme();
                 applyTheme(theme);
+                updatePreview(); // Force preview update to apply theme changes
             });
         }
     });
@@ -3104,6 +3106,7 @@ function initCustomization() {
                 }
                 const theme = getCurrentTheme();
                 applyTheme(theme);
+                updatePreview(); // Force preview update to apply theme changes
             });
         }
     });
@@ -3116,6 +3119,7 @@ function initCustomization() {
             element.addEventListener('input', function() {
                 const theme = getCurrentTheme();
                 applyTheme(theme);
+                updatePreview(); // Force preview update to apply theme changes
             });
         }
     });
@@ -3126,6 +3130,7 @@ function initCustomization() {
         useImageAsBackgroundElement.addEventListener('change', function() {
             const theme = getCurrentTheme();
             applyTheme(theme);
+            updatePreview(); // Force preview update to apply theme changes
         });
     }
 
@@ -3139,6 +3144,7 @@ function initCustomization() {
             }
             const theme = getCurrentTheme();
             applyTheme(theme);
+            updatePreview(); // Force preview update to apply theme changes
         });
     }
 
