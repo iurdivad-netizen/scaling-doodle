@@ -2608,27 +2608,47 @@ const defaultTheme = themePresets['classic-fantasy'];
 function applyTheme(theme) {
     const root = document.documentElement;
 
+    // Font families
     root.style.setProperty('--card-font-family', theme.fontFamily);
     root.style.setProperty('--card-name-font-family', theme.fontFamily);
     root.style.setProperty('--card-header-font-family', theme.fontFamily);
     root.style.setProperty('--card-content-font-family', theme.fontFamily);
 
+    // Font sizes
     root.style.setProperty('--card-name-size', theme.cardNameSize + 'em');
     root.style.setProperty('--card-header-size', theme.cardHeaderSize + 'em');
     root.style.setProperty('--card-description-size', theme.cardDescriptionSize + 'em');
     root.style.setProperty('--card-stat-label-size', theme.cardStatLabelSize + 'em');
-    root.style.setProperty('--card-stat-value-size', theme.cardStatLabelSize + 'em');
-    root.style.setProperty('--card-ability-name-size', (theme.cardAbilityNameSize || 0.85) + 'em');
-    root.style.setProperty('--card-ability-value-size', (theme.cardAbilityValueSize || 0.8) + 'em');
+    root.style.setProperty('--card-stat-value-size', (theme.cardStatValueSize || theme.cardStatLabelSize) + 'em');
+    root.style.setProperty('--card-ability-name-size', (theme.cardAbilityNameSize || 1.1) + 'em');
+    root.style.setProperty('--card-ability-value-size', (theme.cardAbilityValueSize || 1.0) + 'em');
 
+    // Line heights
+    root.style.setProperty('--card-name-line-height', theme.cardNameLineHeight || 1.2);
+    root.style.setProperty('--card-header-line-height', theme.cardHeaderLineHeight || 1.2);
+    root.style.setProperty('--card-stat-line-height', theme.cardStatLineHeight || 1.3);
+    root.style.setProperty('--card-description-line-height', theme.cardDescriptionLineHeight || 1.5);
+
+    // Section sizes and spacing
     root.style.setProperty('--card-image-height', theme.cardImageHeight + 'px');
     root.style.setProperty('--section-spacing', theme.sectionSpacing + 'px');
+    root.style.setProperty('--stat-row-spacing', (theme.statRowSpacing !== undefined ? theme.statRowSpacing : 6) + 'px');
+    root.style.setProperty('--ability-grid-gap', (theme.abilityGridGap !== undefined ? theme.abilityGridGap : 8) + 'px');
 
+    // Padding and border
+    const paddingV = theme.cardContentPaddingV !== undefined ? theme.cardContentPaddingV : 16;
+    const paddingH = theme.cardContentPaddingH !== undefined ? theme.cardContentPaddingH : 20;
+    root.style.setProperty('--card-content-padding', `${paddingV}px ${paddingH}px`);
+    root.style.setProperty('--card-border-radius', (theme.cardBorderRadius !== undefined ? theme.cardBorderRadius : 8) + 'px');
+
+    // Colors
     root.style.setProperty('--card-bg-color', theme.cardBgColor);
     root.style.setProperty('--card-border-color', theme.cardBorderColor);
     root.style.setProperty('--card-text-color', theme.cardTextColor);
     root.style.setProperty('--card-label-color', theme.cardLabelColor);
+    root.style.setProperty('--card-header-color', theme.cardHeaderColor || theme.cardLabelColor);
     root.style.setProperty('--card-name-color', theme.cardNameColor);
+    root.style.setProperty('--divider-color', theme.dividerColor || '#c0a080');
     root.style.setProperty('--content-opacity', theme.contentOpacity !== undefined ? theme.contentOpacity : 0.3);
     root.style.setProperty('--back-card-bg-color', theme.backCardBgColor || '#2c3e50');
 
@@ -2666,8 +2686,10 @@ function applyTheme(theme) {
 
 // Update UI controls to reflect current theme
 function updateCustomizationUI(theme) {
+    // Font family
     document.getElementById('fontFamily').value = theme.fontFamily;
 
+    // Font sizes
     document.getElementById('cardNameSize').value = theme.cardNameSize;
     document.getElementById('cardNameSizeValue').textContent = theme.cardNameSize;
 
@@ -2680,24 +2702,120 @@ function updateCustomizationUI(theme) {
     document.getElementById('cardStatLabelSize').value = theme.cardStatLabelSize;
     document.getElementById('cardStatLabelSizeValue').textContent = theme.cardStatLabelSize;
 
-    document.getElementById('cardAbilityNameSize').value = theme.cardAbilityNameSize || 0.85;
-    document.getElementById('cardAbilityNameSizeValue').textContent = theme.cardAbilityNameSize || 0.85;
+    const statValueSize = theme.cardStatValueSize || theme.cardStatLabelSize || 1.2;
+    const statValueElement = document.getElementById('cardStatValueSize');
+    const statValueValueElement = document.getElementById('cardStatValueSizeValue');
+    if (statValueElement) {
+        statValueElement.value = statValueSize;
+        if (statValueValueElement) statValueValueElement.textContent = statValueSize;
+    }
 
-    document.getElementById('cardAbilityValueSize').value = theme.cardAbilityValueSize || 0.8;
-    document.getElementById('cardAbilityValueSizeValue').textContent = theme.cardAbilityValueSize || 0.8;
+    document.getElementById('cardAbilityNameSize').value = theme.cardAbilityNameSize || 1.1;
+    document.getElementById('cardAbilityNameSizeValue').textContent = theme.cardAbilityNameSize || 1.1;
 
+    document.getElementById('cardAbilityValueSize').value = theme.cardAbilityValueSize || 1.0;
+    document.getElementById('cardAbilityValueSizeValue').textContent = theme.cardAbilityValueSize || 1.0;
+
+    // Line heights
+    const nameLineHeight = theme.cardNameLineHeight || 1.2;
+    const nameLineHeightElement = document.getElementById('cardNameLineHeight');
+    const nameLineHeightValueElement = document.getElementById('cardNameLineHeightValue');
+    if (nameLineHeightElement) {
+        nameLineHeightElement.value = nameLineHeight;
+        if (nameLineHeightValueElement) nameLineHeightValueElement.textContent = nameLineHeight;
+    }
+
+    const headerLineHeight = theme.cardHeaderLineHeight || 1.2;
+    const headerLineHeightElement = document.getElementById('cardHeaderLineHeight');
+    const headerLineHeightValueElement = document.getElementById('cardHeaderLineHeightValue');
+    if (headerLineHeightElement) {
+        headerLineHeightElement.value = headerLineHeight;
+        if (headerLineHeightValueElement) headerLineHeightValueElement.textContent = headerLineHeight;
+    }
+
+    const statLineHeight = theme.cardStatLineHeight || 1.3;
+    const statLineHeightElement = document.getElementById('cardStatLineHeight');
+    const statLineHeightValueElement = document.getElementById('cardStatLineHeightValue');
+    if (statLineHeightElement) {
+        statLineHeightElement.value = statLineHeight;
+        if (statLineHeightValueElement) statLineHeightValueElement.textContent = statLineHeight;
+    }
+
+    const descLineHeight = theme.cardDescriptionLineHeight || 1.5;
+    const descLineHeightElement = document.getElementById('cardDescriptionLineHeight');
+    const descLineHeightValueElement = document.getElementById('cardDescriptionLineHeightValue');
+    if (descLineHeightElement) {
+        descLineHeightElement.value = descLineHeight;
+        if (descLineHeightValueElement) descLineHeightValueElement.textContent = descLineHeight;
+    }
+
+    // Section sizes
     document.getElementById('cardImageHeight').value = theme.cardImageHeight;
     document.getElementById('cardImageHeightValue').textContent = theme.cardImageHeight;
 
     document.getElementById('sectionSpacing').value = theme.sectionSpacing;
     document.getElementById('sectionSpacingValue').textContent = theme.sectionSpacing;
 
+    const statRowSpacing = theme.statRowSpacing !== undefined ? theme.statRowSpacing : 6;
+    const statRowSpacingElement = document.getElementById('statRowSpacing');
+    const statRowSpacingValueElement = document.getElementById('statRowSpacingValue');
+    if (statRowSpacingElement) {
+        statRowSpacingElement.value = statRowSpacing;
+        if (statRowSpacingValueElement) statRowSpacingValueElement.textContent = statRowSpacing;
+    }
+
+    const abilityGridGap = theme.abilityGridGap !== undefined ? theme.abilityGridGap : 8;
+    const abilityGridGapElement = document.getElementById('abilityGridGap');
+    const abilityGridGapValueElement = document.getElementById('abilityGridGapValue');
+    if (abilityGridGapElement) {
+        abilityGridGapElement.value = abilityGridGap;
+        if (abilityGridGapValueElement) abilityGridGapValueElement.textContent = abilityGridGap;
+    }
+
+    // Padding and border
+    const paddingV = theme.cardContentPaddingV !== undefined ? theme.cardContentPaddingV : 16;
+    const paddingVElement = document.getElementById('cardContentPaddingV');
+    const paddingVValueElement = document.getElementById('cardContentPaddingVValue');
+    if (paddingVElement) {
+        paddingVElement.value = paddingV;
+        if (paddingVValueElement) paddingVValueElement.textContent = paddingV;
+    }
+
+    const paddingH = theme.cardContentPaddingH !== undefined ? theme.cardContentPaddingH : 20;
+    const paddingHElement = document.getElementById('cardContentPaddingH');
+    const paddingHValueElement = document.getElementById('cardContentPaddingHValue');
+    if (paddingHElement) {
+        paddingHElement.value = paddingH;
+        if (paddingHValueElement) paddingHValueElement.textContent = paddingH;
+    }
+
+    const borderRadius = theme.cardBorderRadius !== undefined ? theme.cardBorderRadius : 8;
+    const borderRadiusElement = document.getElementById('cardBorderRadius');
+    const borderRadiusValueElement = document.getElementById('cardBorderRadiusValue');
+    if (borderRadiusElement) {
+        borderRadiusElement.value = borderRadius;
+        if (borderRadiusValueElement) borderRadiusValueElement.textContent = borderRadius;
+    }
+
+    // Colors
     document.getElementById('cardBgColor').value = theme.cardBgColor;
     document.getElementById('cardBorderColor').value = theme.cardBorderColor;
     document.getElementById('cardTextColor').value = theme.cardTextColor;
     document.getElementById('cardLabelColor').value = theme.cardLabelColor;
+
+    const headerColorElement = document.getElementById('cardHeaderColor');
+    if (headerColorElement) {
+        headerColorElement.value = theme.cardHeaderColor || theme.cardLabelColor || '#8b4513';
+    }
+
     document.getElementById('cardNameColor').value = theme.cardNameColor;
 
+    const dividerColorElement = document.getElementById('dividerColor');
+    if (dividerColorElement) {
+        dividerColorElement.value = theme.dividerColor || '#c0a080';
+    }
+
+    // Background
     document.getElementById('useImageAsBackground').checked = theme.useImageAsBackground || false;
     const opacity = theme.contentOpacity !== undefined ? theme.contentOpacity : 0.3;
     document.getElementById('contentOpacity').value = opacity;
@@ -2707,39 +2825,89 @@ function updateCustomizationUI(theme) {
 
 // Get current theme from UI controls
 function getCurrentTheme() {
+    // Font settings
     const fontFamilyElement = document.getElementById('fontFamily');
+
+    // Font sizes
     const cardNameSizeElement = document.getElementById('cardNameSize');
     const cardHeaderSizeElement = document.getElementById('cardHeaderSize');
     const cardDescriptionSizeElement = document.getElementById('cardDescriptionSize');
     const cardStatLabelSizeElement = document.getElementById('cardStatLabelSize');
+    const cardStatValueSizeElement = document.getElementById('cardStatValueSize');
     const cardAbilityNameSizeElement = document.getElementById('cardAbilityNameSize');
     const cardAbilityValueSizeElement = document.getElementById('cardAbilityValueSize');
+
+    // Line heights
+    const cardNameLineHeightElement = document.getElementById('cardNameLineHeight');
+    const cardHeaderLineHeightElement = document.getElementById('cardHeaderLineHeight');
+    const cardStatLineHeightElement = document.getElementById('cardStatLineHeight');
+    const cardDescriptionLineHeightElement = document.getElementById('cardDescriptionLineHeight');
+
+    // Sizes and spacing
     const cardImageHeightElement = document.getElementById('cardImageHeight');
     const sectionSpacingElement = document.getElementById('sectionSpacing');
+    const statRowSpacingElement = document.getElementById('statRowSpacing');
+    const abilityGridGapElement = document.getElementById('abilityGridGap');
+
+    // Padding and border
+    const cardContentPaddingVElement = document.getElementById('cardContentPaddingV');
+    const cardContentPaddingHElement = document.getElementById('cardContentPaddingH');
+    const cardBorderRadiusElement = document.getElementById('cardBorderRadius');
+
+    // Colors
     const cardBgColorElement = document.getElementById('cardBgColor');
     const cardBorderColorElement = document.getElementById('cardBorderColor');
     const cardTextColorElement = document.getElementById('cardTextColor');
     const cardLabelColorElement = document.getElementById('cardLabelColor');
+    const cardHeaderColorElement = document.getElementById('cardHeaderColor');
     const cardNameColorElement = document.getElementById('cardNameColor');
+    const dividerColorElement = document.getElementById('dividerColor');
+
+    // Background
     const useImageAsBackgroundElement = document.getElementById('useImageAsBackground');
     const contentOpacityElement = document.getElementById('contentOpacity');
     const backCardBgColorElement = document.getElementById('backCardBgColor');
 
     return {
+        // Font settings
         fontFamily: fontFamilyElement ? fontFamilyElement.value : 'Georgia, serif',
+
+        // Font sizes
         cardNameSize: cardNameSizeElement ? parseFloat(cardNameSizeElement.value) : 2.4,
         cardHeaderSize: cardHeaderSizeElement ? parseFloat(cardHeaderSizeElement.value) : 1.2,
-        cardDescriptionSize: cardDescriptionSizeElement ? parseFloat(cardDescriptionSizeElement.value) : 1.0,
-        cardStatLabelSize: cardStatLabelSizeElement ? parseFloat(cardStatLabelSizeElement.value) : 0.9,
-        cardAbilityNameSize: cardAbilityNameSizeElement ? parseFloat(cardAbilityNameSizeElement.value) : 0.85,
-        cardAbilityValueSize: cardAbilityValueSizeElement ? parseFloat(cardAbilityValueSizeElement.value) : 0.8,
+        cardDescriptionSize: cardDescriptionSizeElement ? parseFloat(cardDescriptionSizeElement.value) : 1.1,
+        cardStatLabelSize: cardStatLabelSizeElement ? parseFloat(cardStatLabelSizeElement.value) : 1.2,
+        cardStatValueSize: cardStatValueSizeElement ? parseFloat(cardStatValueSizeElement.value) : 1.2,
+        cardAbilityNameSize: cardAbilityNameSizeElement ? parseFloat(cardAbilityNameSizeElement.value) : 1.1,
+        cardAbilityValueSize: cardAbilityValueSizeElement ? parseFloat(cardAbilityValueSizeElement.value) : 1.0,
+
+        // Line heights
+        cardNameLineHeight: cardNameLineHeightElement ? parseFloat(cardNameLineHeightElement.value) : 1.2,
+        cardHeaderLineHeight: cardHeaderLineHeightElement ? parseFloat(cardHeaderLineHeightElement.value) : 1.2,
+        cardStatLineHeight: cardStatLineHeightElement ? parseFloat(cardStatLineHeightElement.value) : 1.3,
+        cardDescriptionLineHeight: cardDescriptionLineHeightElement ? parseFloat(cardDescriptionLineHeightElement.value) : 1.5,
+
+        // Sizes and spacing
         cardImageHeight: cardImageHeightElement ? parseInt(cardImageHeightElement.value) : 240,
         sectionSpacing: sectionSpacingElement ? parseInt(sectionSpacingElement.value) : 12,
-        cardBgColor: cardBgColorElement ? cardBgColorElement.value : '#2c3e50',
-        cardBorderColor: cardBorderColorElement ? cardBorderColorElement.value : '#7f8c8d',
-        cardTextColor: cardTextColorElement ? cardTextColorElement.value : '#ecf0f1',
-        cardLabelColor: cardLabelColorElement ? cardLabelColorElement.value : '#95a5a6',
-        cardNameColor: cardNameColorElement ? cardNameColorElement.value : '#f1c40f',
+        statRowSpacing: statRowSpacingElement ? parseInt(statRowSpacingElement.value) : 6,
+        abilityGridGap: abilityGridGapElement ? parseInt(abilityGridGapElement.value) : 8,
+
+        // Padding and border
+        cardContentPaddingV: cardContentPaddingVElement ? parseInt(cardContentPaddingVElement.value) : 16,
+        cardContentPaddingH: cardContentPaddingHElement ? parseInt(cardContentPaddingHElement.value) : 20,
+        cardBorderRadius: cardBorderRadiusElement ? parseInt(cardBorderRadiusElement.value) : 8,
+
+        // Colors
+        cardBgColor: cardBgColorElement ? cardBgColorElement.value : '#f9f6f0',
+        cardBorderColor: cardBorderColorElement ? cardBorderColorElement.value : '#8b4513',
+        cardTextColor: cardTextColorElement ? cardTextColorElement.value : '#333333',
+        cardLabelColor: cardLabelColorElement ? cardLabelColorElement.value : '#8b4513',
+        cardHeaderColor: cardHeaderColorElement ? cardHeaderColorElement.value : '#8b4513',
+        cardNameColor: cardNameColorElement ? cardNameColorElement.value : '#f4e4c1',
+        dividerColor: dividerColorElement ? dividerColorElement.value : '#c0a080',
+
+        // Background
         useImageAsBackground: useImageAsBackgroundElement ? useImageAsBackgroundElement.checked : false,
         contentOpacity: contentOpacityElement ? parseFloat(contentOpacityElement.value) : 0.3,
         backCardImage: window.backCardImageData || '',
@@ -3071,6 +3239,7 @@ function initCustomization() {
         { id: 'cardHeaderSize', valueId: 'cardHeaderSizeValue' },
         { id: 'cardDescriptionSize', valueId: 'cardDescriptionSizeValue' },
         { id: 'cardStatLabelSize', valueId: 'cardStatLabelSizeValue' },
+        { id: 'cardStatValueSize', valueId: 'cardStatValueSizeValue' },
         { id: 'cardAbilityNameSize', valueId: 'cardAbilityNameSizeValue' },
         { id: 'cardAbilityValueSize', valueId: 'cardAbilityValueSizeValue' }
     ];
@@ -3090,10 +3259,35 @@ function initCustomization() {
         }
     });
 
+    // Line height sliders
+    const lineHeightInputs = [
+        { id: 'cardNameLineHeight', valueId: 'cardNameLineHeightValue' },
+        { id: 'cardHeaderLineHeight', valueId: 'cardHeaderLineHeightValue' },
+        { id: 'cardStatLineHeight', valueId: 'cardStatLineHeightValue' },
+        { id: 'cardDescriptionLineHeight', valueId: 'cardDescriptionLineHeightValue' }
+    ];
+
+    lineHeightInputs.forEach(input => {
+        const element = document.getElementById(input.id);
+        if (element) {
+            element.addEventListener('input', function() {
+                const valueElement = document.getElementById(input.valueId);
+                if (valueElement) {
+                    valueElement.textContent = this.value;
+                }
+                const theme = getCurrentTheme();
+                applyTheme(theme);
+                updatePreview(); // Force preview update to apply theme changes
+            });
+        }
+    });
+
     // Section size sliders
     const sectionSizeInputs = [
         { id: 'cardImageHeight', valueId: 'cardImageHeightValue' },
-        { id: 'sectionSpacing', valueId: 'sectionSpacingValue' }
+        { id: 'sectionSpacing', valueId: 'sectionSpacingValue' },
+        { id: 'statRowSpacing', valueId: 'statRowSpacingValue' },
+        { id: 'abilityGridGap', valueId: 'abilityGridGapValue' }
     ];
 
     sectionSizeInputs.forEach(input => {
@@ -3111,8 +3305,30 @@ function initCustomization() {
         }
     });
 
+    // Padding and border sliders
+    const paddingBorderInputs = [
+        { id: 'cardContentPaddingV', valueId: 'cardContentPaddingVValue' },
+        { id: 'cardContentPaddingH', valueId: 'cardContentPaddingHValue' },
+        { id: 'cardBorderRadius', valueId: 'cardBorderRadiusValue' }
+    ];
+
+    paddingBorderInputs.forEach(input => {
+        const element = document.getElementById(input.id);
+        if (element) {
+            element.addEventListener('input', function() {
+                const valueElement = document.getElementById(input.valueId);
+                if (valueElement) {
+                    valueElement.textContent = this.value;
+                }
+                const theme = getCurrentTheme();
+                applyTheme(theme);
+                updatePreview(); // Force preview update to apply theme changes
+            });
+        }
+    });
+
     // Color pickers
-    const colorInputs = ['cardBgColor', 'cardBorderColor', 'cardTextColor', 'cardLabelColor', 'cardNameColor', 'backCardBgColor'];
+    const colorInputs = ['cardBgColor', 'cardBorderColor', 'cardTextColor', 'cardLabelColor', 'cardHeaderColor', 'cardNameColor', 'dividerColor', 'backCardBgColor'];
     colorInputs.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
