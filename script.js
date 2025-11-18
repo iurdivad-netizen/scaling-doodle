@@ -645,34 +645,85 @@ function generateThreeColumnFront(templateId) {
         const wis = document.getElementById('wis').value || '-';
         const cha = document.getElementById('cha').value || '-';
 
+        // Extract additional stats for initiative, proficiency, and saving throws
+        const additionalStats = document.getElementById('additionalStats').value || '';
+
+        // Parse for initiative and proficiency (fallback to defaults if not found)
+        const initiativeMatch = additionalStats.match(/Initiative:\s*([+\-]?\d+)/i);
+        const proficiencyMatch = additionalStats.match(/Proficiency:\s*([+\-]?\d+)/i);
+        const savingThrowsMatch = additionalStats.match(/Saving Throws:\s*([^\n]+)/i);
+
+        const initiative = initiativeMatch ? initiativeMatch[1] : '+0';
+        const proficiency = proficiencyMatch ? proficiencyMatch[1] : '+2';
+        const savingThrows = savingThrowsMatch ? savingThrowsMatch[1].trim() : '';
+
         return `
             <div class="card-image">
                 <img id="previewImage" src="" alt="Card Image">
                 <div class="card-name-overlay">
-                    <h2>${name}</h2>
+                    <h2 style="margin: 0; font-size: 1.5em;">${name}</h2>
                 </div>
             </div>
-            <div class="card-content">
-                <div class="card-type">
-                    <span>${type}</span>
-                    <span class="separator">•</span>
-                    <span>${subtype}</span>
+            <div class="card-content" style="padding: 15px;">
+                <div class="card-type" style="text-align: center; margin-bottom: 10px;">
+                    <div style="font-weight: bold; font-size: 0.9em;">${type}</div>
+                    <div style="font-size: 0.85em; color: #666;">${subtype}</div>
                 </div>
                 <div class="divider"></div>
-                <div class="card-stats">
-                    <div class="stat-row"><strong>AC</strong><span>${ac}</span></div>
-                    <div class="stat-row"><strong>HP</strong><span>${hp}</span></div>
-                    <div class="stat-row"><strong>Speed</strong><span>${speed}</span></div>
+                <div class="card-stats" style="font-size: 0.85em; margin: 10px 0;">
+                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                        <strong>AC:</strong><span>${ac}</span>
+                    </div>
+                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                        <strong>HP:</strong><span>${hp}</span>
+                    </div>
+                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                        <strong>Speed:</strong><span>${speed}</span>
+                    </div>
+                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                        <strong>Initiative:</strong><span>${initiative}</span>
+                    </div>
+                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                        <strong>Proficiency:</strong><span>${proficiency}</span>
+                    </div>
                 </div>
                 <div class="divider"></div>
-                <div class="ability-scores-display">
-                    <div class="ability-score"><div class="ability-name">STR</div><div class="ability-value">${str}</div></div>
-                    <div class="ability-score"><div class="ability-name">DEX</div><div class="ability-value">${dex}</div></div>
-                    <div class="ability-score"><div class="ability-name">CON</div><div class="ability-value">${con}</div></div>
-                    <div class="ability-score"><div class="ability-name">INT</div><div class="ability-value">${int}</div></div>
-                    <div class="ability-score"><div class="ability-name">WIS</div><div class="ability-value">${wis}</div></div>
-                    <div class="ability-score"><div class="ability-name">CHA</div><div class="ability-value">${cha}</div></div>
+                <div style="margin: 10px 0;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.9em; color: var(--card-label-color);">ABILITY SCORES</div>
+                    <div class="ability-scores-display" style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 8px;">
+                        <div class="ability-score" style="text-align: center; min-width: 60px;">
+                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">STR</div>
+                            <div class="ability-value" style="font-size: 0.8em;">${str}</div>
+                        </div>
+                        <div class="ability-score" style="text-align: center; min-width: 60px;">
+                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">DEX</div>
+                            <div class="ability-value" style="font-size: 0.8em;">${dex}</div>
+                        </div>
+                        <div class="ability-score" style="text-align: center; min-width: 60px;">
+                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">CON</div>
+                            <div class="ability-value" style="font-size: 0.8em;">${con}</div>
+                        </div>
+                        <div class="ability-score" style="text-align: center; min-width: 60px;">
+                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">INT</div>
+                            <div class="ability-value" style="font-size: 0.8em;">${int}</div>
+                        </div>
+                        <div class="ability-score" style="text-align: center; min-width: 60px;">
+                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">WIS</div>
+                            <div class="ability-value" style="font-size: 0.8em;">${wis}</div>
+                        </div>
+                        <div class="ability-score" style="text-align: center; min-width: 60px;">
+                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">CHA</div>
+                            <div class="ability-value" style="font-size: 0.8em;">${cha}</div>
+                        </div>
+                    </div>
                 </div>
+                ${savingThrows ? `
+                <div class="divider"></div>
+                <div style="margin: 10px 0;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 5px; font-size: 0.9em; color: var(--card-label-color);">SAVING THROWS</div>
+                    <div style="text-align: center; font-size: 0.85em;">${savingThrows}</div>
+                </div>
+                ` : ''}
             </div>
         `;
     }
@@ -697,16 +748,84 @@ function generateThreeColumnBack1(templateId) {
     if (templateId === 'creature') {
         const additionalStats = document.getElementById('additionalStats').value || '';
 
+        // Parse for combat stats
+        const spellSaveDCMatch = additionalStats.match(/Spell Save DC:\s*(\d+)/i);
+        const spellAttackMatch = additionalStats.match(/Spell Attack:\s*([+\-]?\d+)/i);
+        const weaponAttackMatch = additionalStats.match(/([A-Za-z\s]+Attack):\s*([+\-]?\d+)\s+to\s+hit,\s*([^\n]+)/i);
+
+        const spellSaveDC = spellSaveDCMatch ? spellSaveDCMatch[1] : '13';
+        const spellAttack = spellAttackMatch ? spellAttackMatch[1] : '+5';
+        const weaponAttack = weaponAttackMatch ? `${weaponAttackMatch[1]}: ${weaponAttackMatch[2]} to hit, ${weaponAttackMatch[3]}` : '';
+
+        // Parse for spell slots
+        const cantripsMatch = additionalStats.match(/Cantrips:\s*(\d+)/i);
+        const level1Match = additionalStats.match(/1st Level:\s*(\d+)/i);
+        const level2Match = additionalStats.match(/2nd Level:\s*(\d+)/i);
+        const level3Match = additionalStats.match(/3rd Level:\s*(\d+)/i);
+
+        const cantrips = cantripsMatch ? cantripsMatch[1] : '4';
+        const level1 = level1Match ? level1Match[1] : '4';
+        const level2 = level2Match ? level2Match[1] : '3';
+        const level3 = level3Match ? level3Match[1] : '';
+
+        // Parse for key cantrips
+        const cantripsList = [];
+        const cantripRegex = /•\s*([A-Za-z\s]+)\s*\(([^)]+)\)/g;
+        let match;
+        while ((match = cantripRegex.exec(additionalStats)) !== null) {
+            cantripsList.push(`• ${match[1].trim()} (${match[2]})`);
+        }
+
+        // Parse for domain spells
+        const domainSpells1stMatch = additionalStats.match(/1st:\s*([^\n]+)/i);
+        const domainSpells2ndMatch = additionalStats.match(/2nd:\s*([^\n]+)/i);
+
+        const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch[1].trim() : '';
+        const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch[1].trim() : '';
+
         return `
-            <div class="card-content" style="padding: 20px;">
-                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
-                    <h2 style="margin: 0; text-align: center;">${name}</h2>
+            <div class="card-content" style="padding: 15px; font-size: 0.85em;">
+                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 12px; margin: -15px -15px 15px -15px;">
+                    <h2 style="margin: 0; text-align: center; font-size: 1.3em;">${name}</h2>
                 </div>
-                <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Additional Stats</h3>
-                <div class="divider"></div>
-                <div class="additional-stats">
-                    <p style="white-space: pre-wrap;">${additionalStats || 'No additional stats'}</p>
+
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">COMBAT</div>
+                    <div class="divider" style="margin: 5px 0;"></div>
+                    <div style="font-size: 0.8em; line-height: 1.4;">
+                        <div style="margin: 4px 0;">Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>
+                        ${weaponAttack ? `<div style="margin: 4px 0;">${weaponAttack}</div>` : ''}
+                    </div>
                 </div>
+
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">SPELL SLOTS</div>
+                    <div class="divider" style="margin: 5px 0;"></div>
+                    <div style="font-size: 0.8em; text-align: center; line-height: 1.4;">
+                        Cantrips: ${cantrips} | 1st Level: ${level1} | 2nd Level: ${level2}${level3 ? ` | 3rd Level: ${level3}` : ''}
+                    </div>
+                </div>
+
+                ${cantripsList.length > 0 ? `
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">KEY CANTRIPS</div>
+                    <div class="divider" style="margin: 5px 0;"></div>
+                    <div style="font-size: 0.75em; line-height: 1.5;">
+                        ${cantripsList.slice(0, 4).join('<br>')}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${domainSpells1st || domainSpells2nd ? `
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">DOMAIN SPELLS (Always Prepared)</div>
+                    <div class="divider" style="margin: 5px 0;"></div>
+                    <div style="font-size: 0.75em; line-height: 1.5;">
+                        ${domainSpells1st ? `<div style="margin: 4px 0;"><strong>1st:</strong> ${domainSpells1st}</div>` : ''}
+                        ${domainSpells2nd ? `<div style="margin: 4px 0;"><strong>2nd:</strong> ${domainSpells2nd}</div>` : ''}
+                    </div>
+                </div>
+                ` : ''}
             </div>
         `;
     }
@@ -724,17 +843,66 @@ function generateThreeColumnBack2(templateId) {
 
     if (templateId === 'creature') {
         const description = document.getElementById('description').value || '';
+        const additionalStats = document.getElementById('additionalStats').value || '';
+
+        // Parse prepared spells from description
+        const preparedSpellsMatch = description.match(/PREPARED SPELLS[\s\S]*?:([^\n]+(?:\n[^\n]+)*?)(?=\n\n|CLASS FEATURES|EQUIPMENT|$)/i);
+        const preparedSpells = preparedSpellsMatch ? preparedSpellsMatch[0].trim() : '';
+
+        // Parse class features from description
+        const classFeaturesMatch = description.match(/CLASS FEATURES[\s\S]*?:([^\n]+(?:\n[^\n]+)*?)(?=\n\n|EQUIPMENT|$)/i);
+        const classFeatures = classFeaturesMatch ? classFeaturesMatch[0].trim() : '';
+
+        // Parse equipment from description
+        const equipmentMatch = description.match(/EQUIPMENT[\s\S]*?:([^\n]+(?:\n[^\n]+)*?)$/i);
+        const equipment = equipmentMatch ? equipmentMatch[0].trim() : '';
+
+        // Parse passive perception
+        const passivePerceptionMatch = additionalStats.match(/PASSIVE PERCEPTION:\s*(\d+)/i) ||
+                                      description.match(/PASSIVE PERCEPTION:\s*(\d+)/i);
+        const passivePerception = passivePerceptionMatch ? passivePerceptionMatch[1] : '13';
 
         return `
-            <div class="card-content" style="padding: 20px;">
-                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
-                    <h2 style="margin: 0; text-align: center;">${name}</h2>
+            <div class="card-content" style="padding: 15px; font-size: 0.85em;">
+                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 12px; margin: -15px -15px 15px -15px;">
+                    <h2 style="margin: 0; text-align: center; font-size: 1.3em;">${name}</h2>
                 </div>
-                <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Abilities & Actions</h3>
-                <div class="divider"></div>
+
+                ${preparedSpells ? `
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">PREPARED SPELLS</div>
+                    <div class="divider" style="margin: 5px 0;"></div>
+                    <div style="font-size: 0.75em; line-height: 1.5; white-space: pre-wrap;">${preparedSpells.replace(/PREPARED SPELLS\s*\(?\d*\s*total\)?:?/i, '').trim()}</div>
+                </div>
+                ` : ''}
+
+                ${classFeatures ? `
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">CLASS FEATURES</div>
+                    <div class="divider" style="margin: 5px 0;"></div>
+                    <div style="font-size: 0.75em; line-height: 1.5; white-space: pre-wrap;">${classFeatures.replace(/CLASS FEATURES:?/i, '').trim()}</div>
+                </div>
+                ` : ''}
+
+                ${equipment ? `
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">EQUIPMENT</div>
+                    <div class="divider" style="margin: 5px 0;"></div>
+                    <div style="font-size: 0.75em; line-height: 1.5; white-space: pre-wrap;">${equipment.replace(/EQUIPMENT:?/i, '').trim()}</div>
+                </div>
+                ` : ''}
+
+                <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid #ccc;">
+                    <div style="font-size: 0.8em; text-align: center;">
+                        <strong>PASSIVE PERCEPTION:</strong> ${passivePerception}
+                    </div>
+                </div>
+
+                ${!preparedSpells && !classFeatures && !equipment ? `
                 <div class="abilities-section">
-                    <p style="white-space: pre-wrap;">${description || 'No abilities or actions'}</p>
+                    <p style="white-space: pre-wrap; font-size: 0.8em;">${description || 'No abilities or actions'}</p>
                 </div>
+                ` : ''}
             </div>
         `;
     }
