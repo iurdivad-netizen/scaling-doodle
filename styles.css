@@ -1660,6 +1660,121 @@ header p {
     }
 }
 
+/* Three-Column Layout Content Styles - Using CSS Variables */
+.trifold-content {
+    padding: var(--card-content-padding);
+    font-size: var(--card-description-size);
+}
+
+.trifold-content .trifold-header {
+    position: relative;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    padding: 12px;
+    margin: calc(var(--card-content-padding) * -1) calc(var(--card-content-padding) * -1) var(--section-spacing) calc(var(--card-content-padding) * -1);
+}
+
+.trifold-content .trifold-header h2 {
+    margin: 0;
+    text-align: center;
+    font-size: 1.5em;
+    color: var(--card-name-color);
+}
+
+.trifold-content .trifold-section {
+    margin-bottom: var(--section-spacing);
+}
+
+.trifold-content .trifold-section-title {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: calc(var(--section-spacing) * 0.67);
+    font-size: var(--card-header-size);
+    color: var(--card-label-color);
+}
+
+.trifold-content .trifold-section .divider {
+    margin: calc(var(--section-spacing) * 0.42) 0;
+}
+
+.trifold-content .trifold-text {
+    font-size: 0.94em;
+    line-height: var(--card-description-line-height);
+}
+
+.trifold-content .trifold-text-small {
+    font-size: 0.88em;
+    line-height: var(--card-description-line-height);
+}
+
+.trifold-content .trifold-text-tiny {
+    font-size: 0.82em;
+    line-height: var(--card-description-line-height);
+    white-space: pre-wrap;
+}
+
+.trifold-front {
+    padding: var(--card-content-padding);
+}
+
+.trifold-front .card-type {
+    text-align: center;
+    margin-bottom: calc(var(--section-spacing) * 0.83);
+}
+
+.trifold-front .card-type-main {
+    font-weight: bold;
+    font-size: var(--card-header-size);
+}
+
+.trifold-front .card-type-sub {
+    font-size: calc(var(--card-header-size) * 0.94);
+    color: #666;
+}
+
+.trifold-front .stat-list {
+    font-size: calc(var(--card-stat-label-size) * 0.94);
+    margin: calc(var(--section-spacing) * 0.83) 0;
+}
+
+.trifold-front .stat-list .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: calc(var(--stat-row-spacing) * 0.5) 0;
+}
+
+.trifold-front .ability-scores-section {
+    margin: calc(var(--section-spacing) * 0.83) 0;
+}
+
+.trifold-front .ability-scores-section-title {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: calc(var(--section-spacing) * 0.67);
+    font-size: var(--card-header-size);
+    color: var(--card-label-color);
+}
+
+.trifold-front .ability-scores-display {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: var(--ability-grid-gap);
+}
+
+.trifold-front .ability-score {
+    text-align: center;
+    min-width: 60px;
+}
+
+.trifold-front .ability-score .ability-name {
+    font-weight: bold;
+    font-size: var(--card-ability-name-size);
+}
+
+.trifold-front .ability-score .ability-value {
+    font-size: var(--card-ability-value-size);
+}
+
 /* Image as Background Styles */
 .card.image-as-background {
     position: relative;

@@ -654,67 +654,67 @@ function generateThreeColumnFront(templateId) {
             <div class="card-image">
                 <img id="previewImage" src="" alt="Card Image">
                 <div class="card-name-overlay">
-                    <h2 style="margin: 0; font-size: 1.5em;">${name}</h2>
+                    <h2>${name}</h2>
                 </div>
             </div>
-            <div class="card-content" style="padding: 15px;">
-                <div class="card-type" style="text-align: center; margin-bottom: 10px;">
-                    <div style="font-weight: bold; font-size: 0.9em;">${type}</div>
-                    <div style="font-size: 0.85em; color: #666;">${subtype}</div>
+            <div class="card-content trifold-front">
+                <div class="card-type">
+                    <div class="card-type-main">${type}</div>
+                    <div class="card-type-sub">${subtype}</div>
                 </div>
                 <div class="divider"></div>
-                <div class="card-stats" style="font-size: 0.85em; margin: 10px 0;">
-                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                <div class="stat-list">
+                    <div class="stat-row">
                         <strong>AC:</strong><span>${ac}</span>
                     </div>
-                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                    <div class="stat-row">
                         <strong>HP:</strong><span>${hp}</span>
                     </div>
-                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                    <div class="stat-row">
                         <strong>Speed:</strong><span>${speed}</span>
                     </div>
-                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                    <div class="stat-row">
                         <strong>Initiative:</strong><span>${initiative}</span>
                     </div>
-                    <div class="stat-row" style="display: flex; justify-content: space-between; padding: 3px 0;">
+                    <div class="stat-row">
                         <strong>Proficiency:</strong><span>${proficiency}</span>
                     </div>
                 </div>
                 <div class="divider"></div>
-                <div style="margin: 10px 0;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.9em; color: var(--card-label-color);">ABILITY SCORES</div>
-                    <div class="ability-scores-display" style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 8px;">
-                        <div class="ability-score" style="text-align: center; min-width: 60px;">
-                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">STR</div>
-                            <div class="ability-value" style="font-size: 0.8em;">${str}</div>
+                <div class="ability-scores-section">
+                    <div class="ability-scores-section-title">ABILITY SCORES</div>
+                    <div class="ability-scores-display">
+                        <div class="ability-score">
+                            <div class="ability-name">STR</div>
+                            <div class="ability-value">${str}</div>
                         </div>
-                        <div class="ability-score" style="text-align: center; min-width: 60px;">
-                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">DEX</div>
-                            <div class="ability-value" style="font-size: 0.8em;">${dex}</div>
+                        <div class="ability-score">
+                            <div class="ability-name">DEX</div>
+                            <div class="ability-value">${dex}</div>
                         </div>
-                        <div class="ability-score" style="text-align: center; min-width: 60px;">
-                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">CON</div>
-                            <div class="ability-value" style="font-size: 0.8em;">${con}</div>
+                        <div class="ability-score">
+                            <div class="ability-name">CON</div>
+                            <div class="ability-value">${con}</div>
                         </div>
-                        <div class="ability-score" style="text-align: center; min-width: 60px;">
-                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">INT</div>
-                            <div class="ability-value" style="font-size: 0.8em;">${int}</div>
+                        <div class="ability-score">
+                            <div class="ability-name">INT</div>
+                            <div class="ability-value">${int}</div>
                         </div>
-                        <div class="ability-score" style="text-align: center; min-width: 60px;">
-                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">WIS</div>
-                            <div class="ability-value" style="font-size: 0.8em;">${wis}</div>
+                        <div class="ability-score">
+                            <div class="ability-name">WIS</div>
+                            <div class="ability-value">${wis}</div>
                         </div>
-                        <div class="ability-score" style="text-align: center; min-width: 60px;">
-                            <div class="ability-name" style="font-weight: bold; font-size: 0.75em;">CHA</div>
-                            <div class="ability-value" style="font-size: 0.8em;">${cha}</div>
+                        <div class="ability-score">
+                            <div class="ability-name">CHA</div>
+                            <div class="ability-value">${cha}</div>
                         </div>
                     </div>
                 </div>
                 ${savingThrows ? `
                 <div class="divider"></div>
-                <div style="margin: 10px 0;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 5px; font-size: 0.9em; color: var(--card-label-color);">SAVING THROWS</div>
-                    <div style="text-align: center; font-size: 0.85em;">${savingThrows}</div>
+                <div class="ability-scores-section">
+                    <div class="ability-scores-section-title">SAVING THROWS</div>
+                    <div class="trifold-text" style="text-align: center;">${savingThrows}</div>
                 </div>
                 ` : ''}
             </div>
@@ -729,8 +729,8 @@ function generateThreeColumnFront(templateId) {
                 <h2>${name}</h2>
             </div>
         </div>
-        <div class="card-content">
-            <p style="text-align: center; margin-top: 20px;">Front Panel</p>
+        <div class="card-content trifold-front">
+            <p style="text-align: center;">Front Panel</p>
         </div>
     `;
 }
@@ -769,49 +769,49 @@ function generateThreeColumnBack1(templateId) {
         const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch.replace(/2nd:\s*/i, '').trim() : '';
 
         return `
-            <div class="card-content" style="padding: 15px; font-size: 0.85em;">
-                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 12px; margin: -15px -15px 15px -15px;">
-                    <h2 style="margin: 0; text-align: center; font-size: 1.3em;">${name}</h2>
+            <div class="card-content trifold-content">
+                <div class="trifold-header">
+                    <h2>${name}</h2>
                 </div>
 
                 ${spellSaveDC || spellAttack || weaponAttack ? `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">COMBAT</div>
-                    <div class="divider" style="margin: 5px 0;"></div>
-                    <div style="font-size: 0.8em; line-height: 1.4;">
-                        ${spellSaveDC || spellAttack ? `<div style="margin: 4px 0;">Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>` : ''}
-                        ${weaponAttack ? `<div style="margin: 4px 0;">${weaponAttack}</div>` : ''}
+                <div class="trifold-section">
+                    <div class="trifold-section-title">COMBAT</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-small">
+                        ${spellSaveDC || spellAttack ? `<div>Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>` : ''}
+                        ${weaponAttack ? `<div>${weaponAttack}</div>` : ''}
                     </div>
                 </div>
                 ` : ''}
 
                 ${cantrips || level1 || level2 || level3 ? `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">SPELL SLOTS</div>
-                    <div class="divider" style="margin: 5px 0;"></div>
-                    <div style="font-size: 0.8em; text-align: center; line-height: 1.4;">
+                <div class="trifold-section">
+                    <div class="trifold-section-title">SPELL SLOTS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-small" style="text-align: center;">
                         ${cantrips ? `Cantrips: ${cantrips}` : ''}${cantrips && (level1 || level2 || level3) ? ' | ' : ''}${level1 ? `1st Level: ${level1}` : ''}${level1 && (level2 || level3) ? ' | ' : ''}${level2 ? `2nd Level: ${level2}` : ''}${level2 && level3 ? ' | ' : ''}${level3 ? `3rd Level: ${level3}` : ''}
                     </div>
                 </div>
                 ` : ''}
 
                 ${cantripsList.length > 0 ? `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">KEY CANTRIPS</div>
-                    <div class="divider" style="margin: 5px 0;"></div>
-                    <div style="font-size: 0.75em; line-height: 1.5;">
+                <div class="trifold-section">
+                    <div class="trifold-section-title">KEY CANTRIPS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">
                         ${cantripsList.slice(0, 4).join('<br>')}
                     </div>
                 </div>
                 ` : ''}
 
                 ${domainSpells1st || domainSpells2nd ? `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">DOMAIN SPELLS (Always Prepared)</div>
-                    <div class="divider" style="margin: 5px 0;"></div>
-                    <div style="font-size: 0.75em; line-height: 1.5;">
-                        ${domainSpells1st ? `<div style="margin: 4px 0;"><strong>1st:</strong> ${domainSpells1st}</div>` : ''}
-                        ${domainSpells2nd ? `<div style="margin: 4px 0;"><strong>2nd:</strong> ${domainSpells2nd}</div>` : ''}
+                <div class="trifold-section">
+                    <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">
+                        ${domainSpells1st ? `<div><strong>1st:</strong> ${domainSpells1st}</div>` : ''}
+                        ${domainSpells2nd ? `<div><strong>2nd:</strong> ${domainSpells2nd}</div>` : ''}
                     </div>
                 </div>
                 ` : ''}
@@ -820,8 +820,10 @@ function generateThreeColumnBack1(templateId) {
     }
 
     return `
-        <div class="card-content" style="padding: 20px;">
-            <h3 style="text-align: center;">Panel 2</h3>
+        <div class="card-content trifold-content">
+            <div class="trifold-header">
+                <h2>Panel 2</h2>
+            </div>
             <p>Additional information</p>
         </div>
     `;
@@ -847,38 +849,38 @@ function generateThreeColumnBack2(templateId) {
         const equipment = equipmentText ? `EQUIPMENT:\n${equipmentText}` : '';
 
         return `
-            <div class="card-content" style="padding: 15px; font-size: 0.85em;">
-                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 12px; margin: -15px -15px 15px -15px;">
-                    <h2 style="margin: 0; text-align: center; font-size: 1.3em;">${name}</h2>
+            <div class="card-content trifold-content">
+                <div class="trifold-header">
+                    <h2>${name}</h2>
                 </div>
 
                 ${preparedSpells ? `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">PREPARED SPELLS</div>
-                    <div class="divider" style="margin: 5px 0;"></div>
-                    <div style="font-size: 0.75em; line-height: 1.5; white-space: pre-wrap;">${preparedSpells.replace(/PREPARED SPELLS\s*\(?\d*\s*total\)?:?/i, '').trim()}</div>
+                <div class="trifold-section">
+                    <div class="trifold-section-title">PREPARED SPELLS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${preparedSpells.replace(/PREPARED SPELLS\s*\(?\d*\s*total\)?:?/i, '').trim()}</div>
                 </div>
                 ` : ''}
 
                 ${classFeatures ? `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">CLASS FEATURES</div>
-                    <div class="divider" style="margin: 5px 0;"></div>
-                    <div style="font-size: 0.75em; line-height: 1.5; white-space: pre-wrap;">${classFeatures.replace(/CLASS FEATURES:?/i, '').trim()}</div>
+                <div class="trifold-section">
+                    <div class="trifold-section-title">CLASS FEATURES</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${classFeatures.replace(/CLASS FEATURES:?/i, '').trim()}</div>
                 </div>
                 ` : ''}
 
                 ${equipment ? `
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">EQUIPMENT</div>
-                    <div class="divider" style="margin: 5px 0;"></div>
-                    <div style="font-size: 0.75em; line-height: 1.5; white-space: pre-wrap;">${equipment.replace(/EQUIPMENT:?/i, '').trim()}</div>
+                <div class="trifold-section">
+                    <div class="trifold-section-title">EQUIPMENT</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${equipment.replace(/EQUIPMENT:?/i, '').trim()}</div>
                 </div>
                 ` : ''}
 
                 ${passivePerception ? `
-                <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid #ccc;">
-                    <div style="font-size: 0.8em; text-align: center;">
+                <div class="trifold-section" style="margin-top: auto; padding-top: var(--section-spacing); border-top: 1px solid #ccc;">
+                    <div class="trifold-text-small" style="text-align: center;">
                         <strong>PASSIVE PERCEPTION:</strong> ${passivePerception}
                     </div>
                 </div>
@@ -888,8 +890,10 @@ function generateThreeColumnBack2(templateId) {
     }
 
     return `
-        <div class="card-content" style="padding: 20px;">
-            <h3 style="text-align: center;">Panel 3</h3>
+        <div class="card-content trifold-content">
+            <div class="trifold-header">
+                <h2>Panel 3</h2>
+            </div>
             <p>Description</p>
         </div>
     `;
