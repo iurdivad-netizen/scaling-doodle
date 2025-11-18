@@ -162,6 +162,77 @@ header p {
     cursor: pointer;
 }
 
+/* Panel Section Styling */
+.panel-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    background: linear-gradient(to bottom, #fafafa 0%, #ffffff 100%);
+}
+
+.panel-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.panel-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.panel-title {
+    color: #333;
+    font-size: 1.3em;
+    margin: 8px 0 0 0;
+    font-weight: 600;
+}
+
+/* Panel-specific colors */
+.panel-1 {
+    border-color: #667eea;
+}
+
+.panel-1 .panel-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.panel-1 .panel-header {
+    border-bottom-color: #667eea;
+}
+
+.panel-2 {
+    border-color: #f093fb;
+}
+
+.panel-2 .panel-badge {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.panel-2 .panel-header {
+    border-bottom-color: #f093fb;
+}
+
+.panel-3 {
+    border-color: #4facfe;
+}
+
+.panel-3 .panel-badge {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.panel-3 .panel-header {
+    border-bottom-color: #4facfe;
+}
+
 .image-options {
     margin-bottom: 15px;
 }
