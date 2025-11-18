@@ -948,7 +948,9 @@ function updateCardsDisplayLayout() {
 
 // Parse D&D character text and extract card data
 function parseCharacterText(text) {
-    const lines = text.trim().split('\n').map(line => line.trim()).filter(line => line && !line.match(/^[═║╔╠╣╗]+$/));
+    const lines = text.trim().split('\n')
+        .map(line => line.trim().replace(/^[║│┃╏╎┆┇┊┋]+\s*/, '').replace(/\s*[║│┃╏╎┆┇┊┋]+$/, '').trim())
+        .filter(line => line && !line.match(/^[═─━┈┉┊┋╌╍╎╏]+$/));
 
     const parsedData = {
         cardName: '',
@@ -1204,11 +1206,20 @@ function parseCharacterText(text) {
     const equipmentIndex = lines.findIndex(line => /^EQUIPMENT$/i.test(line));
     if (equipmentIndex >= 0) {
         const equipmentLines = [];
+        let inEquipmentSection = false;
         for (let i = equipmentIndex + 1; i < lines.length; i++) {
             const line = lines[i];
-            if (line.match(/^[A-Z\s]+$/) && line.length > 10 && !line.startsWith('•')) break;
+            // Break if we hit another section header
+            if (line.match(/^[A-Z\s]+$/) && line.length > 10) break;
+            // Include lines that start with • or ×, or continuation lines (non-empty)
             if (line.startsWith('•') || line.includes('×')) {
                 equipmentLines.push(line);
+                inEquipmentSection = true;
+            } else if (inEquipmentSection && line.length > 0 && !line.match(/^[A-Z\s]+$/)) {
+                // Continuation line - append to last equipment line
+                if (equipmentLines.length > 0) {
+                    equipmentLines[equipmentLines.length - 1] += ' ' + line;
+                }
             }
         }
         parsedData.equipment = equipmentLines.join('\n');
