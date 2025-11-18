@@ -2259,18 +2259,96 @@ async function exportAllCards() {
 // Generate three-column panel HTML for printing (back panel 1)
 function generatePrintThreeColumnBack1(cardData) {
     const name = cardData.name || 'Card Name';
-    const additionalStats = cardData.additionalStats || '';
+    const templateId = cardData.template;
 
+    if (templateId === 'creature') {
+        const additionalStats = cardData.additionalStats || '';
+
+        // Get combat stats from form fields
+        const spellSaveDC = cardData.formFields?.spellSaveDC || '';
+        const spellAttack = cardData.formFields?.spellAttack || '';
+
+        // Parse for weapon attack (still from additionalStats)
+        const weaponAttackMatch = additionalStats.match(/([A-Za-z\s]+Attack):\s*([+\-]?\d+)\s+to\s+hit,\s*([^\n]+)/i);
+        const weaponAttack = weaponAttackMatch ? `${weaponAttackMatch[1]}: ${weaponAttackMatch[2]} to hit, ${weaponAttackMatch[3]}` : '';
+
+        // Get spell slots from form fields
+        const cantrips = cardData.formFields?.cantrips || '';
+        const level1 = cardData.formFields?.level1Slots || '';
+        const level2 = cardData.formFields?.level2Slots || '';
+        const level3 = cardData.formFields?.level3Slots || '';
+
+        // Get key cantrips from form fields
+        const keyCantripsText = cardData.formFields?.keyCantrips || '';
+        const cantripsList = keyCantripsText.split('\n').filter(line => line.trim().startsWith('•'));
+
+        // Get domain spells from form fields
+        const domainSpellsText = cardData.formFields?.domainSpells || '';
+        const domainSpellsLines = domainSpellsText.split('\n').filter(line => line.trim());
+        const domainSpells1stMatch = domainSpellsLines.find(line => /1st:/i.test(line));
+        const domainSpells2ndMatch = domainSpellsLines.find(line => /2nd:/i.test(line));
+
+        const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch.replace(/1st:\s*/i, '').trim() : '';
+        const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch.replace(/2nd:\s*/i, '').trim() : '';
+
+        return `
+            <div class="card-content trifold-content">
+                <div class="trifold-header">
+                    <h2>${name}</h2>
+                </div>
+
+                ${spellSaveDC || spellAttack || weaponAttack ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">COMBAT</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-small">
+                        ${spellSaveDC || spellAttack ? `<div>Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>` : ''}
+                        ${weaponAttack ? `<div>${weaponAttack}</div>` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${cantrips || level1 || level2 || level3 ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">SPELL SLOTS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-small" style="text-align: center;">
+                        ${cantrips ? `Cantrips: ${cantrips}` : ''}${cantrips && (level1 || level2 || level3) ? ' | ' : ''}${level1 ? `1st Level: ${level1}` : ''}${level1 && (level2 || level3) ? ' | ' : ''}${level2 ? `2nd Level: ${level2}` : ''}${level2 && level3 ? ' | ' : ''}${level3 ? `3rd Level: ${level3}` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${cantripsList.length > 0 ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">KEY CANTRIPS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">
+                        ${cantripsList.slice(0, 4).join('<br>')}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${domainSpells1st || domainSpells2nd ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">
+                        ${domainSpells1st ? `<div><strong>1st:</strong> ${domainSpells1st}</div>` : ''}
+                        ${domainSpells2nd ? `<div><strong>2nd:</strong> ${domainSpells2nd}</div>` : ''}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    // Fallback for other templates
     return `
-        <div class="card-content" style="padding: 20px;">
-            <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
-                <h2 style="margin: 0; text-align: center; color: #fff;">${name}</h2>
+        <div class="card-content trifold-content">
+            <div class="trifold-header">
+                <h2>Panel 2</h2>
             </div>
-            <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Additional Stats</h3>
-            <div class="divider"></div>
-            <div class="additional-stats">
-                <p style="white-space: pre-wrap;">${additionalStats || 'No additional stats'}</p>
-            </div>
+            <p>Additional information</p>
         </div>
     `;
 }
@@ -2278,18 +2356,65 @@ function generatePrintThreeColumnBack1(cardData) {
 // Generate three-column panel HTML for printing (back panel 2)
 function generatePrintThreeColumnBack2(cardData) {
     const name = cardData.name || 'Card Name';
-    const description = cardData.description || '';
+    const templateId = cardData.template;
 
+    if (templateId === 'creature') {
+        // Get data from form fields
+        const preparedSpellsText = cardData.formFields?.preparedSpells || '';
+        const classFeaturesText = cardData.formFields?.classFeatures || '';
+        const equipmentText = cardData.formFields?.equipment || '';
+        const passivePerception = cardData.formFields?.passivePerception || '';
+
+        // Format prepared spells
+        const preparedSpells = preparedSpellsText ? `PREPARED SPELLS:\n${preparedSpellsText}` : '';
+
+        // Format class features
+        const classFeatures = classFeaturesText ? `CLASS FEATURES:\n${classFeaturesText}` : '';
+
+        // Format equipment
+        const equipment = equipmentText ? `EQUIPMENT:\n${equipmentText}` : '';
+
+        return `
+            <div class="card-content trifold-content">
+                <div class="trifold-header">
+                    <h2>${name}</h2>
+                </div>
+
+                ${preparedSpells ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">PREPARED SPELLS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${preparedSpells.replace(/PREPARED SPELLS\s*\(?\d*\s*total\)?:?/i, '').trim()}</div>
+                </div>
+                ` : ''}
+
+                ${classFeatures ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">CLASS FEATURES</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${classFeatures.replace(/CLASS FEATURES:?/i, '').trim()}</div>
+                </div>
+                ` : ''}
+
+                ${equipment ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">EQUIPMENT</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${equipment.replace(/EQUIPMENT:?/i, '').trim()}</div>
+                </div>
+                ` : ''}
+
+            </div>
+        `;
+    }
+
+    // Fallback for other templates
     return `
-        <div class="card-content" style="padding: 20px;">
-            <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
-                <h2 style="margin: 0; text-align: center; color: #fff;">${name}</h2>
+        <div class="card-content trifold-content">
+            <div class="trifold-header">
+                <h2>Panel 3</h2>
             </div>
-            <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Abilities & Actions</h3>
-            <div class="divider"></div>
-            <div class="abilities-section">
-                <p style="white-space: pre-wrap;">${description || 'No abilities or actions'}</p>
-            </div>
+            <p>Description</p>
         </div>
     `;
 }
