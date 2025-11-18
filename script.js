@@ -2453,48 +2453,7 @@ function showPrintPreview() {
         }
     });
 
-    // Process three-column cards first (one per page, 3 distinct panels side by side)
-    threeColumnCards.forEach(card => {
-        const printPage = document.createElement('div');
-        printPage.className = 'print-page print-page-trifold';
-
-        // Generate the three distinct panels
-        const panels = [
-            card.html, // Front panel (already contains image + basic stats)
-            generatePrintThreeColumnBack1(card), // Panel 1 - additional stats
-            generatePrintThreeColumnBack2(card)  // Panel 2 - abilities/description
-        ];
-
-        // Create 3 distinct panels side by side
-        panels.forEach((panelHTML, index) => {
-            const printCard = document.createElement('div');
-            printCard.className = 'print-card print-card-trifold';
-
-            const cardDiv = document.createElement('div');
-            cardDiv.className = 'card';
-            cardDiv.innerHTML = panelHTML;
-
-            // Apply background image styling if it was saved (only for front panel)
-            if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
-                cardDiv.classList.add('image-as-background');
-                cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
-                cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.3');
-                cardDiv.style.background = 'none';
-            }
-
-            // Apply horizontal stats layout if it was saved
-            if (card.hasHorizontalStatsLayout) {
-                cardDiv.classList.add('horizontal-stats');
-            }
-
-            printCard.appendChild(cardDiv);
-            printPage.appendChild(printCard);
-        });
-
-        printContent.appendChild(printPage);
-    });
-
-    // Process regular cards - get cards per page from selector
+    // Get cards per page from selector
     const cardsPerPageSelect = document.getElementById('cardsPerPageSelect');
     const cardsPerPage = parseInt(cardsPerPageSelect?.value || 9);
 
@@ -2508,6 +2467,60 @@ function showPrintPreview() {
         gridLayout = 'layout-3x3'; // 3 rows x 3 columns (default)
     }
 
+    // Process three-column cards - each trifold card has 3 panels
+    // Calculate trifold cards per page: cardsPerPage / 3
+    const trifoldCardsPerPage = Math.floor(cardsPerPage / 3);
+    const totalTrifoldPages = Math.ceil(threeColumnCards.length / trifoldCardsPerPage);
+
+    for (let page = 0; page < totalTrifoldPages; page++) {
+        const printPage = document.createElement('div');
+        printPage.className = `print-page print-page-trifold ${gridLayout}`;
+
+        const startIdx = page * trifoldCardsPerPage;
+        const endIdx = Math.min(startIdx + trifoldCardsPerPage, threeColumnCards.length);
+
+        // Process each trifold card on this page
+        for (let i = startIdx; i < endIdx; i++) {
+            const card = threeColumnCards[i];
+
+            // Generate the three distinct panels for this card
+            const panels = [
+                card.html, // Front panel (already contains image + basic stats)
+                generatePrintThreeColumnBack1(card), // Panel 1 - additional stats
+                generatePrintThreeColumnBack2(card)  // Panel 2 - abilities/description
+            ];
+
+            // Create 3 distinct panels side by side
+            panels.forEach((panelHTML, index) => {
+                const printCard = document.createElement('div');
+                printCard.className = 'print-card print-card-trifold';
+
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                cardDiv.innerHTML = panelHTML;
+
+                // Apply background image styling if it was saved (only for front panel)
+                if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
+                    cardDiv.classList.add('image-as-background');
+                    cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
+                    cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.3');
+                    cardDiv.style.background = 'none';
+                }
+
+                // Apply horizontal stats layout if it was saved
+                if (card.hasHorizontalStatsLayout) {
+                    cardDiv.classList.add('horizontal-stats');
+                }
+
+                printCard.appendChild(cardDiv);
+                printPage.appendChild(printCard);
+            });
+        }
+
+        printContent.appendChild(printPage);
+    }
+
+    // Process regular cards
     const totalPages = Math.ceil(regularCards.length / cardsPerPage);
 
     // Generate front pages for regular cards
