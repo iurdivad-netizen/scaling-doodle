@@ -1339,12 +1339,24 @@ header p {
     margin: 0 auto 20px;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: row;
-    gap: 0;
-    justify-content: center;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 88mm);
+    gap: 5mm;
     box-sizing: border-box;
+}
+
+/* Grid layout variations for trifold pages */
+.print-page-trifold.layout-1x3 {
+    grid-template-rows: 88mm !important;
+}
+
+.print-page-trifold.layout-2x3 {
+    grid-template-rows: repeat(2, 88mm) !important;
+}
+
+.print-page-trifold.layout-3x3 {
+    grid-template-rows: repeat(3, 88mm) !important;
 }
 
 .print-card-trifold {
@@ -1650,17 +1662,32 @@ header p {
         page-break-before: avoid !important;
         page-break-inside: avoid !important;
         box-shadow: none !important;
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 0 !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-rows: repeat(3, 88mm) !important;
+        gap: 5mm !important;
         box-sizing: border-box !important;
         background: white !important;
     }
 
     .print-page-trifold:last-child {
         page-break-after: auto !important;
+    }
+
+    /* Grid layout variations for trifold pages (print) */
+    .print-page-trifold.layout-1x3 {
+        grid-template-rows: 88mm !important;
+        min-height: auto !important;
+    }
+
+    .print-page-trifold.layout-2x3 {
+        grid-template-rows: repeat(2, 88mm) !important;
+        min-height: auto !important;
+    }
+
+    .print-page-trifold.layout-3x3 {
+        grid-template-rows: repeat(3, 88mm) !important;
+        min-height: 297mm !important;
     }
 
     .print-card-trifold {
