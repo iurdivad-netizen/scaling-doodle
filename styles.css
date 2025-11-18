@@ -1645,6 +1645,142 @@ header p {
             transparent 10px
         ) !important;
     }
+
+    /* Trifold content styles for print */
+    .print-card-trifold .trifold-content,
+    .print-card .trifold-content {
+        padding: var(--card-content-padding) !important;
+        font-size: var(--card-description-size) !important;
+        display: block !important;
+    }
+
+    .print-card-trifold .trifold-header,
+    .print-card .trifold-header {
+        position: relative !important;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        padding: 12px !important;
+        margin: calc(var(--card-content-padding) * -1) calc(var(--card-content-padding) * -1) var(--section-spacing) calc(var(--card-content-padding) * -1) !important;
+    }
+
+    .print-card-trifold .trifold-header h2,
+    .print-card .trifold-header h2 {
+        margin: 0 !important;
+        text-align: center !important;
+        font-size: 1.5em !important;
+        color: var(--card-name-color) !important;
+    }
+
+    .print-card-trifold .trifold-section,
+    .print-card .trifold-section {
+        margin-bottom: var(--section-spacing) !important;
+        display: block !important;
+    }
+
+    .print-card-trifold .trifold-section-title,
+    .print-card .trifold-section-title {
+        font-weight: bold !important;
+        text-align: center !important;
+        margin-bottom: calc(var(--section-spacing) * 0.67) !important;
+        font-size: var(--card-header-size) !important;
+        color: var(--card-label-color) !important;
+    }
+
+    .print-card-trifold .trifold-section .divider,
+    .print-card .trifold-section .divider {
+        margin: calc(var(--section-spacing) * 0.42) 0 !important;
+    }
+
+    .print-card-trifold .trifold-text,
+    .print-card .trifold-text {
+        font-size: 0.94em !important;
+        line-height: var(--card-description-line-height) !important;
+    }
+
+    .print-card-trifold .trifold-text-small,
+    .print-card .trifold-text-small {
+        font-size: 0.88em !important;
+        line-height: var(--card-description-line-height) !important;
+    }
+
+    .print-card-trifold .trifold-text-tiny,
+    .print-card .trifold-text-tiny {
+        font-size: 0.82em !important;
+        line-height: var(--card-description-line-height) !important;
+        white-space: pre-wrap !important;
+    }
+
+    .print-card-trifold .trifold-front,
+    .print-card .trifold-front {
+        padding: var(--card-content-padding) !important;
+    }
+
+    .print-card-trifold .trifold-front .card-type,
+    .print-card .trifold-front .card-type {
+        text-align: center !important;
+        margin-bottom: calc(var(--section-spacing) * 0.83) !important;
+    }
+
+    .print-card-trifold .trifold-front .card-type-main,
+    .print-card .trifold-front .card-type-main {
+        font-weight: bold !important;
+        font-size: var(--card-header-size) !important;
+    }
+
+    .print-card-trifold .trifold-front .card-type-sub,
+    .print-card .trifold-front .card-type-sub {
+        font-size: calc(var(--card-header-size) * 0.94) !important;
+        color: #666 !important;
+    }
+
+    .print-card-trifold .trifold-front .stat-list,
+    .print-card .trifold-front .stat-list {
+        font-size: calc(var(--card-stat-label-size) * 0.94) !important;
+        margin: calc(var(--section-spacing) * 0.83) 0 !important;
+    }
+
+    .print-card-trifold .trifold-front .stat-list .stat-row,
+    .print-card .trifold-front .stat-list .stat-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        padding: calc(var(--stat-row-spacing) * 0.5) 0 !important;
+    }
+
+    .print-card-trifold .ability-scores-section,
+    .print-card .ability-scores-section {
+        margin-bottom: calc(var(--section-spacing) * 0.83) !important;
+        display: block !important;
+    }
+
+    .print-card-trifold .ability-scores-section-title,
+    .print-card .ability-scores-section-title {
+        font-weight: bold !important;
+        text-align: center !important;
+        margin-bottom: calc(var(--section-spacing) * 0.67) !important;
+        font-size: calc(var(--card-header-size) * 0.88) !important;
+        color: var(--card-label-color) !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    /* Horizontal stats layout for three-column print */
+    .print-card-trifold .card.horizontal-stats .trifold-front .stat-list,
+    .print-card .card.horizontal-stats .trifold-front .stat-list {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
+        gap: calc(var(--ability-grid-gap) * 0.5) !important;
+        margin: calc(var(--section-spacing) * 0.83) 0 !important;
+    }
+
+    .print-card-trifold .card.horizontal-stats .trifold-front .stat-list .stat-row,
+    .print-card .card.horizontal-stats .trifold-front .stat-list .stat-row {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 8px 4px !important;
+        background: #e8dcc4 !important;
+        border: 2px solid var(--card-border-color) !important;
+        border-radius: 6px !important;
+    }
 }
 
 /* Responsive Design */
