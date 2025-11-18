@@ -232,6 +232,9 @@ function updatePreview() {
 
     // Update back card for immersive layout
     updateBackCard();
+
+    // Update cards display layout for three-column view
+    updateCardsDisplayLayout();
 }
 
 // Generate creature card preview
@@ -605,6 +608,48 @@ function updateBackCard() {
     }
 }
 
+// Update cards display layout based on selected layout style
+function updateCardsDisplayLayout() {
+    const layoutStyle = cardLayoutSelect.value;
+    const cardsDisplay = document.querySelector('.cards-display');
+    const cardFront = document.getElementById('cardPreview');
+    const cardBack = document.querySelector('.card-back');
+
+    if (layoutStyle === 'three-column') {
+        // Add three-column class
+        cardsDisplay.classList.add('three-column');
+
+        // Remove any existing cloned cards
+        const existingClones = cardsDisplay.querySelectorAll('.card-front-clone');
+        existingClones.forEach(clone => clone.remove());
+
+        // Clone the front card 2 more times (for a total of 3)
+        for (let i = 0; i < 2; i++) {
+            const clone = cardFront.cloneNode(true);
+            clone.id = `cardPreview-clone-${i + 1}`;
+            clone.classList.add('card-front-clone');
+            cardsDisplay.insertBefore(clone, cardBack);
+        }
+
+        // Hide the back card in three-column layout
+        if (cardBack) {
+            cardBack.style.display = 'none';
+        }
+    } else {
+        // Remove three-column class
+        cardsDisplay.classList.remove('three-column');
+
+        // Remove cloned cards
+        const existingClones = cardsDisplay.querySelectorAll('.card-front-clone');
+        existingClones.forEach(clone => clone.remove());
+
+        // Show the back card for other layouts
+        if (cardBack) {
+            cardBack.style.display = '';
+        }
+    }
+}
+
 // Parse D&D character text and extract card data
 function parseCharacterText(text) {
     const lines = text.trim().split('\n').filter(line => line.trim());
@@ -768,6 +813,7 @@ function attachEventListeners() {
     // Layout style change
     cardLayoutSelect.addEventListener('change', function() {
         updatePreview();
+        updateCardsDisplayLayout();
     });
 
     // Image upload handler
