@@ -420,6 +420,22 @@ header p {
     font-weight: 600;
 }
 
+/* Horizontal stats layout styles */
+.card.horizontal-stats .card-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--ability-grid-gap);
+}
+
+.card.horizontal-stats .card-stats .stat-row {
+    text-align: center;
+}
+
+.card.horizontal-stats .card-stats .stat-row strong,
+.card.horizontal-stats .card-stats .stat-row span {
+    display: block;
+}
+
 .ability-scores-display {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -1740,6 +1756,34 @@ header p {
     display: flex;
     justify-content: space-between;
     padding: calc(var(--stat-row-spacing) * 0.5) 0;
+}
+
+/* Horizontal stats layout for three-column */
+.card.horizontal-stats .trifold-front .stat-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: calc(var(--ability-grid-gap) * 0.5);
+    margin: calc(var(--section-spacing) * 0.83) 0;
+}
+
+.card.horizontal-stats .trifold-front .stat-list .stat-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 8px 4px;
+    background: #e8dcc4;
+    border: 2px solid var(--card-border-color);
+    border-radius: 6px;
+}
+
+.card.horizontal-stats .trifold-front .stat-list .stat-row strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.card.horizontal-stats .trifold-front .stat-list .stat-row span {
+    display: block;
 }
 
 .trifold-front .ability-scores-section {

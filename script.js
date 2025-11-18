@@ -931,6 +931,13 @@ function updateCardsDisplayLayout() {
         panel2.innerHTML = back2Panel;
         cardsDisplay.insertBefore(panel2, cardBack);
 
+        // Apply horizontal stats layout if enabled
+        const useHorizontalStatsLayout = document.getElementById('useHorizontalStatsLayout');
+        if (useHorizontalStatsLayout && useHorizontalStatsLayout.checked) {
+            panel1.classList.add('horizontal-stats');
+            panel2.classList.add('horizontal-stats');
+        }
+
         // Hide the back card in three-column layout
         if (cardBack) {
             cardBack.style.display = 'none';
@@ -1803,6 +1810,7 @@ function captureCardState() {
         formFields: formFields,
         theme: currentTheme,
         hasBackgroundImage: cardPreview.classList.contains('image-as-background'),
+        hasHorizontalStatsLayout: cardPreview.classList.contains('horizontal-stats'),
         backgroundImage: cardPreview.classList.contains('image-as-background')
             ? getComputedStyle(document.documentElement).getPropertyValue('--card-background-image')
             : null,
@@ -1897,6 +1905,21 @@ function loadCardIntoEditor(cardData) {
         }
     }
 
+    // Restore horizontal stats layout if it was saved
+    if (cardData.hasHorizontalStatsLayout) {
+        const useHorizontalStatsLayoutCheckbox = document.getElementById('useHorizontalStatsLayout');
+        if (useHorizontalStatsLayoutCheckbox) {
+            useHorizontalStatsLayoutCheckbox.checked = true;
+        }
+        applyHorizontalStatsLayout(true);
+    } else {
+        const useHorizontalStatsLayoutCheckbox = document.getElementById('useHorizontalStatsLayout');
+        if (useHorizontalStatsLayoutCheckbox) {
+            useHorizontalStatsLayoutCheckbox.checked = false;
+        }
+        applyHorizontalStatsLayout(false);
+    }
+
     // Close the deck modal
     deckModal.classList.remove('active');
 
@@ -1964,6 +1987,11 @@ function showDeckModal() {
                 cardDiv.style.setProperty('--card-background-image', cardData.backgroundImage);
                 cardDiv.style.setProperty('--content-opacity', cardData.contentOpacity || '0.3');
                 cardDiv.style.background = 'none';
+            }
+
+            // Apply horizontal stats layout if it was saved
+            if (cardData.hasHorizontalStatsLayout) {
+                cardDiv.classList.add('horizontal-stats');
             }
 
             cardContainer.appendChild(removeBtn);
@@ -2265,6 +2293,11 @@ function showPrintPreview() {
                 cardDiv.style.background = 'none';
             }
 
+            // Apply horizontal stats layout if it was saved
+            if (card.hasHorizontalStatsLayout) {
+                cardDiv.classList.add('horizontal-stats');
+            }
+
             printCard.appendChild(cardDiv);
             printPage.appendChild(printCard);
         });
@@ -2298,6 +2331,11 @@ function showPrintPreview() {
                 cardDiv.style.setProperty('--card-background-image', regularCards[i].backgroundImage);
                 cardDiv.style.setProperty('--content-opacity', regularCards[i].contentOpacity || '0.3');
                 cardDiv.style.background = 'none';
+            }
+
+            // Apply horizontal stats layout if it was saved
+            if (regularCards[i].hasHorizontalStatsLayout) {
+                cardDiv.classList.add('horizontal-stats');
             }
 
             printCard.appendChild(cardDiv);
@@ -2685,6 +2723,28 @@ function applyTheme(theme) {
             card.classList.remove('image-as-background');
             root.style.setProperty('--card-background-image', 'none');
         }
+    }
+}
+
+// Apply horizontal stats layout
+function applyHorizontalStatsLayout(enabled) {
+    const cardPreview = document.getElementById('cardPreview');
+    const trifoldPanels = document.querySelectorAll('.trifold-panel');
+
+    if (enabled) {
+        if (cardPreview) {
+            cardPreview.classList.add('horizontal-stats');
+        }
+        trifoldPanels.forEach(panel => {
+            panel.classList.add('horizontal-stats');
+        });
+    } else {
+        if (cardPreview) {
+            cardPreview.classList.remove('horizontal-stats');
+        }
+        trifoldPanels.forEach(panel => {
+            panel.classList.remove('horizontal-stats');
+        });
     }
 }
 
@@ -3352,6 +3412,23 @@ function initCustomization() {
             applyTheme(theme);
             updatePreview(); // Force preview update to apply theme changes
         });
+    }
+
+    // Horizontal stats layout checkbox
+    const useHorizontalStatsLayoutElement = document.getElementById('useHorizontalStatsLayout');
+    if (useHorizontalStatsLayoutElement) {
+        useHorizontalStatsLayoutElement.addEventListener('change', function() {
+            applyHorizontalStatsLayout(this.checked);
+            // Save preference to localStorage
+            localStorage.setItem('useHorizontalStatsLayout', this.checked);
+        });
+    }
+
+    // Load saved horizontal stats layout preference
+    const savedHorizontalStatsLayout = localStorage.getItem('useHorizontalStatsLayout');
+    if (savedHorizontalStatsLayout === 'true' && useHorizontalStatsLayoutElement) {
+        useHorizontalStatsLayoutElement.checked = true;
+        applyHorizontalStatsLayout(true);
     }
 
     // Content opacity slider
