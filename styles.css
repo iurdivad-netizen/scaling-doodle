@@ -1199,18 +1199,47 @@ header p {
 .print-alignment-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     padding: 15px;
     background: #f5f5f5;
     border-radius: 6px;
     margin-bottom: 20px;
     justify-content: center;
+    flex-wrap: wrap;
+}
+
+.print-control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .print-alignment-controls label {
     font-weight: 600;
     color: #333;
-    margin-right: 10px;
+    margin-right: 5px;
+}
+
+.cards-per-page-select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.cards-per-page-select:hover {
+    border-color: #007bff;
+}
+
+.cards-per-page-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .alignment-btn {
@@ -1269,6 +1298,22 @@ header p {
     grid-template-columns: repeat(3, 1fr);
     gap: 5mm;
     box-sizing: border-box;
+}
+
+/* Grid layout variations for different cards per page */
+.print-page.layout-1x3 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 88mm;
+}
+
+.print-page.layout-2x3 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 88mm);
+}
+
+.print-page.layout-3x3 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 88mm);
 }
 
 .print-card {
@@ -1407,6 +1452,22 @@ header p {
         gap: 5mm !important;
         box-sizing: border-box !important;
         background: white !important;
+    }
+
+    /* Grid layout variations for different cards per page (print) */
+    .print-page.layout-1x3 {
+        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-rows: 88mm !important;
+    }
+
+    .print-page.layout-2x3 {
+        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-rows: repeat(2, 88mm) !important;
+    }
+
+    .print-page.layout-3x3 {
+        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-rows: repeat(3, 88mm) !important;
     }
 
     .print-page:last-child {

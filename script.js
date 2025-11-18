@@ -1588,6 +1588,19 @@ function attachEventListeners() {
     alignRightBtn.addEventListener('click', adjustAlignmentRight);
     resetAlignmentBtn.addEventListener('click', resetPrintAlignment);
 
+    // Cards per page selector - regenerate preview on change
+    const cardsPerPageSelect = document.getElementById('cardsPerPageSelect');
+    if (cardsPerPageSelect) {
+        cardsPerPageSelect.addEventListener('change', () => {
+            // Only regenerate if print modal is visible
+            if (printModal.classList.contains('active')) {
+                showPrintPreview();
+                // Don't open the modal again, just update content
+                printModal.classList.add('active');
+            }
+        });
+    }
+
     // Close modals on outside click
     deckModal.addEventListener('click', (e) => {
         if (e.target === deckModal) {
@@ -2481,14 +2494,26 @@ function showPrintPreview() {
         printContent.appendChild(printPage);
     });
 
-    // Process regular cards (3x3 grid)
-    const cardsPerPage = 9; // 3x3 grid
+    // Process regular cards - get cards per page from selector
+    const cardsPerPageSelect = document.getElementById('cardsPerPageSelect');
+    const cardsPerPage = parseInt(cardsPerPageSelect?.value || 9);
+
+    // Determine grid layout based on cards per page
+    let gridLayout;
+    if (cardsPerPage === 3) {
+        gridLayout = 'layout-1x3'; // 1 row x 3 columns
+    } else if (cardsPerPage === 6) {
+        gridLayout = 'layout-2x3'; // 2 rows x 3 columns
+    } else {
+        gridLayout = 'layout-3x3'; // 3 rows x 3 columns (default)
+    }
+
     const totalPages = Math.ceil(regularCards.length / cardsPerPage);
 
     // Generate front pages for regular cards
     for (let page = 0; page < totalPages; page++) {
         const printPage = document.createElement('div');
-        printPage.className = 'print-page';
+        printPage.className = `print-page ${gridLayout}`;
 
         const startIdx = page * cardsPerPage;
         const endIdx = Math.min(startIdx + cardsPerPage, regularCards.length);
@@ -2524,7 +2549,7 @@ function showPrintPreview() {
     // Generate back pages with matching placement (only for regular cards)
     for (let page = 0; page < totalPages; page++) {
         const printPage = document.createElement('div');
-        printPage.className = 'print-page';
+        printPage.className = `print-page ${gridLayout}`;
 
         const startIdx = page * cardsPerPage;
         const endIdx = Math.min(startIdx + cardsPerPage, regularCards.length);
