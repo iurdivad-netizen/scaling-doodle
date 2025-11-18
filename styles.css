@@ -967,6 +967,40 @@ header p {
     box-sizing: border-box;
 }
 
+/* Trifold print layout styles */
+.print-page-trifold {
+    width: 210mm;
+    height: 297mm;
+    padding: 10mm;
+    margin: 0 auto 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+.print-card-trifold {
+    width: 63mm;
+    height: auto;
+    transform-origin: top left;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.print-card-trifold .card {
+    width: 750px;
+    height: 1050px;
+    transform: scale(0.317);
+    transform-origin: top left;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 /* Print media queries */
 @media print {
     /* Remove default page margins */
@@ -1223,6 +1257,73 @@ header p {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
+
+    /* Trifold print layout styles */
+    .print-page-trifold {
+        width: 210mm !important;
+        height: auto !important;
+        min-height: 297mm !important;
+        max-height: 297mm !important;
+        padding: 10mm !important;
+        margin: 0 !important;
+        page-break-after: always !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
+        box-shadow: none !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 0 !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        box-sizing: border-box !important;
+        background: white !important;
+    }
+
+    .print-page-trifold:last-child {
+        page-break-after: auto !important;
+    }
+
+    .print-card-trifold {
+        width: 63mm !important;
+        height: auto !important;
+        transform-origin: top left !important;
+        overflow: hidden !important;
+        page-break-inside: avoid !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
+    }
+
+    .print-card-trifold .card {
+        width: 750px !important;
+        height: 1050px !important;
+        transform: scale(0.317) !important;
+        transform-origin: top left !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: var(--card-bg-color) !important;
+        border: 2px solid var(--card-border-color) !important;
+        border-radius: var(--card-border-radius) !important;
+        box-shadow: none !important;
+        position: relative !important;
+    }
+
+    /* Add dashed fold lines between trifold cards */
+    .print-card-trifold:not(:last-child) .card::after {
+        content: '' !important;
+        position: absolute !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 1px !important;
+        background: repeating-linear-gradient(
+            to bottom,
+            #ccc 0,
+            #ccc 5px,
+            transparent 5px,
+            transparent 10px
+        ) !important;
+    }
 }
 
 /* Responsive Design */
@@ -1336,10 +1437,10 @@ header p {
     }
 }
 
-/* Three Column Layout Styles */
+/* Three Column Layout Styles - Seamless for folding */
 .cards-display.three-column {
     display: flex;
-    gap: 20px;
+    gap: 0;
     justify-content: center;
     align-items: flex-start;
     flex-wrap: nowrap;
@@ -1349,7 +1450,16 @@ header p {
 .cards-display.three-column .card-front {
     flex-shrink: 0;
     transform: scale(0.4);
-    transform-origin: top center;
+    transform-origin: top left;
+    margin: 0;
+}
+
+.cards-display.three-column .card-front:first-child {
+    transform-origin: top left;
+}
+
+.cards-display.three-column .card-front:last-child {
+    transform-origin: top right;
 }
 
 .cards-display.three-column .card-back {
@@ -1358,10 +1468,6 @@ header p {
 
 /* Responsive: smaller scale for three-column on smaller screens */
 @media (max-width: 1600px) {
-    .cards-display.three-column {
-        gap: 10px;
-    }
-
     .cards-display.three-column .card-front {
         transform: scale(0.3);
     }
@@ -1371,15 +1477,38 @@ header p {
     .cards-display.three-column {
         flex-direction: column;
         align-items: center;
+        gap: 10px;
     }
 
     .cards-display.three-column .card-front {
         transform: scale(0.5);
-        margin-bottom: -262.5px;
+        transform-origin: top center;
+        margin-bottom: 0;
+    }
+}
+
+/* Print styles for three-column foldable layout */
+@media print {
+    .cards-display.three-column {
+        display: flex;
+        gap: 0;
+        page-break-inside: avoid;
+        margin: 0;
+        padding: 0;
+    }
+
+    .cards-display.three-column .card-front {
+        transform: scale(1);
+        margin: 0;
+        border-right: 1px dashed #ccc;
     }
 
     .cards-display.three-column .card-front:last-child {
-        margin-bottom: 0;
+        border-right: none;
+    }
+
+    .cards-display.three-column .card-back {
+        display: none;
     }
 }
 

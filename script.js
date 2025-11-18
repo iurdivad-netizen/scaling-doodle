@@ -1687,16 +1687,58 @@ function showPrintPreview() {
 
     printContent.innerHTML = '';
 
-    const cardsPerPage = 9; // 3x3 grid
-    const totalPages = Math.ceil(deck.length / cardsPerPage);
+    // Separate three-column cards from regular cards
+    const regularCards = [];
+    const threeColumnCards = [];
 
-    // Generate front pages
+    deck.forEach(card => {
+        if (card.layout === 'three-column') {
+            threeColumnCards.push(card);
+        } else {
+            regularCards.push(card);
+        }
+    });
+
+    // Process three-column cards first (one per page, 3 copies side by side)
+    threeColumnCards.forEach(card => {
+        const printPage = document.createElement('div');
+        printPage.className = 'print-page print-page-trifold';
+
+        // Create 3 copies of the card side by side
+        for (let copy = 0; copy < 3; copy++) {
+            const printCard = document.createElement('div');
+            printCard.className = 'print-card print-card-trifold';
+
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            cardDiv.innerHTML = card.html;
+
+            // Apply background image styling if it was saved
+            if (card.hasBackgroundImage && card.backgroundImage) {
+                cardDiv.classList.add('image-as-background');
+                cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
+                cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.3');
+                cardDiv.style.background = 'none';
+            }
+
+            printCard.appendChild(cardDiv);
+            printPage.appendChild(printCard);
+        }
+
+        printContent.appendChild(printPage);
+    });
+
+    // Process regular cards (3x3 grid)
+    const cardsPerPage = 9; // 3x3 grid
+    const totalPages = Math.ceil(regularCards.length / cardsPerPage);
+
+    // Generate front pages for regular cards
     for (let page = 0; page < totalPages; page++) {
         const printPage = document.createElement('div');
         printPage.className = 'print-page';
 
         const startIdx = page * cardsPerPage;
-        const endIdx = Math.min(startIdx + cardsPerPage, deck.length);
+        const endIdx = Math.min(startIdx + cardsPerPage, regularCards.length);
 
         for (let i = startIdx; i < endIdx; i++) {
             const printCard = document.createElement('div');
@@ -1704,13 +1746,13 @@ function showPrintPreview() {
 
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
-            cardDiv.innerHTML = deck[i].html;
+            cardDiv.innerHTML = regularCards[i].html;
 
             // Apply background image styling if it was saved
-            if (deck[i].hasBackgroundImage && deck[i].backgroundImage) {
+            if (regularCards[i].hasBackgroundImage && regularCards[i].backgroundImage) {
                 cardDiv.classList.add('image-as-background');
-                cardDiv.style.setProperty('--card-background-image', deck[i].backgroundImage);
-                cardDiv.style.setProperty('--content-opacity', deck[i].contentOpacity || '0.3');
+                cardDiv.style.setProperty('--card-background-image', regularCards[i].backgroundImage);
+                cardDiv.style.setProperty('--content-opacity', regularCards[i].contentOpacity || '0.3');
                 cardDiv.style.background = 'none';
             }
 
@@ -1721,13 +1763,13 @@ function showPrintPreview() {
         printContent.appendChild(printPage);
     }
 
-    // Generate back pages with matching placement
+    // Generate back pages with matching placement (only for regular cards)
     for (let page = 0; page < totalPages; page++) {
         const printPage = document.createElement('div');
         printPage.className = 'print-page';
 
         const startIdx = page * cardsPerPage;
-        const endIdx = Math.min(startIdx + cardsPerPage, deck.length);
+        const endIdx = Math.min(startIdx + cardsPerPage, regularCards.length);
 
         for (let i = startIdx; i < endIdx; i++) {
             const printCard = document.createElement('div');
@@ -1737,12 +1779,12 @@ function showPrintPreview() {
             backCardDiv.className = 'card card-back';
 
             // Get back card data for this card
-            const backImage = deck[i].backCardImage || '';
-            const backBgColor = deck[i].backCardBgColor || '#2c3e50';
-            const layoutStyle = deck[i].layout || 'standard';
-            const additionalStats = deck[i].additionalStats || '';
-            const description = deck[i].description || '';
-            const frontCardImage = deck[i].frontCardImage || '';
+            const backImage = regularCards[i].backCardImage || '';
+            const backBgColor = regularCards[i].backCardBgColor || '#2c3e50';
+            const layoutStyle = regularCards[i].layout || 'standard';
+            const additionalStats = regularCards[i].additionalStats || '';
+            const description = regularCards[i].description || '';
+            const frontCardImage = regularCards[i].frontCardImage || '';
 
             // Apply background color
             backCardDiv.style.backgroundColor = backBgColor;
