@@ -715,6 +715,97 @@ header p {
     padding-bottom: 6px;
 }
 
+.customization-section h5 {
+    color: #555;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+/* Customization Panel Sections */
+.customization-panel-section {
+    margin-bottom: 25px;
+    padding: 18px;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    background: linear-gradient(to bottom, #fafafa 0%, #ffffff 100%);
+}
+
+.customization-panel-header {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.customization-panel-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.customization-panel-title {
+    color: #333;
+    font-size: 1.15em;
+    margin: 6px 0 0 0;
+    font-weight: 600;
+}
+
+/* Customization panel-specific colors */
+.custom-panel-global {
+    border-color: #9b59b6;
+}
+
+.custom-panel-global .customization-panel-badge {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+}
+
+.custom-panel-global .customization-panel-header {
+    border-bottom-color: #9b59b6;
+}
+
+.custom-panel-1 {
+    border-color: #667eea;
+}
+
+.custom-panel-1 .customization-panel-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.custom-panel-1 .customization-panel-header {
+    border-bottom-color: #667eea;
+}
+
+.custom-panel-typography {
+    border-color: #2ecc71;
+}
+
+.custom-panel-typography .customization-panel-badge {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.custom-panel-typography .customization-panel-header {
+    border-bottom-color: #2ecc71;
+}
+
+.custom-panel-back {
+    border-color: #e74c3c;
+}
+
+.custom-panel-back .customization-panel-badge {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.custom-panel-back .customization-panel-header {
+    border-bottom-color: #e74c3c;
+}
+
 .setting-row {
     margin-bottom: 12px;
 }
