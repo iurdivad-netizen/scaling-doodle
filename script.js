@@ -2443,27 +2443,166 @@ function resetPrintAlignment() {
 
 // Card Customization System
 
-// Default theme settings
-const defaultTheme = {
-    fontFamily: "'Georgia', serif",
-    cardNameSize: 1.8,
-    cardHeaderSize: 0.95,
-    cardDescriptionSize: 0.9,
-    cardStatLabelSize: 0.95,
-    cardAbilityNameSize: 0.85,
-    cardAbilityValueSize: 0.8,
-    cardImageHeight: 240,
-    sectionSpacing: 12,
-    cardBgColor: '#f9f6f0',
-    cardBorderColor: '#8b4513',
-    cardTextColor: '#333333',
-    cardLabelColor: '#8b4513',
-    cardNameColor: '#f4e4c1',
-    useImageAsBackground: false,
-    contentOpacity: 0.3,
-    backCardImage: '',
-    backCardBgColor: '#2c3e50'
+// Predefined Theme Templates
+const themePresets = {
+    'classic-fantasy': {
+        name: 'Classic Fantasy',
+        description: 'Traditional parchment style with medieval aesthetics',
+        fontFamily: "'Georgia', serif",
+        cardNameSize: 1.8,
+        cardHeaderSize: 0.95,
+        cardDescriptionSize: 0.9,
+        cardStatLabelSize: 0.95,
+        cardAbilityNameSize: 0.85,
+        cardAbilityValueSize: 0.8,
+        cardImageHeight: 240,
+        sectionSpacing: 12,
+        cardBgColor: '#f9f6f0',
+        cardBorderColor: '#8b4513',
+        cardTextColor: '#333333',
+        cardLabelColor: '#8b4513',
+        cardNameColor: '#f4e4c1',
+        useImageAsBackground: false,
+        contentOpacity: 0.3,
+        backCardImage: '',
+        backCardBgColor: '#2c3e50'
+    },
+    'modern-clean': {
+        name: 'Modern Clean',
+        description: 'Minimalist design with clean lines and modern typography',
+        fontFamily: "'Helvetica', 'Arial', sans-serif",
+        cardNameSize: 2.0,
+        cardHeaderSize: 1.0,
+        cardDescriptionSize: 0.95,
+        cardStatLabelSize: 0.9,
+        cardAbilityNameSize: 0.9,
+        cardAbilityValueSize: 0.85,
+        cardImageHeight: 280,
+        sectionSpacing: 16,
+        cardBgColor: '#ffffff',
+        cardBorderColor: '#e0e0e0',
+        cardTextColor: '#2c3e50',
+        cardLabelColor: '#5a6c7d',
+        cardNameColor: '#2c3e50',
+        useImageAsBackground: false,
+        contentOpacity: 0.3,
+        backCardImage: '',
+        backCardBgColor: '#f8f9fa'
+    },
+    'dark-mode': {
+        name: 'Dark Mode',
+        description: 'High contrast dark theme for low-light environments',
+        fontFamily: "'Georgia', serif",
+        cardNameSize: 1.9,
+        cardHeaderSize: 1.0,
+        cardDescriptionSize: 0.95,
+        cardStatLabelSize: 0.95,
+        cardAbilityNameSize: 0.9,
+        cardAbilityValueSize: 0.85,
+        cardImageHeight: 250,
+        sectionSpacing: 14,
+        cardBgColor: '#1a1a1a',
+        cardBorderColor: '#4a5568',
+        cardTextColor: '#e2e8f0',
+        cardLabelColor: '#a0aec0',
+        cardNameColor: '#ffd700',
+        useImageAsBackground: false,
+        contentOpacity: 0.3,
+        backCardImage: '',
+        backCardBgColor: '#0f0f0f'
+    },
+    'minimalist': {
+        name: 'Minimalist',
+        description: 'Ultra-clean design with maximum readability',
+        fontFamily: "'Palatino', 'Times New Roman', serif",
+        cardNameSize: 1.6,
+        cardHeaderSize: 0.9,
+        cardDescriptionSize: 0.85,
+        cardStatLabelSize: 0.85,
+        cardAbilityNameSize: 0.8,
+        cardAbilityValueSize: 0.75,
+        cardImageHeight: 220,
+        sectionSpacing: 18,
+        cardBgColor: '#fafafa',
+        cardBorderColor: '#d1d1d1',
+        cardTextColor: '#1a1a1a',
+        cardLabelColor: '#666666',
+        cardNameColor: '#1a1a1a',
+        useImageAsBackground: false,
+        contentOpacity: 0.3,
+        backCardImage: '',
+        backCardBgColor: '#f0f0f0'
+    },
+    'vintage': {
+        name: 'Vintage',
+        description: 'Aged paper with sepia tones and antique aesthetic',
+        fontFamily: "'Garamond', 'Times New Roman', serif",
+        cardNameSize: 1.9,
+        cardHeaderSize: 1.0,
+        cardDescriptionSize: 0.95,
+        cardStatLabelSize: 1.0,
+        cardAbilityNameSize: 0.9,
+        cardAbilityValueSize: 0.85,
+        cardImageHeight: 240,
+        sectionSpacing: 12,
+        cardBgColor: '#f4e8d0',
+        cardBorderColor: '#6b4423',
+        cardTextColor: '#3d2817',
+        cardLabelColor: '#8b6f47',
+        cardNameColor: '#f4e8d0',
+        useImageAsBackground: false,
+        contentOpacity: 0.3,
+        backCardImage: '',
+        backCardBgColor: '#3d2817'
+    },
+    'steampunk': {
+        name: 'Steampunk',
+        description: 'Industrial Victorian aesthetic with bronze and copper tones',
+        fontFamily: "'Courier New', 'Courier', monospace",
+        cardNameSize: 1.7,
+        cardHeaderSize: 0.95,
+        cardDescriptionSize: 0.9,
+        cardStatLabelSize: 0.9,
+        cardAbilityNameSize: 0.85,
+        cardAbilityValueSize: 0.8,
+        cardImageHeight: 260,
+        sectionSpacing: 14,
+        cardBgColor: '#c9b99b',
+        cardBorderColor: '#8b5a00',
+        cardTextColor: '#2c1810',
+        cardLabelColor: '#704214',
+        cardNameColor: '#ffd700',
+        useImageAsBackground: false,
+        contentOpacity: 0.3,
+        backCardImage: '',
+        backCardBgColor: '#4a3728'
+    },
+    'custom': {
+        name: 'Custom',
+        description: 'Fully customizable theme - start from any template',
+        fontFamily: "'Georgia', serif",
+        cardNameSize: 1.8,
+        cardHeaderSize: 0.95,
+        cardDescriptionSize: 0.9,
+        cardStatLabelSize: 0.95,
+        cardAbilityNameSize: 0.85,
+        cardAbilityValueSize: 0.8,
+        cardImageHeight: 240,
+        sectionSpacing: 12,
+        cardBgColor: '#f9f6f0',
+        cardBorderColor: '#8b4513',
+        cardTextColor: '#333333',
+        cardLabelColor: '#8b4513',
+        cardNameColor: '#f4e4c1',
+        useImageAsBackground: false,
+        contentOpacity: 0.3,
+        backCardImage: '',
+        backCardBgColor: '#2c3e50'
+    }
 };
+
+// Default theme settings (Classic Fantasy)
+const defaultTheme = themePresets['classic-fantasy'];
 
 // Apply theme to CSS variables
 function applyTheme(theme) {
@@ -2640,6 +2779,12 @@ function resetTheme() {
     applyTheme(defaultTheme);
     updateCustomizationUI(defaultTheme);
 
+    // Reset theme selector to classic-fantasy
+    const themeSelect = document.getElementById('themePresetSelector');
+    if (themeSelect) {
+        themeSelect.value = 'classic-fantasy';
+    }
+
     // Show confirmation
     const btn = document.getElementById('resetThemeBtn');
     const originalText = btn.textContent;
@@ -2653,8 +2798,193 @@ function resetTheme() {
     }, 1500);
 }
 
+// Load a preset theme
+function loadPresetTheme(presetId) {
+    const preset = themePresets[presetId];
+    if (!preset) {
+        console.error('Theme preset not found:', presetId);
+        return;
+    }
+
+    // Create a copy of the preset to avoid modifying the original
+    const theme = { ...preset };
+
+    applyTheme(theme);
+    updateCustomizationUI(theme);
+
+    // Update theme description
+    updateThemeDescription(presetId);
+}
+
+// Update theme description display
+function updateThemeDescription(presetId) {
+    const preset = themePresets[presetId];
+    const descElement = document.getElementById('themeDescription');
+    if (descElement && preset) {
+        descElement.textContent = preset.description;
+        descElement.style.display = 'block';
+    }
+}
+
+// Save a custom theme with a name
+function saveCustomTheme() {
+    const themeName = prompt('Enter a name for your custom theme:');
+    if (!themeName || themeName.trim() === '') {
+        return;
+    }
+
+    const theme = getCurrentTheme();
+
+    // Get existing custom themes
+    let customThemes = JSON.parse(localStorage.getItem('customCardThemes') || '{}');
+
+    // Save the custom theme
+    customThemes[themeName] = {
+        name: themeName,
+        description: 'Custom theme',
+        ...theme
+    };
+
+    localStorage.setItem('customCardThemes', JSON.stringify(customThemes));
+
+    // Refresh the theme selector
+    populateThemeSelector();
+
+    // Show confirmation
+    alert(`Custom theme "${themeName}" saved successfully!`);
+}
+
+// Delete a custom theme
+function deleteCustomTheme(themeName) {
+    if (!confirm(`Are you sure you want to delete the custom theme "${themeName}"?`)) {
+        return;
+    }
+
+    let customThemes = JSON.parse(localStorage.getItem('customCardThemes') || '{}');
+    delete customThemes[themeName];
+    localStorage.setItem('customCardThemes', JSON.stringify(customThemes));
+
+    // Refresh the theme selector
+    populateThemeSelector();
+
+    // Reset to default if the deleted theme was active
+    const themeSelect = document.getElementById('themePresetSelector');
+    if (themeSelect && themeSelect.value === 'custom-' + themeName) {
+        themeSelect.value = 'classic-fantasy';
+        loadPresetTheme('classic-fantasy');
+    }
+}
+
+// Populate theme selector with presets and custom themes
+function populateThemeSelector() {
+    const selector = document.getElementById('themePresetSelector');
+    if (!selector) return;
+
+    // Clear existing options
+    selector.innerHTML = '';
+
+    // Add preset themes
+    const presetGroup = document.createElement('optgroup');
+    presetGroup.label = 'Preset Themes';
+
+    for (const [id, preset] of Object.entries(themePresets)) {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = preset.name;
+        presetGroup.appendChild(option);
+    }
+
+    selector.appendChild(presetGroup);
+
+    // Add custom themes
+    const customThemes = JSON.parse(localStorage.getItem('customCardThemes') || '{}');
+
+    if (Object.keys(customThemes).length > 0) {
+        const customGroup = document.createElement('optgroup');
+        customGroup.label = 'Custom Themes';
+
+        for (const [themeName, theme] of Object.entries(customThemes)) {
+            const option = document.createElement('option');
+            option.value = 'custom-' + themeName;
+            option.textContent = themeName;
+            customGroup.appendChild(option);
+        }
+
+        selector.appendChild(customGroup);
+    }
+}
+
+// Load a custom theme by name
+function loadCustomTheme(themeName) {
+    const customThemes = JSON.parse(localStorage.getItem('customCardThemes') || '{}');
+    const theme = customThemes[themeName];
+
+    if (!theme) {
+        console.error('Custom theme not found:', themeName);
+        return;
+    }
+
+    applyTheme(theme);
+    updateCustomizationUI(theme);
+
+    const descElement = document.getElementById('themeDescription');
+    if (descElement) {
+        descElement.textContent = theme.description || 'Custom theme';
+        descElement.style.display = 'block';
+    }
+}
+
+// Manage custom themes (show list with delete options)
+function manageCustomThemes() {
+    const customThemes = JSON.parse(localStorage.getItem('customCardThemes') || '{}');
+
+    if (Object.keys(customThemes).length === 0) {
+        alert('No custom themes saved yet.');
+        return;
+    }
+
+    const modal = document.getElementById('customThemeModal');
+    const themeList = document.getElementById('customThemeList');
+
+    if (!modal || !themeList) {
+        console.error('Theme management UI not found');
+        return;
+    }
+
+    // Clear existing list
+    themeList.innerHTML = '';
+
+    // Populate list
+    for (const [themeName, theme] of Object.entries(customThemes)) {
+        const item = document.createElement('div');
+        item.className = 'custom-theme-item';
+        item.innerHTML = `
+            <span class="theme-name">${themeName}</span>
+            <div class="theme-actions">
+                <button onclick="loadCustomTheme('${themeName}'); document.getElementById('themePresetSelector').value = 'custom-${themeName}'; closeCustomThemeModal();" class="btn-small">Load</button>
+                <button onclick="deleteCustomTheme('${themeName}');" class="btn-small btn-danger">Delete</button>
+            </div>
+        `;
+        themeList.appendChild(item);
+    }
+
+    // Show modal
+    modal.style.display = 'block';
+}
+
+// Close custom theme management modal
+function closeCustomThemeModal() {
+    const modal = document.getElementById('customThemeModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
 // Initialize customization system
 function initCustomization() {
+    // Populate theme selector with presets and custom themes
+    populateThemeSelector();
+
     // Load saved theme or use default
     const savedTheme = localStorage.getItem('cardTheme');
     if (savedTheme) {
@@ -2669,6 +2999,23 @@ function initCustomization() {
     } else {
         applyTheme(defaultTheme);
         updateCustomizationUI(defaultTheme);
+    }
+
+    // Theme preset selector
+    const themeSelector = document.getElementById('themePresetSelector');
+    if (themeSelector) {
+        themeSelector.addEventListener('change', function() {
+            const selectedValue = this.value;
+
+            if (selectedValue.startsWith('custom-')) {
+                // Load custom theme
+                const themeName = selectedValue.substring(7); // Remove 'custom-' prefix
+                loadCustomTheme(themeName);
+            } else {
+                // Load preset theme
+                loadPresetTheme(selectedValue);
+            }
+        });
     }
 
     // Toggle customization panel

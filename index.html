@@ -448,6 +448,24 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                     <h3>Card Customization <button id="toggleCustomization" class="btn-toggle">Show</button></h3>
                     <div id="customizationPanel" class="customization-panel" style="display: none;">
 
+                        <!-- Theme Selector -->
+                        <div class="customization-section theme-section">
+                            <h4>Theme Templates</h4>
+                            <div class="setting-row">
+                                <label for="themePresetSelector">Select Theme</label>
+                                <select id="themePresetSelector" class="theme-selector">
+                                    <!-- Options populated dynamically -->
+                                </select>
+                            </div>
+                            <p id="themeDescription" class="theme-description"></p>
+                            <div class="theme-buttons">
+                                <button onclick="saveCustomTheme()" class="btn-secondary">Save as Custom Theme</button>
+                                <button onclick="manageCustomThemes()" class="btn-secondary">Manage Custom Themes</button>
+                            </div>
+                        </div>
+
+                        <div class="customization-divider"></div>
+
                         <!-- Font Settings -->
                         <div class="customization-section">
                             <h4>Fonts</h4>
@@ -733,6 +751,21 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                         <input type="number" id="quickEnemyDex" placeholder="DEX Modifier" value="0">
                         <button id="addQuickEnemyBtn" class="btn-primary">Add Enemy</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Theme Management Modal -->
+    <div id="customThemeModal" class="modal" style="display: none;">
+        <div class="modal-content custom-theme-modal">
+            <div class="modal-header">
+                <h2>Manage Custom Themes</h2>
+                <button class="modal-close" onclick="closeCustomThemeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="customThemeList" class="custom-theme-list">
+                    <!-- Custom themes will be listed here -->
                 </div>
             </div>
         </div>

@@ -661,15 +661,158 @@ header p {
     font-size: 14px;
 }
 
-.theme-actions {
+/* Theme Selector Styles */
+.theme-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.theme-section h4 {
+    color: white;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.theme-section label {
+    color: white !important;
+}
+
+.theme-selector {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    font-size: 15px;
+    background: white;
+    color: #333;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.theme-selector:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.theme-description {
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    font-size: 14px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.95);
+    display: none;
+}
+
+.theme-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.theme-buttons button {
+    flex: 1;
+    min-width: 150px;
+}
+
+.btn-secondary {
+    padding: 10px 16px;
+    background: white;
+    color: #667eea;
+    border: 2px solid white;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.customization-divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #667eea, transparent);
+    margin: 25px 0;
+}
+
+/* Custom Theme Modal */
+.custom-theme-modal {
+    max-width: 600px;
+}
+
+.custom-theme-list {
     display: flex;
     flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.custom-theme-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.custom-theme-item:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+    transform: translateX(5px);
+}
+
+.theme-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+}
+
+.theme-actions {
+    display: flex;
     gap: 8px;
 }
 
 .theme-actions button {
-    padding: 10px;
+    padding: 8px 16px;
     font-size: 14px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    background: #667eea;
+    color: white;
+    border: 2px solid #667eea;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-small:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
 }
 
 .deck-actions {
