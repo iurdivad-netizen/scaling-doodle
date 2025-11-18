@@ -20,13 +20,13 @@
     --card-content-font-family: 'Georgia', serif;
 
     /* Font sizes */
-    --card-name-size: 1.8em;
-    --card-header-size: 0.95em;
-    --card-stat-label-size: 0.95em;
-    --card-stat-value-size: 0.95em;
-    --card-description-size: 0.9em;
-    --card-ability-name-size: 0.85em;
-    --card-ability-value-size: 0.8em;
+    --card-name-size: 2.4em;
+    --card-header-size: 1.2em;
+    --card-stat-label-size: 1.2em;
+    --card-stat-value-size: 1.2em;
+    --card-description-size: 1.1em;
+    --card-ability-name-size: 1.1em;
+    --card-ability-value-size: 1.0em;
 
     /* Colors */
     --card-bg-color: #f9f6f0;
