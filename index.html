@@ -147,264 +147,278 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                     <button id="importBtn" class="btn-primary">Import & Auto-Fill</button>
                 </div>
 
-                <div class="form-section">
-                    <label for="cardName">Name</label>
-                    <input type="text" id="cardName" placeholder="Enter card name" value="Ancient Red Dragon">
-                </div>
-
-                <div class="form-section">
-                    <label for="cardType">Type</label>
-                    <input type="text" id="cardType" placeholder="e.g., Dragon, Humanoid" value="Gargantuan Dragon">
-                </div>
-
-                <div class="form-section template-creature">
-                    <label for="cardSubtype">Alignment</label>
-                    <input type="text" id="cardSubtype" placeholder="e.g., Chaotic Evil" value="Chaotic Evil">
-                </div>
-
-                <!-- Spell-specific fields -->
-                <div class="form-section template-spell" style="display: none;">
-                    <label for="spellLevel">Level</label>
-                    <input type="text" id="spellLevel" placeholder="e.g., 3rd-level" value="">
-                </div>
-
-                <div class="form-section template-spell" style="display: none;">
-                    <label for="spellSchool">School</label>
-                    <input type="text" id="spellSchool" placeholder="e.g., Evocation" value="">
-                </div>
-
-                <div class="form-section template-spell" style="display: none;">
-                    <label for="castingTime">Casting Time</label>
-                    <input type="text" id="castingTime" placeholder="e.g., 1 action" value="">
-                </div>
-
-                <div class="form-section template-spell" style="display: none;">
-                    <label for="spellRange">Range</label>
-                    <input type="text" id="spellRange" placeholder="e.g., 60 feet" value="">
-                </div>
-
-                <div class="form-section template-spell" style="display: none;">
-                    <label for="components">Components</label>
-                    <input type="text" id="components" placeholder="e.g., V, S, M" value="">
-                </div>
-
-                <div class="form-section template-spell" style="display: none;">
-                    <label for="duration">Duration</label>
-                    <input type="text" id="duration" placeholder="e.g., Instantaneous" value="">
-                </div>
-
-                <!-- Item-specific fields -->
-                <div class="form-section template-item" style="display: none;">
-                    <label for="itemRarity">Rarity</label>
-                    <input type="text" id="itemRarity" placeholder="e.g., Rare" value="">
-                </div>
-
-                <div class="form-section template-item" style="display: none;">
-                    <label for="itemType">Item Type</label>
-                    <input type="text" id="itemType" placeholder="e.g., Wondrous Item" value="">
-                </div>
-
-                <div class="form-section template-item" style="display: none;">
-                    <label for="attunement">Attunement</label>
-                    <input type="text" id="attunement" placeholder="e.g., Requires attunement" value="">
-                </div>
-
-                <!-- Equipment-specific fields -->
-                <div class="form-section template-equipment" style="display: none;">
-                    <label for="equipmentType">Equipment Type</label>
-                    <input type="text" id="equipmentType" placeholder="e.g., Armor, Weapon" value="">
-                </div>
-
-                <div class="form-section template-equipment" style="display: none;">
-                    <label for="equipmentCost">Cost</label>
-                    <input type="text" id="equipmentCost" placeholder="e.g., 50 gp" value="">
-                </div>
-
-                <div class="form-section template-equipment" style="display: none;">
-                    <label for="equipmentWeight">Weight</label>
-                    <input type="text" id="equipmentWeight" placeholder="e.g., 10 lb." value="">
-                </div>
-
-                <!-- Ability-specific fields -->
-                <div class="form-section template-ability" style="display: none;">
-                    <label for="abilitySource">Source</label>
-                    <input type="text" id="abilitySource" placeholder="e.g., Class Feature, Racial Trait" value="">
-                </div>
-
-                <div class="form-section template-ability" style="display: none;">
-                    <label for="abilityLevel">Level/Prerequisite</label>
-                    <input type="text" id="abilityLevel" placeholder="e.g., 5th level" value="">
-                </div>
-
-                <div class="form-section">
-                    <h3>Image</h3>
-                    <div class="image-options">
-                        <label>
-                            <input type="radio" name="imageSource" value="upload" checked>
-                            Upload Image
-                        </label>
-                        <label>
-                            <input type="radio" name="imageSource" value="url">
-                            Image URL
-                        </label>
+                <!-- PANEL 1: FRONT (Character Info & Core Stats) -->
+                <div class="panel-section panel-1">
+                    <div class="panel-header">
+                        <span class="panel-badge">Panel 1: Front</span>
+                        <h3 class="panel-title">Character Info & Core Stats</h3>
                     </div>
-                    <div class="image-controls">
-                        <input type="file" id="imageUpload" accept="image/*">
-                        <button id="clearImageBtn" class="clear-image-btn">Clear Image</button>
-                    </div>
-                    <div class="image-url-controls">
-                        <input type="text" id="imageUrl" placeholder="Enter image URL" style="display: none;">
-                        <button id="loadImageBtn" style="display: none;">Load Image</button>
-                    </div>
-                </div>
 
-                <div class="form-section template-creature">
-                    <h3>Stats</h3>
-                    <div class="stats-grid">
-                        <div class="stat-input">
-                            <label for="ac">Armor Class</label>
-                            <input type="text" id="ac" value="22">
+                    <div class="form-section">
+                        <label for="cardName">Name</label>
+                        <input type="text" id="cardName" placeholder="Enter card name" value="Ancient Red Dragon">
+                    </div>
+
+                    <div class="form-section">
+                        <label for="cardType">Type</label>
+                        <input type="text" id="cardType" placeholder="e.g., Dragon, Humanoid" value="Gargantuan Dragon">
+                    </div>
+
+                    <div class="form-section template-creature">
+                        <label for="cardSubtype">Alignment</label>
+                        <input type="text" id="cardSubtype" placeholder="e.g., Chaotic Evil" value="Chaotic Evil">
+                    </div>
+
+                    <!-- Spell-specific fields -->
+                    <div class="form-section template-spell" style="display: none;">
+                        <label for="spellLevel">Level</label>
+                        <input type="text" id="spellLevel" placeholder="e.g., 3rd-level" value="">
+                    </div>
+
+                    <div class="form-section template-spell" style="display: none;">
+                        <label for="spellSchool">School</label>
+                        <input type="text" id="spellSchool" placeholder="e.g., Evocation" value="">
+                    </div>
+
+                    <div class="form-section template-spell" style="display: none;">
+                        <label for="castingTime">Casting Time</label>
+                        <input type="text" id="castingTime" placeholder="e.g., 1 action" value="">
+                    </div>
+
+                    <div class="form-section template-spell" style="display: none;">
+                        <label for="spellRange">Range</label>
+                        <input type="text" id="spellRange" placeholder="e.g., 60 feet" value="">
+                    </div>
+
+                    <div class="form-section template-spell" style="display: none;">
+                        <label for="components">Components</label>
+                        <input type="text" id="components" placeholder="e.g., V, S, M" value="">
+                    </div>
+
+                    <div class="form-section template-spell" style="display: none;">
+                        <label for="duration">Duration</label>
+                        <input type="text" id="duration" placeholder="e.g., Instantaneous" value="">
+                    </div>
+
+                    <!-- Item-specific fields -->
+                    <div class="form-section template-item" style="display: none;">
+                        <label for="itemRarity">Rarity</label>
+                        <input type="text" id="itemRarity" placeholder="e.g., Rare" value="">
+                    </div>
+
+                    <div class="form-section template-item" style="display: none;">
+                        <label for="itemType">Item Type</label>
+                        <input type="text" id="itemType" placeholder="e.g., Wondrous Item" value="">
+                    </div>
+
+                    <div class="form-section template-item" style="display: none;">
+                        <label for="attunement">Attunement</label>
+                        <input type="text" id="attunement" placeholder="e.g., Requires attunement" value="">
+                    </div>
+
+                    <!-- Equipment-specific fields -->
+                    <div class="form-section template-equipment" style="display: none;">
+                        <label for="equipmentType">Equipment Type</label>
+                        <input type="text" id="equipmentType" placeholder="e.g., Armor, Weapon" value="">
+                    </div>
+
+                    <div class="form-section template-equipment" style="display: none;">
+                        <label for="equipmentCost">Cost</label>
+                        <input type="text" id="equipmentCost" placeholder="e.g., 50 gp" value="">
+                    </div>
+
+                    <div class="form-section template-equipment" style="display: none;">
+                        <label for="equipmentWeight">Weight</label>
+                        <input type="text" id="equipmentWeight" placeholder="e.g., 10 lb." value="">
+                    </div>
+
+                    <!-- Ability-specific fields -->
+                    <div class="form-section template-ability" style="display: none;">
+                        <label for="abilitySource">Source</label>
+                        <input type="text" id="abilitySource" placeholder="e.g., Class Feature, Racial Trait" value="">
+                    </div>
+
+                    <div class="form-section template-ability" style="display: none;">
+                        <label for="abilityLevel">Level/Prerequisite</label>
+                        <input type="text" id="abilityLevel" placeholder="e.g., 5th level" value="">
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Image</h3>
+                        <div class="image-options">
+                            <label>
+                                <input type="radio" name="imageSource" value="upload" checked>
+                                Upload Image
+                            </label>
+                            <label>
+                                <input type="radio" name="imageSource" value="url">
+                                Image URL
+                            </label>
                         </div>
-                        <div class="stat-input">
-                            <label for="hp">Hit Points</label>
-                            <input type="text" id="hp" value="546 (28d20 + 252)">
+                        <div class="image-controls">
+                            <input type="file" id="imageUpload" accept="image/*">
+                            <button id="clearImageBtn" class="clear-image-btn">Clear Image</button>
                         </div>
-                        <div class="stat-input">
-                            <label for="speed">Speed</label>
-                            <input type="text" id="speed" value="40 ft., climb 40 ft., fly 80 ft.">
+                        <div class="image-url-controls">
+                            <input type="text" id="imageUrl" placeholder="Enter image URL" style="display: none;">
+                            <button id="loadImageBtn" style="display: none;">Load Image</button>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-section template-creature">
-                    <h3>Ability Scores</h3>
-                    <div class="ability-scores">
-                        <div class="ability">
-                            <label for="str">STR</label>
-                            <input type="text" id="str" value="30 (+10)">
-                        </div>
-                        <div class="ability">
-                            <label for="dex">DEX</label>
-                            <input type="text" id="dex" value="10 (+0)">
-                        </div>
-                        <div class="ability">
-                            <label for="con">CON</label>
-                            <input type="text" id="con" value="29 (+9)">
-                        </div>
-                        <div class="ability">
-                            <label for="int">INT</label>
-                            <input type="text" id="int" value="18 (+4)">
-                        </div>
-                        <div class="ability">
-                            <label for="wis">WIS</label>
-                            <input type="text" id="wis" value="15 (+2)">
-                        </div>
-                        <div class="ability">
-                            <label for="cha">CHA</label>
-                            <input type="text" id="cha" value="23 (+6)">
+                    <div class="form-section template-creature">
+                        <h3>Stats</h3>
+                        <div class="stats-grid">
+                            <div class="stat-input">
+                                <label for="ac">Armor Class</label>
+                                <input type="text" id="ac" value="22">
+                            </div>
+                            <div class="stat-input">
+                                <label for="hp">Hit Points</label>
+                                <input type="text" id="hp" value="546 (28d20 + 252)">
+                            </div>
+                            <div class="stat-input">
+                                <label for="speed">Speed</label>
+                                <input type="text" id="speed" value="40 ft., climb 40 ft., fly 80 ft.">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Initiative and Proficiency -->
-                <div class="form-section template-creature">
-                    <h3>Combat Stats</h3>
-                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
-                        <div class="stat-input">
-                            <label for="initiative">Initiative</label>
-                            <input type="text" id="initiative" placeholder="+0" value="">
-                        </div>
-                        <div class="stat-input">
-                            <label for="proficiency">Proficiency</label>
-                            <input type="text" id="proficiency" placeholder="+2" value="">
+                    <div class="form-section template-creature">
+                        <h3>Ability Scores</h3>
+                        <div class="ability-scores">
+                            <div class="ability">
+                                <label for="str">STR</label>
+                                <input type="text" id="str" value="30 (+10)">
+                            </div>
+                            <div class="ability">
+                                <label for="dex">DEX</label>
+                                <input type="text" id="dex" value="10 (+0)">
+                            </div>
+                            <div class="ability">
+                                <label for="con">CON</label>
+                                <input type="text" id="con" value="29 (+9)">
+                            </div>
+                            <div class="ability">
+                                <label for="int">INT</label>
+                                <input type="text" id="int" value="18 (+4)">
+                            </div>
+                            <div class="ability">
+                                <label for="wis">WIS</label>
+                                <input type="text" id="wis" value="15 (+2)">
+                            </div>
+                            <div class="ability">
+                                <label for="cha">CHA</label>
+                                <input type="text" id="cha" value="23 (+6)">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Saving Throws -->
-                <div class="form-section template-creature">
-                    <label for="savingThrows">Saving Throws</label>
-                    <input type="text" id="savingThrows" placeholder="e.g., WIS +5, CHA +1" value="">
-                </div>
+                    <div class="form-section template-creature">
+                        <h3>Combat Stats</h3>
+                        <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                            <div class="stat-input">
+                                <label for="initiative">Initiative</label>
+                                <input type="text" id="initiative" placeholder="+0" value="">
+                            </div>
+                            <div class="stat-input">
+                                <label for="proficiency">Proficiency</label>
+                                <input type="text" id="proficiency" placeholder="+2" value="">
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Spell Combat Stats -->
-                <div class="form-section template-creature">
-                    <h3>Spell Combat</h3>
-                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
-                        <div class="stat-input">
-                            <label for="spellSaveDC">Spell Save DC</label>
-                            <input type="text" id="spellSaveDC" placeholder="13" value="">
-                        </div>
-                        <div class="stat-input">
-                            <label for="spellAttack">Spell Attack</label>
-                            <input type="text" id="spellAttack" placeholder="+5" value="">
-                        </div>
+                    <div class="form-section template-creature">
+                        <label for="savingThrows">Saving Throws</label>
+                        <input type="text" id="savingThrows" placeholder="e.g., WIS +5, CHA +1" value="">
                     </div>
                 </div>
 
-                <!-- Spell Slots -->
-                <div class="form-section template-creature">
-                    <h3>Spell Slots</h3>
-                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
-                        <div class="stat-input">
-                            <label for="cantrips">Cantrips</label>
-                            <input type="text" id="cantrips" placeholder="4" value="">
-                        </div>
-                        <div class="stat-input">
-                            <label for="level1Slots">1st Level</label>
-                            <input type="text" id="level1Slots" placeholder="4" value="">
-                        </div>
-                        <div class="stat-input">
-                            <label for="level2Slots">2nd Level</label>
-                            <input type="text" id="level2Slots" placeholder="3" value="">
-                        </div>
-                        <div class="stat-input">
-                            <label for="level3Slots">3rd Level</label>
-                            <input type="text" id="level3Slots" placeholder="" value="">
+                <!-- PANEL 2: BACK LEFT (Combat & Spells) -->
+                <div class="panel-section panel-2 template-creature">
+                    <div class="panel-header">
+                        <span class="panel-badge">Panel 2: Back Left</span>
+                        <h3 class="panel-title">Combat & Spells</h3>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Spell Combat</h3>
+                        <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                            <div class="stat-input">
+                                <label for="spellSaveDC">Spell Save DC</label>
+                                <input type="text" id="spellSaveDC" placeholder="13" value="">
+                            </div>
+                            <div class="stat-input">
+                                <label for="spellAttack">Spell Attack</label>
+                                <input type="text" id="spellAttack" placeholder="+5" value="">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Key Cantrips -->
-                <div class="form-section template-creature">
-                    <label for="keyCantrips">Key Cantrips</label>
-                    <textarea id="keyCantrips" rows="3" placeholder="• Sacred Flame (1d8 radiant, DC 13 DEX)
+                    <div class="form-section">
+                        <h3>Spell Slots</h3>
+                        <div class="stats-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                            <div class="stat-input">
+                                <label for="cantrips">Cantrips</label>
+                                <input type="text" id="cantrips" placeholder="4" value="">
+                            </div>
+                            <div class="stat-input">
+                                <label for="level1Slots">1st Level</label>
+                                <input type="text" id="level1Slots" placeholder="4" value="">
+                            </div>
+                            <div class="stat-input">
+                                <label for="level2Slots">2nd Level</label>
+                                <input type="text" id="level2Slots" placeholder="3" value="">
+                            </div>
+                            <div class="stat-input">
+                                <label for="level3Slots">3rd Level</label>
+                                <input type="text" id="level3Slots" placeholder="" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="keyCantrips">Key Cantrips</label>
+                        <textarea id="keyCantrips" rows="3" placeholder="• Sacred Flame (1d8 radiant, DC 13 DEX)
 • Spare the Dying (30 ft, bonus action)"></textarea>
-                </div>
+                    </div>
 
-                <!-- Domain Spells -->
-                <div class="form-section template-creature">
-                    <label for="domainSpells">Domain Spells (Always Prepared)</label>
-                    <textarea id="domainSpells" rows="3" placeholder="1st: Bane, False Life
+                    <div class="form-section">
+                        <label for="domainSpells">Domain Spells (Always Prepared)</label>
+                        <textarea id="domainSpells" rows="3" placeholder="1st: Bane, False Life
 2nd: Gentle Repose, Ray of Enfeeblement"></textarea>
+                    </div>
                 </div>
 
-                <!-- Prepared Spells -->
-                <div class="form-section template-creature">
-                    <label for="preparedSpells">Prepared Spells</label>
-                    <textarea id="preparedSpells" rows="3" placeholder="1st: Bless, Cure Wounds, Healing Word
+                <!-- PANEL 3: BACK RIGHT (Features & Equipment) -->
+                <div class="panel-section panel-3 template-creature">
+                    <div class="panel-header">
+                        <span class="panel-badge">Panel 3: Back Right</span>
+                        <h3 class="panel-title">Features & Equipment</h3>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="preparedSpells">Prepared Spells</label>
+                        <textarea id="preparedSpells" rows="3" placeholder="1st: Bless, Cure Wounds, Healing Word
 2nd: Lesser Restoration, Spiritual Weapon"></textarea>
-                </div>
+                    </div>
 
-                <!-- Class Features -->
-                <div class="form-section template-creature">
-                    <label for="classFeatures">Class Features</label>
-                    <textarea id="classFeatures" rows="4" placeholder="• Channel Divinity (2/rest)
+                    <div class="form-section">
+                        <label for="classFeatures">Class Features</label>
+                        <textarea id="classFeatures" rows="4" placeholder="• Channel Divinity (2/rest)
 • Circle of Mortality (max heal at 0 HP)"></textarea>
-                </div>
+                    </div>
 
-                <!-- Equipment -->
-                <div class="form-section template-creature">
-                    <label for="equipment">Equipment</label>
-                    <textarea id="equipment" rows="3" placeholder="• Mace & Shield
+                    <div class="form-section">
+                        <label for="equipment">Equipment</label>
+                        <textarea id="equipment" rows="3" placeholder="• Mace & Shield
 • Chain Mail Armor
 • Holy Symbol"></textarea>
-                </div>
+                    </div>
 
-                <!-- Passive Perception -->
-                <div class="form-section template-creature">
-                    <label for="passivePerception">Passive Perception</label>
-                    <input type="text" id="passivePerception" placeholder="13" value="">
+                    <div class="form-section">
+                        <label for="passivePerception">Passive Perception</label>
+                        <input type="text" id="passivePerception" placeholder="13" value="">
+                    </div>
                 </div>
 
                 <div class="form-section template-creature">
