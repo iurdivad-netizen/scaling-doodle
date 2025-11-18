@@ -852,11 +852,21 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                 <button class="modal-close" id="closePrintModal">&times;</button>
             </div>
             <div class="print-alignment-controls">
-                <label>Horizontal Alignment:</label>
-                <button id="alignLeft" class="alignment-btn">←</button>
-                <span id="alignmentValue">-2px</span>
-                <button id="alignRight" class="alignment-btn">→</button>
-                <button id="resetAlignment" class="alignment-btn reset">Reset</button>
+                <div class="print-control-group">
+                    <label>Cards Per Page:</label>
+                    <select id="cardsPerPageSelect" class="cards-per-page-select">
+                        <option value="3">3 cards (1x3)</option>
+                        <option value="6">6 cards (2x3)</option>
+                        <option value="9" selected>9 cards (3x3)</option>
+                    </select>
+                </div>
+                <div class="print-control-group">
+                    <label>Horizontal Alignment:</label>
+                    <button id="alignLeft" class="alignment-btn">←</button>
+                    <span id="alignmentValue">-2px</span>
+                    <button id="alignRight" class="alignment-btn">→</button>
+                    <button id="resetAlignment" class="alignment-btn reset">Reset</button>
+                </div>
             </div>
             <div id="printContent"></div>
             <div class="modal-actions">
