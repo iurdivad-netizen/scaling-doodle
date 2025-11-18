@@ -629,6 +629,34 @@ function generateThreeColumnPanels() {
     return { frontPanel, back1Panel, back2Panel };
 }
 
+function generateSavingThrowsBoxes(savingThrowsText) {
+    if (!savingThrowsText) return '';
+
+    // Parse saving throws text to extract abilities
+    // Expected format: "STR +5, DEX +3" or similar
+    const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+    const savingThrowsMap = {};
+
+    // Parse the text for each ability
+    abilities.forEach(ability => {
+        const regex = new RegExp(ability + '\\s*([+-]?\\d+)', 'i');
+        const match = savingThrowsText.match(regex);
+        if (match) {
+            savingThrowsMap[ability] = match[1];
+        }
+    });
+
+    // Generate boxes for abilities with saving throws
+    return abilities
+        .filter(ability => savingThrowsMap[ability])
+        .map(ability => `
+            <div class="ability-score">
+                <div class="ability-name">${ability}</div>
+                <div class="ability-value">${savingThrowsMap[ability]}</div>
+            </div>
+        `).join('');
+}
+
 function generateThreeColumnFront(templateId) {
     const name = document.getElementById('cardName').value || 'Card Name';
 
@@ -677,8 +705,13 @@ function generateThreeColumnFront(templateId) {
                         <strong>Initiative:</strong><span>${initiative}</span>
                     </div>
                     <div class="stat-row">
-                        <strong>Proficiency:</strong><span>${proficiency}</span>
+                        <strong>Prof:</strong><span>${proficiency}</span>
                     </div>
+                    ${passivePerception ? `
+                    <div class="stat-row">
+                        <strong>PP:</strong><span>${passivePerception}</span>
+                    </div>
+                    ` : ''}
                 </div>
                 <div class="divider"></div>
                 <div class="ability-scores-section">
@@ -714,7 +747,9 @@ function generateThreeColumnFront(templateId) {
                 <div class="divider"></div>
                 <div class="ability-scores-section">
                     <div class="ability-scores-section-title">SAVING THROWS</div>
-                    <div class="trifold-text" style="text-align: center;">${savingThrows}</div>
+                    <div class="ability-scores-display">
+                        ${generateSavingThrowsBoxes(savingThrows)}
+                    </div>
                 </div>
                 ` : ''}
             </div>
@@ -878,13 +913,6 @@ function generateThreeColumnBack2(templateId) {
                 </div>
                 ` : ''}
 
-                ${passivePerception ? `
-                <div class="trifold-section" style="margin-top: auto; padding-top: var(--section-spacing); border-top: 1px solid #ccc;">
-                    <div class="trifold-text-small" style="text-align: center;">
-                        <strong>PASSIVE PERCEPTION:</strong> ${passivePerception}
-                    </div>
-                </div>
-                ` : ''}
             </div>
         `;
     }
