@@ -1,0 +1,40 @@
+ELIAS THORN - GRAVE CLERIC
+Level 4 Human Cleric
+Grave Domain
+AC: 18  |  HP: 33  |  Speed: 30 ft.
+Initiative: +0  |  Proficiency: +2
+ABILITY SCORES
+STR 16 (+3)  DEX 10 (+0)  CON 14 (+2)
+INT 10 (+0)  WIS 16 (+3)  CHA  8 (-1)
+SAVING THROWS
+WIS +5  |  CHA +1
+COMBAT
+Spell Save DC: 13  |  Spell Attack: +5
+Mace Attack: +5 to hit, 1d6+3 damage
+SPELL SLOTS
+Cantrips: 4  |  1st Level: 4  |  2nd Level: 3
+KEY CANTRIPS
+• Sacred Flame (1d8 radiant, DC 13 DEX)
+• Spare the Dying (30 ft, bonus action)
+• Thaumaturgy  • Light
+DOMAIN SPELLS (Always Prepared)
+1st: Bane, False Life
+2nd: Gentle Repose, Ray of Enfeeblement
+PREPARED SPELLS (7 total)
+1st: Bless, Cure Wounds, Healing Word
+2nd: Lesser Restoration, Spiritual Weapon
+CLASS FEATURES
+• Channel Divinity (2/rest)
+  - Turn Undead (DC 13 WIS save)
+  - Path to the Grave (vulnerability curse)
+• Circle of Mortality (max heal at 0 HP)
+• Eyes of the Grave (detect undead, 3/day)
+EQUIPMENT
+• Mace & Shield
+• Chain Mail Armor
+• Holy Symbol
+• Healer's Kit
+• 3× Holy Water
+• Amulet of the Grave (+1 vs undead saves,
+  1/day Speak with Dead)
+PASSIVE PERCEPTION: 13

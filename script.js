@@ -968,7 +968,7 @@ function updateCardsDisplayLayout() {
 
 // Parse D&D character text and extract card data
 function parseCharacterText(text) {
-    const lines = text.trim().split('\n').filter(line => line.trim());
+    const lines = text.trim().split('\n').map(line => line.trim()).filter(line => line && !line.match(/^[═║╔╠╣╗]+$/));
 
     const parsedData = {
         cardName: '',
@@ -989,7 +989,7 @@ function parseCharacterText(text) {
 
     if (lines.length === 0) return parsedData;
 
-    // Parse first line: "Name – Type/Class"
+    // Parse first line: "Name – Type/Class" or "ELIAS THORN - GRAVE CLERIC"
     const firstLine = lines[0];
     if (firstLine.includes('–') || firstLine.includes('-')) {
         const separator = firstLine.includes('–') ? '–' : '-';
@@ -1010,6 +1010,32 @@ function parseCharacterText(text) {
         parsedData.cardName = firstLine;
     }
 
+    // Check for "Level X Race Class" format (e.g., "Level 4 Human Cleric")
+    const levelLine = lines.find(line => /^Level\s+\d+/i.test(line));
+    if (levelLine) {
+        const levelMatch = levelLine.match(/Level\s+(\d+)\s+(.+)/i);
+        if (levelMatch) {
+            const typeInfo = levelMatch[2].trim();
+            const typeParts = typeInfo.split(' ');
+            if (typeParts.length >= 2) {
+                parsedData.cardType = typeParts[0]; // Race (e.g., "Human")
+                parsedData.cardSubtype = `Level ${levelMatch[1]} ${typeParts.slice(1).join(' ')}`; // e.g., "Level 4 Cleric"
+            } else {
+                parsedData.cardSubtype = `Level ${levelMatch[1]} ${typeInfo}`;
+            }
+        }
+    }
+
+    // Parse domain/archetype line if present (e.g., "Grave Domain")
+    const domainLine = lines.find(line => /Domain|Circle|Path|Way|Tradition/i.test(line) && !line.includes(':'));
+    if (domainLine && domainLine !== levelLine && domainLine !== firstLine) {
+        if (parsedData.cardSubtype) {
+            parsedData.cardSubtype += ` (${domainLine.trim()})`;
+        } else {
+            parsedData.cardSubtype = domainLine.trim();
+        }
+    }
+
     // Parse stats line: "AC: X | HP: Y | Speed: Z"
     const statsLine = lines.find(line => /AC:/i.test(line) && /HP:/i.test(line));
     if (statsLine) {
@@ -1022,8 +1048,29 @@ function parseCharacterText(text) {
         if (speedMatch) parsedData.speed = speedMatch[1].trim();
     }
 
-    // Parse ability scores line: "STR X (+Y) DEX X (+Y) ..."
-    const abilityLine = lines.find(line => /STR\s+\d+/.test(line));
+    // Parse ability scores - handle multi-line format
+    const abilityScoresIndex = lines.findIndex(line => /ABILITY SCORES/i.test(line));
+    let abilityLine = '';
+
+    if (abilityScoresIndex >= 0) {
+        // Collect lines after ABILITY SCORES header until we hit another section
+        const abilityLines = [];
+        for (let i = abilityScoresIndex + 1; i < lines.length; i++) {
+            if (lines[i].match(/^[A-Z\s]+$/) && lines[i].length > 15) {
+                // Hit another section header
+                break;
+            }
+            if (lines[i].includes('STR') || lines[i].includes('DEX') || lines[i].includes('CON') ||
+                lines[i].includes('INT') || lines[i].includes('WIS') || lines[i].includes('CHA')) {
+                abilityLines.push(lines[i]);
+            }
+        }
+        abilityLine = abilityLines.join(' ');
+    } else {
+        // Fallback: find single line with STR
+        abilityLine = lines.find(line => /STR\s+\d+/.test(line)) || '';
+    }
+
     if (abilityLine) {
         const strMatch = abilityLine.match(/STR\s+(\d+\s*\([^)]+\))/);
         const dexMatch = abilityLine.match(/DEX\s+(\d+\s*\([^)]+\))/);
@@ -1040,38 +1087,135 @@ function parseCharacterText(text) {
         if (chaMatch) parsedData.cha = chaMatch[1].trim();
     }
 
-    // Collect remaining lines for additional stats and description
-    const additionalLines = [];
-    const descriptionLines = [];
-    let inDescription = false;
+    // Build additionalStats from parsed sections
+    const additionalStatsParts = [];
+    const descriptionParts = [];
 
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+    // Parse Initiative and Proficiency
+    const initProfLine = lines.find(line => /Initiative:/i.test(line) && /Proficiency:/i.test(line));
+    if (initProfLine) {
+        const initMatch = initProfLine.match(/Initiative:\s*([+\-]?\d+)/i);
+        const profMatch = initProfLine.match(/Proficiency:\s*([+\-]?\d+)/i);
+        if (initMatch) additionalStatsParts.push(`Initiative: ${initMatch[1]}`);
+        if (profMatch) additionalStatsParts.push(`Proficiency: ${profMatch[1]}`);
+    }
 
-        // Skip lines we've already processed
-        if (line === firstLine || line === statsLine || line === abilityLine) {
-            continue;
-        }
+    // Parse Saving Throws section
+    const savingThrowsIndex = lines.findIndex(line => /^SAVING THROWS$/i.test(line));
+    if (savingThrowsIndex >= 0 && savingThrowsIndex + 1 < lines.length) {
+        const savingThrowsContent = lines[savingThrowsIndex + 1];
+        additionalStatsParts.push(`Saving Throws: ${savingThrowsContent}`);
+    }
 
-        // Check if this looks like a feature/ability (contains colons, starts with capital, etc.)
-        if (line.includes(':') || /^[A-Z]/.test(line)) {
-            if (line.toLowerCase().includes('feature') ||
-                line.toLowerCase().includes('equipment') ||
-                line.toLowerCase().includes('spell') ||
-                line.toLowerCase().includes('saving throw') ||
-                line.toLowerCase().includes('skill')) {
-                additionalLines.push(line);
-            } else {
-                descriptionLines.push(line);
+    // Parse Combat section
+    const combatIndex = lines.findIndex(line => /^COMBAT$/i.test(line));
+    if (combatIndex >= 0) {
+        for (let i = combatIndex + 1; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.match(/^[A-Z\s]+$/) && line.length > 10) break; // Hit next section
+
+            if (/Spell Save DC:/i.test(line)) {
+                const match = line.match(/Spell Save DC:\s*(\d+)/i);
+                if (match) additionalStatsParts.push(`Spell Save DC: ${match[1]}`);
             }
-        } else if (line.trim()) {
-            descriptionLines.push(line);
+            if (/Spell Attack:/i.test(line)) {
+                const match = line.match(/Spell Attack:\s*([+\-]?\d+)/i);
+                if (match) additionalStatsParts.push(`Spell Attack: ${match[1]}`);
+            }
+            if (/Attack:/i.test(line) && !/Spell Attack/i.test(line)) {
+                additionalStatsParts.push(line);
+            }
         }
     }
 
-    // Populate additional stats and description
-    parsedData.additionalStats = additionalLines.join('\n').trim();
-    parsedData.description = descriptionLines.join('\n\n').trim();
+    // Parse Spell Slots
+    const spellSlotsIndex = lines.findIndex(line => /^SPELL SLOTS$/i.test(line));
+    if (spellSlotsIndex >= 0 && spellSlotsIndex + 1 < lines.length) {
+        const slotsLine = lines[spellSlotsIndex + 1];
+
+        const cantripsMatch = slotsLine.match(/Cantrips:\s*(\d+)/i);
+        const level1Match = slotsLine.match(/1st Level:\s*(\d+)/i);
+        const level2Match = slotsLine.match(/2nd Level:\s*(\d+)/i);
+        const level3Match = slotsLine.match(/3rd Level:\s*(\d+)/i);
+
+        if (cantripsMatch) additionalStatsParts.push(`Cantrips: ${cantripsMatch[1]}`);
+        if (level1Match) additionalStatsParts.push(`1st Level: ${level1Match[1]}`);
+        if (level2Match) additionalStatsParts.push(`2nd Level: ${level2Match[1]}`);
+        if (level3Match) additionalStatsParts.push(`3rd Level: ${level3Match[1]}`);
+    }
+
+    // Parse Key Cantrips
+    const cantripsIndex = lines.findIndex(line => /^KEY CANTRIPS$/i.test(line));
+    if (cantripsIndex >= 0) {
+        for (let i = cantripsIndex + 1; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.match(/^[A-Z\s]+$/) && line.length > 10) break; // Hit next section
+            if (line.startsWith('•')) {
+                additionalStatsParts.push(line);
+            }
+        }
+    }
+
+    // Parse Domain Spells
+    const domainSpellsIndex = lines.findIndex(line => /^DOMAIN SPELLS/i.test(line));
+    if (domainSpellsIndex >= 0) {
+        for (let i = domainSpellsIndex + 1; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.match(/^[A-Z\s]+$/) && line.length > 10) break; // Hit next section
+            if (/^\d+\w+:/.test(line)) {
+                additionalStatsParts.push(line);
+            }
+        }
+    }
+
+    // Parse Passive Perception
+    const passivePercLine = lines.find(line => /PASSIVE PERCEPTION:/i.test(line));
+    if (passivePercLine) {
+        const match = passivePercLine.match(/PASSIVE PERCEPTION:\s*(\d+)/i);
+        if (match) additionalStatsParts.push(`PASSIVE PERCEPTION: ${match[1]}`);
+    }
+
+    // Parse Prepared Spells for description
+    const preparedSpellsIndex = lines.findIndex(line => /^PREPARED SPELLS/i.test(line));
+    if (preparedSpellsIndex >= 0) {
+        descriptionParts.push('PREPARED SPELLS:');
+        for (let i = preparedSpellsIndex + 1; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.match(/^[A-Z\s]+$/) && line.length > 10 && !line.match(/^\d+\w+:/)) break;
+            if (/^\d+\w+:/.test(line) || line.includes(',')) {
+                descriptionParts.push(line);
+            }
+        }
+    }
+
+    // Parse Class Features
+    const classFeaturesIndex = lines.findIndex(line => /^CLASS FEATURES$/i.test(line));
+    if (classFeaturesIndex >= 0) {
+        descriptionParts.push('\nCLASS FEATURES:');
+        for (let i = classFeaturesIndex + 1; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.match(/^[A-Z\s]+$/) && line.length > 10 && !line.startsWith('•') && !line.startsWith('-')) break;
+            if (line.startsWith('•') || line.startsWith('-') || line.startsWith(' ')) {
+                descriptionParts.push(line);
+            }
+        }
+    }
+
+    // Parse Equipment
+    const equipmentIndex = lines.findIndex(line => /^EQUIPMENT$/i.test(line));
+    if (equipmentIndex >= 0) {
+        descriptionParts.push('\nEQUIPMENT:');
+        for (let i = equipmentIndex + 1; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.match(/^[A-Z\s]+$/) && line.length > 10 && !line.startsWith('•')) break;
+            if (line.startsWith('•') || line.includes('×')) {
+                descriptionParts.push(line);
+            }
+        }
+    }
+
+    parsedData.additionalStats = additionalStatsParts.join('\n');
+    parsedData.description = descriptionParts.join('\n');
 
     return parsedData;
 }
@@ -1091,6 +1235,13 @@ function importCardData() {
     if (currentTemplate !== 'creature') {
         loadTemplate('creature');
         cardTemplateSelect.value = 'creature';
+    }
+
+    // Switch to three-column layout for comprehensive character cards
+    const cardLayoutSelect = document.getElementById('cardLayoutStyle');
+    if (cardLayoutSelect && cardLayoutSelect.value !== 'three-column') {
+        cardLayoutSelect.value = 'three-column';
+        updateCardsDisplayLayout();
     }
 
     // Fill in the form fields
