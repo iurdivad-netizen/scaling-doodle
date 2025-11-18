@@ -5,7 +5,7 @@ let cardIdCounter = 0;
 const templates = {
     creature: {
         name: 'Creature/Monster',
-        fields: ['cardName', 'cardType', 'cardSubtype', 'imageUpload', 'imageUrl', 'ac', 'hp', 'speed', 'str', 'dex', 'con', 'int', 'wis', 'cha', 'additionalStats', 'description'],
+        fields: ['cardName', 'cardType', 'cardSubtype', 'imageUpload', 'imageUrl', 'ac', 'hp', 'speed', 'str', 'dex', 'con', 'int', 'wis', 'cha', 'initiative', 'proficiency', 'savingThrows', 'spellSaveDC', 'spellAttack', 'cantrips', 'level1Slots', 'level2Slots', 'level3Slots', 'keyCantrips', 'domainSpells', 'preparedSpells', 'classFeatures', 'equipment', 'passivePerception', 'additionalStats', 'description'],
         defaults: {
             cardName: 'Ancient Red Dragon',
             cardType: 'Gargantuan Dragon',
@@ -645,17 +645,10 @@ function generateThreeColumnFront(templateId) {
         const wis = document.getElementById('wis').value || '-';
         const cha = document.getElementById('cha').value || '-';
 
-        // Extract additional stats for initiative, proficiency, and saving throws
-        const additionalStats = document.getElementById('additionalStats').value || '';
-
-        // Parse for initiative and proficiency (fallback to defaults if not found)
-        const initiativeMatch = additionalStats.match(/Initiative:\s*([+\-]?\d+)/i);
-        const proficiencyMatch = additionalStats.match(/Proficiency:\s*([+\-]?\d+)/i);
-        const savingThrowsMatch = additionalStats.match(/Saving Throws:\s*([^\n]+)/i);
-
-        const initiative = initiativeMatch ? initiativeMatch[1] : '+0';
-        const proficiency = proficiencyMatch ? proficiencyMatch[1] : '+2';
-        const savingThrows = savingThrowsMatch ? savingThrowsMatch[1].trim() : '';
+        // Get initiative, proficiency, and saving throws from dedicated fields
+        const initiative = document.getElementById('initiative')?.value || '+0';
+        const proficiency = document.getElementById('proficiency')?.value || '+2';
+        const savingThrows = document.getElementById('savingThrows')?.value || '';
 
         return `
             <div class="card-image">
@@ -748,40 +741,32 @@ function generateThreeColumnBack1(templateId) {
     if (templateId === 'creature') {
         const additionalStats = document.getElementById('additionalStats').value || '';
 
-        // Parse for combat stats
-        const spellSaveDCMatch = additionalStats.match(/Spell Save DC:\s*(\d+)/i);
-        const spellAttackMatch = additionalStats.match(/Spell Attack:\s*([+\-]?\d+)/i);
-        const weaponAttackMatch = additionalStats.match(/([A-Za-z\s]+Attack):\s*([+\-]?\d+)\s+to\s+hit,\s*([^\n]+)/i);
+        // Get combat stats from dedicated fields
+        const spellSaveDC = document.getElementById('spellSaveDC')?.value || '';
+        const spellAttack = document.getElementById('spellAttack')?.value || '';
 
-        const spellSaveDC = spellSaveDCMatch ? spellSaveDCMatch[1] : '13';
-        const spellAttack = spellAttackMatch ? spellAttackMatch[1] : '+5';
+        // Parse for weapon attack (still from additionalStats)
+        const weaponAttackMatch = additionalStats.match(/([A-Za-z\s]+Attack):\s*([+\-]?\d+)\s+to\s+hit,\s*([^\n]+)/i);
         const weaponAttack = weaponAttackMatch ? `${weaponAttackMatch[1]}: ${weaponAttackMatch[2]} to hit, ${weaponAttackMatch[3]}` : '';
 
-        // Parse for spell slots
-        const cantripsMatch = additionalStats.match(/Cantrips:\s*(\d+)/i);
-        const level1Match = additionalStats.match(/1st Level:\s*(\d+)/i);
-        const level2Match = additionalStats.match(/2nd Level:\s*(\d+)/i);
-        const level3Match = additionalStats.match(/3rd Level:\s*(\d+)/i);
+        // Get spell slots from dedicated fields
+        const cantrips = document.getElementById('cantrips')?.value || '';
+        const level1 = document.getElementById('level1Slots')?.value || '';
+        const level2 = document.getElementById('level2Slots')?.value || '';
+        const level3 = document.getElementById('level3Slots')?.value || '';
 
-        const cantrips = cantripsMatch ? cantripsMatch[1] : '4';
-        const level1 = level1Match ? level1Match[1] : '4';
-        const level2 = level2Match ? level2Match[1] : '3';
-        const level3 = level3Match ? level3Match[1] : '';
+        // Get key cantrips from dedicated field
+        const keyCantripsText = document.getElementById('keyCantrips')?.value || '';
+        const cantripsList = keyCantripsText.split('\n').filter(line => line.trim().startsWith('•'));
 
-        // Parse for key cantrips
-        const cantripsList = [];
-        const cantripRegex = /•\s*([A-Za-z\s]+)\s*\(([^)]+)\)/g;
-        let match;
-        while ((match = cantripRegex.exec(additionalStats)) !== null) {
-            cantripsList.push(`• ${match[1].trim()} (${match[2]})`);
-        }
+        // Get domain spells from dedicated field
+        const domainSpellsText = document.getElementById('domainSpells')?.value || '';
+        const domainSpellsLines = domainSpellsText.split('\n').filter(line => line.trim());
+        const domainSpells1stMatch = domainSpellsLines.find(line => /1st:/i.test(line));
+        const domainSpells2ndMatch = domainSpellsLines.find(line => /2nd:/i.test(line));
 
-        // Parse for domain spells
-        const domainSpells1stMatch = additionalStats.match(/1st:\s*([^\n]+)/i);
-        const domainSpells2ndMatch = additionalStats.match(/2nd:\s*([^\n]+)/i);
-
-        const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch[1].trim() : '';
-        const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch[1].trim() : '';
+        const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch.replace(/1st:\s*/i, '').trim() : '';
+        const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch.replace(/2nd:\s*/i, '').trim() : '';
 
         return `
             <div class="card-content" style="padding: 15px; font-size: 0.85em;">
@@ -789,22 +774,26 @@ function generateThreeColumnBack1(templateId) {
                     <h2 style="margin: 0; text-align: center; font-size: 1.3em;">${name}</h2>
                 </div>
 
+                ${spellSaveDC || spellAttack || weaponAttack ? `
                 <div style="margin-bottom: 12px;">
                     <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">COMBAT</div>
                     <div class="divider" style="margin: 5px 0;"></div>
                     <div style="font-size: 0.8em; line-height: 1.4;">
-                        <div style="margin: 4px 0;">Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>
+                        ${spellSaveDC || spellAttack ? `<div style="margin: 4px 0;">Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>` : ''}
                         ${weaponAttack ? `<div style="margin: 4px 0;">${weaponAttack}</div>` : ''}
                     </div>
                 </div>
+                ` : ''}
 
+                ${cantrips || level1 || level2 || level3 ? `
                 <div style="margin-bottom: 12px;">
                     <div style="font-weight: bold; text-align: center; margin-bottom: 8px; font-size: 0.95em; color: var(--card-label-color);">SPELL SLOTS</div>
                     <div class="divider" style="margin: 5px 0;"></div>
                     <div style="font-size: 0.8em; text-align: center; line-height: 1.4;">
-                        Cantrips: ${cantrips} | 1st Level: ${level1} | 2nd Level: ${level2}${level3 ? ` | 3rd Level: ${level3}` : ''}
+                        ${cantrips ? `Cantrips: ${cantrips}` : ''}${cantrips && (level1 || level2 || level3) ? ' | ' : ''}${level1 ? `1st Level: ${level1}` : ''}${level1 && (level2 || level3) ? ' | ' : ''}${level2 ? `2nd Level: ${level2}` : ''}${level2 && level3 ? ' | ' : ''}${level3 ? `3rd Level: ${level3}` : ''}
                     </div>
                 </div>
+                ` : ''}
 
                 ${cantripsList.length > 0 ? `
                 <div style="margin-bottom: 12px;">
@@ -842,25 +831,20 @@ function generateThreeColumnBack2(templateId) {
     const name = document.getElementById('cardName').value || 'Card Name';
 
     if (templateId === 'creature') {
-        const description = document.getElementById('description').value || '';
-        const additionalStats = document.getElementById('additionalStats').value || '';
+        // Get data from dedicated fields
+        const preparedSpellsText = document.getElementById('preparedSpells')?.value || '';
+        const classFeaturesText = document.getElementById('classFeatures')?.value || '';
+        const equipmentText = document.getElementById('equipment')?.value || '';
+        const passivePerception = document.getElementById('passivePerception')?.value || '';
 
-        // Parse prepared spells from description
-        const preparedSpellsMatch = description.match(/PREPARED SPELLS[\s\S]*?:([^\n]+(?:\n[^\n]+)*?)(?=\n\n|CLASS FEATURES|EQUIPMENT|$)/i);
-        const preparedSpells = preparedSpellsMatch ? preparedSpellsMatch[0].trim() : '';
+        // Format prepared spells
+        const preparedSpells = preparedSpellsText ? `PREPARED SPELLS:\n${preparedSpellsText}` : '';
 
-        // Parse class features from description
-        const classFeaturesMatch = description.match(/CLASS FEATURES[\s\S]*?:([^\n]+(?:\n[^\n]+)*?)(?=\n\n|EQUIPMENT|$)/i);
-        const classFeatures = classFeaturesMatch ? classFeaturesMatch[0].trim() : '';
+        // Format class features
+        const classFeatures = classFeaturesText ? `CLASS FEATURES:\n${classFeaturesText}` : '';
 
-        // Parse equipment from description
-        const equipmentMatch = description.match(/EQUIPMENT[\s\S]*?:([^\n]+(?:\n[^\n]+)*?)$/i);
-        const equipment = equipmentMatch ? equipmentMatch[0].trim() : '';
-
-        // Parse passive perception
-        const passivePerceptionMatch = additionalStats.match(/PASSIVE PERCEPTION:\s*(\d+)/i) ||
-                                      description.match(/PASSIVE PERCEPTION:\s*(\d+)/i);
-        const passivePerception = passivePerceptionMatch ? passivePerceptionMatch[1] : '13';
+        // Format equipment
+        const equipment = equipmentText ? `EQUIPMENT:\n${equipmentText}` : '';
 
         return `
             <div class="card-content" style="padding: 15px; font-size: 0.85em;">
@@ -892,15 +876,11 @@ function generateThreeColumnBack2(templateId) {
                 </div>
                 ` : ''}
 
+                ${passivePerception ? `
                 <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid #ccc;">
                     <div style="font-size: 0.8em; text-align: center;">
                         <strong>PASSIVE PERCEPTION:</strong> ${passivePerception}
                     </div>
-                </div>
-
-                ${!preparedSpells && !classFeatures && !equipment ? `
-                <div class="abilities-section">
-                    <p style="white-space: pre-wrap; font-size: 0.8em;">${description || 'No abilities or actions'}</p>
                 </div>
                 ` : ''}
             </div>
@@ -983,6 +963,21 @@ function parseCharacterText(text) {
         int: '',
         wis: '',
         cha: '',
+        initiative: '',
+        proficiency: '',
+        savingThrows: '',
+        spellSaveDC: '',
+        spellAttack: '',
+        cantrips: '',
+        level1Slots: '',
+        level2Slots: '',
+        level3Slots: '',
+        keyCantrips: '',
+        domainSpells: '',
+        preparedSpells: '',
+        classFeatures: '',
+        equipment: '',
+        passivePerception: '',
         additionalStats: '',
         description: ''
     };
@@ -1087,24 +1082,22 @@ function parseCharacterText(text) {
         if (chaMatch) parsedData.cha = chaMatch[1].trim();
     }
 
-    // Build additionalStats from parsed sections
+    // Build additionalStats from remaining sections (skills, immunities, senses, etc.)
     const additionalStatsParts = [];
-    const descriptionParts = [];
 
     // Parse Initiative and Proficiency
     const initProfLine = lines.find(line => /Initiative:/i.test(line) && /Proficiency:/i.test(line));
     if (initProfLine) {
         const initMatch = initProfLine.match(/Initiative:\s*([+\-]?\d+)/i);
         const profMatch = initProfLine.match(/Proficiency:\s*([+\-]?\d+)/i);
-        if (initMatch) additionalStatsParts.push(`Initiative: ${initMatch[1]}`);
-        if (profMatch) additionalStatsParts.push(`Proficiency: ${profMatch[1]}`);
+        if (initMatch) parsedData.initiative = initMatch[1];
+        if (profMatch) parsedData.proficiency = profMatch[1];
     }
 
     // Parse Saving Throws section
     const savingThrowsIndex = lines.findIndex(line => /^SAVING THROWS$/i.test(line));
     if (savingThrowsIndex >= 0 && savingThrowsIndex + 1 < lines.length) {
-        const savingThrowsContent = lines[savingThrowsIndex + 1];
-        additionalStatsParts.push(`Saving Throws: ${savingThrowsContent}`);
+        parsedData.savingThrows = lines[savingThrowsIndex + 1];
     }
 
     // Parse Combat section
@@ -1116,11 +1109,11 @@ function parseCharacterText(text) {
 
             if (/Spell Save DC:/i.test(line)) {
                 const match = line.match(/Spell Save DC:\s*(\d+)/i);
-                if (match) additionalStatsParts.push(`Spell Save DC: ${match[1]}`);
+                if (match) parsedData.spellSaveDC = match[1];
             }
             if (/Spell Attack:/i.test(line)) {
                 const match = line.match(/Spell Attack:\s*([+\-]?\d+)/i);
-                if (match) additionalStatsParts.push(`Spell Attack: ${match[1]}`);
+                if (match) parsedData.spellAttack = match[1];
             }
             if (/Attack:/i.test(line) && !/Spell Attack/i.test(line)) {
                 additionalStatsParts.push(line);
@@ -1138,84 +1131,90 @@ function parseCharacterText(text) {
         const level2Match = slotsLine.match(/2nd Level:\s*(\d+)/i);
         const level3Match = slotsLine.match(/3rd Level:\s*(\d+)/i);
 
-        if (cantripsMatch) additionalStatsParts.push(`Cantrips: ${cantripsMatch[1]}`);
-        if (level1Match) additionalStatsParts.push(`1st Level: ${level1Match[1]}`);
-        if (level2Match) additionalStatsParts.push(`2nd Level: ${level2Match[1]}`);
-        if (level3Match) additionalStatsParts.push(`3rd Level: ${level3Match[1]}`);
+        if (cantripsMatch) parsedData.cantrips = cantripsMatch[1];
+        if (level1Match) parsedData.level1Slots = level1Match[1];
+        if (level2Match) parsedData.level2Slots = level2Match[1];
+        if (level3Match) parsedData.level3Slots = level3Match[1];
     }
 
     // Parse Key Cantrips
     const cantripsIndex = lines.findIndex(line => /^KEY CANTRIPS$/i.test(line));
     if (cantripsIndex >= 0) {
+        const cantripLines = [];
         for (let i = cantripsIndex + 1; i < lines.length; i++) {
             const line = lines[i];
             if (line.match(/^[A-Z\s]+$/) && line.length > 10) break; // Hit next section
-            if (line.startsWith('•')) {
-                additionalStatsParts.push(line);
+            if (line.startsWith('•') || line.trim()) {
+                cantripLines.push(line);
             }
         }
+        parsedData.keyCantrips = cantripLines.join('\n');
     }
 
     // Parse Domain Spells
     const domainSpellsIndex = lines.findIndex(line => /^DOMAIN SPELLS/i.test(line));
     if (domainSpellsIndex >= 0) {
+        const domainLines = [];
         for (let i = domainSpellsIndex + 1; i < lines.length; i++) {
             const line = lines[i];
             if (line.match(/^[A-Z\s]+$/) && line.length > 10) break; // Hit next section
             if (/^\d+\w+:/.test(line)) {
-                additionalStatsParts.push(line);
+                domainLines.push(line);
             }
         }
+        parsedData.domainSpells = domainLines.join('\n');
     }
 
     // Parse Passive Perception
     const passivePercLine = lines.find(line => /PASSIVE PERCEPTION:/i.test(line));
     if (passivePercLine) {
         const match = passivePercLine.match(/PASSIVE PERCEPTION:\s*(\d+)/i);
-        if (match) additionalStatsParts.push(`PASSIVE PERCEPTION: ${match[1]}`);
+        if (match) parsedData.passivePerception = match[1];
     }
 
-    // Parse Prepared Spells for description
+    // Parse Prepared Spells
     const preparedSpellsIndex = lines.findIndex(line => /^PREPARED SPELLS/i.test(line));
     if (preparedSpellsIndex >= 0) {
-        descriptionParts.push('PREPARED SPELLS:');
+        const preparedLines = [];
         for (let i = preparedSpellsIndex + 1; i < lines.length; i++) {
             const line = lines[i];
             if (line.match(/^[A-Z\s]+$/) && line.length > 10 && !line.match(/^\d+\w+:/)) break;
             if (/^\d+\w+:/.test(line) || line.includes(',')) {
-                descriptionParts.push(line);
+                preparedLines.push(line);
             }
         }
+        parsedData.preparedSpells = preparedLines.join('\n');
     }
 
     // Parse Class Features
     const classFeaturesIndex = lines.findIndex(line => /^CLASS FEATURES$/i.test(line));
     if (classFeaturesIndex >= 0) {
-        descriptionParts.push('\nCLASS FEATURES:');
+        const featureLines = [];
         for (let i = classFeaturesIndex + 1; i < lines.length; i++) {
             const line = lines[i];
             if (line.match(/^[A-Z\s]+$/) && line.length > 10 && !line.startsWith('•') && !line.startsWith('-')) break;
             if (line.startsWith('•') || line.startsWith('-') || line.startsWith(' ')) {
-                descriptionParts.push(line);
+                featureLines.push(line);
             }
         }
+        parsedData.classFeatures = featureLines.join('\n');
     }
 
     // Parse Equipment
     const equipmentIndex = lines.findIndex(line => /^EQUIPMENT$/i.test(line));
     if (equipmentIndex >= 0) {
-        descriptionParts.push('\nEQUIPMENT:');
+        const equipmentLines = [];
         for (let i = equipmentIndex + 1; i < lines.length; i++) {
             const line = lines[i];
             if (line.match(/^[A-Z\s]+$/) && line.length > 10 && !line.startsWith('•')) break;
             if (line.startsWith('•') || line.includes('×')) {
-                descriptionParts.push(line);
+                equipmentLines.push(line);
             }
         }
+        parsedData.equipment = equipmentLines.join('\n');
     }
 
     parsedData.additionalStats = additionalStatsParts.join('\n');
-    parsedData.description = descriptionParts.join('\n');
 
     return parsedData;
 }
@@ -1238,9 +1237,9 @@ function importCardData() {
     }
 
     // Switch to three-column layout for comprehensive character cards
-    const cardLayoutSelect = document.getElementById('cardLayoutStyle');
-    if (cardLayoutSelect && cardLayoutSelect.value !== 'three-column') {
-        cardLayoutSelect.value = 'three-column';
+    const layoutSelect = document.getElementById('cardLayout');
+    if (layoutSelect && layoutSelect.value !== 'three-column') {
+        layoutSelect.value = 'three-column';
         updateCardsDisplayLayout();
     }
 
@@ -1257,6 +1256,24 @@ function importCardData() {
     if (data.int) document.getElementById('int').value = data.int;
     if (data.wis) document.getElementById('wis').value = data.wis;
     if (data.cha) document.getElementById('cha').value = data.cha;
+
+    // Fill in new dedicated fields
+    if (data.initiative) document.getElementById('initiative').value = data.initiative;
+    if (data.proficiency) document.getElementById('proficiency').value = data.proficiency;
+    if (data.savingThrows) document.getElementById('savingThrows').value = data.savingThrows;
+    if (data.spellSaveDC) document.getElementById('spellSaveDC').value = data.spellSaveDC;
+    if (data.spellAttack) document.getElementById('spellAttack').value = data.spellAttack;
+    if (data.cantrips) document.getElementById('cantrips').value = data.cantrips;
+    if (data.level1Slots) document.getElementById('level1Slots').value = data.level1Slots;
+    if (data.level2Slots) document.getElementById('level2Slots').value = data.level2Slots;
+    if (data.level3Slots) document.getElementById('level3Slots').value = data.level3Slots;
+    if (data.keyCantrips) document.getElementById('keyCantrips').value = data.keyCantrips;
+    if (data.domainSpells) document.getElementById('domainSpells').value = data.domainSpells;
+    if (data.preparedSpells) document.getElementById('preparedSpells').value = data.preparedSpells;
+    if (data.classFeatures) document.getElementById('classFeatures').value = data.classFeatures;
+    if (data.equipment) document.getElementById('equipment').value = data.equipment;
+    if (data.passivePerception) document.getElementById('passivePerception').value = data.passivePerception;
+
     if (data.additionalStats) document.getElementById('additionalStats').value = data.additionalStats;
     if (data.description) document.getElementById('description').value = data.description;
 
