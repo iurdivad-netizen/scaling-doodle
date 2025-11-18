@@ -306,10 +306,110 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                     </div>
                 </div>
 
+                <!-- Initiative and Proficiency -->
+                <div class="form-section template-creature">
+                    <h3>Combat Stats</h3>
+                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="stat-input">
+                            <label for="initiative">Initiative</label>
+                            <input type="text" id="initiative" placeholder="+0" value="">
+                        </div>
+                        <div class="stat-input">
+                            <label for="proficiency">Proficiency</label>
+                            <input type="text" id="proficiency" placeholder="+2" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saving Throws -->
+                <div class="form-section template-creature">
+                    <label for="savingThrows">Saving Throws</label>
+                    <input type="text" id="savingThrows" placeholder="e.g., WIS +5, CHA +1" value="">
+                </div>
+
+                <!-- Spell Combat Stats -->
+                <div class="form-section template-creature">
+                    <h3>Spell Combat</h3>
+                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="stat-input">
+                            <label for="spellSaveDC">Spell Save DC</label>
+                            <input type="text" id="spellSaveDC" placeholder="13" value="">
+                        </div>
+                        <div class="stat-input">
+                            <label for="spellAttack">Spell Attack</label>
+                            <input type="text" id="spellAttack" placeholder="+5" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spell Slots -->
+                <div class="form-section template-creature">
+                    <h3>Spell Slots</h3>
+                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                        <div class="stat-input">
+                            <label for="cantrips">Cantrips</label>
+                            <input type="text" id="cantrips" placeholder="4" value="">
+                        </div>
+                        <div class="stat-input">
+                            <label for="level1Slots">1st Level</label>
+                            <input type="text" id="level1Slots" placeholder="4" value="">
+                        </div>
+                        <div class="stat-input">
+                            <label for="level2Slots">2nd Level</label>
+                            <input type="text" id="level2Slots" placeholder="3" value="">
+                        </div>
+                        <div class="stat-input">
+                            <label for="level3Slots">3rd Level</label>
+                            <input type="text" id="level3Slots" placeholder="" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Cantrips -->
+                <div class="form-section template-creature">
+                    <label for="keyCantrips">Key Cantrips</label>
+                    <textarea id="keyCantrips" rows="3" placeholder="• Sacred Flame (1d8 radiant, DC 13 DEX)
+• Spare the Dying (30 ft, bonus action)"></textarea>
+                </div>
+
+                <!-- Domain Spells -->
+                <div class="form-section template-creature">
+                    <label for="domainSpells">Domain Spells (Always Prepared)</label>
+                    <textarea id="domainSpells" rows="3" placeholder="1st: Bane, False Life
+2nd: Gentle Repose, Ray of Enfeeblement"></textarea>
+                </div>
+
+                <!-- Prepared Spells -->
+                <div class="form-section template-creature">
+                    <label for="preparedSpells">Prepared Spells</label>
+                    <textarea id="preparedSpells" rows="3" placeholder="1st: Bless, Cure Wounds, Healing Word
+2nd: Lesser Restoration, Spiritual Weapon"></textarea>
+                </div>
+
+                <!-- Class Features -->
+                <div class="form-section template-creature">
+                    <label for="classFeatures">Class Features</label>
+                    <textarea id="classFeatures" rows="4" placeholder="• Channel Divinity (2/rest)
+• Circle of Mortality (max heal at 0 HP)"></textarea>
+                </div>
+
+                <!-- Equipment -->
+                <div class="form-section template-creature">
+                    <label for="equipment">Equipment</label>
+                    <textarea id="equipment" rows="3" placeholder="• Mace & Shield
+• Chain Mail Armor
+• Holy Symbol"></textarea>
+                </div>
+
+                <!-- Passive Perception -->
+                <div class="form-section template-creature">
+                    <label for="passivePerception">Passive Perception</label>
+                    <input type="text" id="passivePerception" placeholder="13" value="">
+                </div>
+
                 <div class="form-section template-creature">
                     <label for="additionalStats">Additional Stats</label>
-                    <textarea id="additionalStats" rows="4" placeholder="Saving Throws, Skills, Immunities, etc.">Saving Throws: Dex +7, Con +16, Wis +9, Cha +13
-Skills: Perception +16, Stealth +7
+                    <textarea id="additionalStats" rows="4" placeholder="Skills, Immunities, Senses, Languages, Challenge, etc.">Skills: Perception +16, Stealth +7
 Damage Immunities: Fire
 Senses: Blindsight 60 ft., Darkvision 120 ft.
 Languages: Common, Draconic
