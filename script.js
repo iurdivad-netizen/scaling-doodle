@@ -162,8 +162,13 @@ function updatePreview() {
     const layoutStyle = cardLayoutSelect.value;
     let previewHTML = '';
 
+    // Check if three-column layout is selected
+    if (layoutStyle === 'three-column') {
+        // For three-column, use the front panel content
+        previewHTML = generateThreeColumnFront(templateId);
+    }
     // Check if immersive layout is selected
-    if (layoutStyle === 'immersive') {
+    else if (layoutStyle === 'immersive') {
         switch (templateId) {
             case 'creature':
                 previewHTML = generateCreaturePreviewImmersive();
@@ -608,6 +613,140 @@ function updateBackCard() {
     }
 }
 
+// Generate three-column trifold panels
+function generateThreeColumnPanels() {
+    const templateId = currentTemplate;
+
+    // Front panel - image + basic stats
+    const frontPanel = generateThreeColumnFront(templateId);
+
+    // Back panel 1 - additional stats
+    const back1Panel = generateThreeColumnBack1(templateId);
+
+    // Back panel 2 - description/abilities
+    const back2Panel = generateThreeColumnBack2(templateId);
+
+    return { frontPanel, back1Panel, back2Panel };
+}
+
+function generateThreeColumnFront(templateId) {
+    const name = document.getElementById('cardName').value || 'Card Name';
+
+    if (templateId === 'creature') {
+        const type = document.getElementById('cardType').value || 'Type';
+        const subtype = document.getElementById('cardSubtype').value || 'Subtype';
+        const ac = document.getElementById('ac').value || '-';
+        const hp = document.getElementById('hp').value || '-';
+        const speed = document.getElementById('speed').value || '-';
+        const str = document.getElementById('str').value || '-';
+        const dex = document.getElementById('dex').value || '-';
+        const con = document.getElementById('con').value || '-';
+        const int = document.getElementById('int').value || '-';
+        const wis = document.getElementById('wis').value || '-';
+        const cha = document.getElementById('cha').value || '-';
+
+        return `
+            <div class="card-image">
+                <img id="previewImage" src="" alt="Card Image">
+                <div class="card-name-overlay">
+                    <h2>${name}</h2>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-type">
+                    <span>${type}</span>
+                    <span class="separator">•</span>
+                    <span>${subtype}</span>
+                </div>
+                <div class="divider"></div>
+                <div class="card-stats">
+                    <div class="stat-row"><strong>AC</strong><span>${ac}</span></div>
+                    <div class="stat-row"><strong>HP</strong><span>${hp}</span></div>
+                    <div class="stat-row"><strong>Speed</strong><span>${speed}</span></div>
+                </div>
+                <div class="divider"></div>
+                <div class="ability-scores-display">
+                    <div class="ability-score"><div class="ability-name">STR</div><div class="ability-value">${str}</div></div>
+                    <div class="ability-score"><div class="ability-name">DEX</div><div class="ability-value">${dex}</div></div>
+                    <div class="ability-score"><div class="ability-name">CON</div><div class="ability-value">${con}</div></div>
+                    <div class="ability-score"><div class="ability-name">INT</div><div class="ability-value">${int}</div></div>
+                    <div class="ability-score"><div class="ability-name">WIS</div><div class="ability-value">${wis}</div></div>
+                    <div class="ability-score"><div class="ability-name">CHA</div><div class="ability-value">${cha}</div></div>
+                </div>
+            </div>
+        `;
+    }
+
+    // For other templates, return basic structure with image and name
+    return `
+        <div class="card-image">
+            <img id="previewImage" src="" alt="Card Image">
+            <div class="card-name-overlay">
+                <h2>${name}</h2>
+            </div>
+        </div>
+        <div class="card-content">
+            <p style="text-align: center; margin-top: 20px;">Front Panel</p>
+        </div>
+    `;
+}
+
+function generateThreeColumnBack1(templateId) {
+    const name = document.getElementById('cardName').value || 'Card Name';
+
+    if (templateId === 'creature') {
+        const additionalStats = document.getElementById('additionalStats').value || '';
+
+        return `
+            <div class="card-content" style="padding: 20px;">
+                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
+                    <h2 style="margin: 0; text-align: center;">${name}</h2>
+                </div>
+                <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Additional Stats</h3>
+                <div class="divider"></div>
+                <div class="additional-stats">
+                    <p style="white-space: pre-wrap;">${additionalStats || 'No additional stats'}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="card-content" style="padding: 20px;">
+            <h3 style="text-align: center;">Panel 2</h3>
+            <p>Additional information</p>
+        </div>
+    `;
+}
+
+function generateThreeColumnBack2(templateId) {
+    const name = document.getElementById('cardName').value || 'Card Name';
+
+    if (templateId === 'creature') {
+        const description = document.getElementById('description').value || '';
+
+        return `
+            <div class="card-content" style="padding: 20px;">
+                <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
+                    <h2 style="margin: 0; text-align: center;">${name}</h2>
+                </div>
+                <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Abilities & Actions</h3>
+                <div class="divider"></div>
+                <div class="abilities-section">
+                    <p style="white-space: pre-wrap;">${description || 'No abilities or actions'}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="card-content" style="padding: 20px;">
+            <h3 style="text-align: center;">Panel 3</h3>
+            <p>Description</p>
+        </div>
+    `;
+}
+
 // Update cards display layout based on selected layout style
 function updateCardsDisplayLayout() {
     const layoutStyle = cardLayoutSelect.value;
@@ -619,17 +758,26 @@ function updateCardsDisplayLayout() {
         // Add three-column class
         cardsDisplay.classList.add('three-column');
 
-        // Remove any existing cloned cards
-        const existingClones = cardsDisplay.querySelectorAll('.card-front-clone');
-        existingClones.forEach(clone => clone.remove());
+        // Remove any existing panel cards
+        const existingPanels = cardsDisplay.querySelectorAll('.trifold-panel');
+        existingPanels.forEach(panel => panel.remove());
 
-        // Clone the front card 2 more times (for a total of 3)
-        for (let i = 0; i < 2; i++) {
-            const clone = cardFront.cloneNode(true);
-            clone.id = `cardPreview-clone-${i + 1}`;
-            clone.classList.add('card-front-clone');
-            cardsDisplay.insertBefore(clone, cardBack);
-        }
+        // Generate three distinct panels
+        const { frontPanel, back1Panel, back2Panel } = generateThreeColumnPanels();
+
+        // Create back panel 1
+        const panel1 = document.createElement('div');
+        panel1.className = 'card card-front trifold-panel';
+        panel1.id = 'trifold-panel-1';
+        panel1.innerHTML = back1Panel;
+        cardsDisplay.insertBefore(panel1, cardBack);
+
+        // Create back panel 2
+        const panel2 = document.createElement('div');
+        panel2.className = 'card card-front trifold-panel';
+        panel2.id = 'trifold-panel-2';
+        panel2.innerHTML = back2Panel;
+        cardsDisplay.insertBefore(panel2, cardBack);
 
         // Hide the back card in three-column layout
         if (cardBack) {
@@ -639,9 +787,9 @@ function updateCardsDisplayLayout() {
         // Remove three-column class
         cardsDisplay.classList.remove('three-column');
 
-        // Remove cloned cards
-        const existingClones = cardsDisplay.querySelectorAll('.card-front-clone');
-        existingClones.forEach(clone => clone.remove());
+        // Remove trifold panels
+        const existingPanels = cardsDisplay.querySelectorAll('.trifold-panel');
+        existingPanels.forEach(panel => panel.remove());
 
         // Show the back card for other layouts
         if (cardBack) {
@@ -1678,6 +1826,44 @@ async function exportAllCards() {
     }
 }
 
+// Generate three-column panel HTML for printing (back panel 1)
+function generatePrintThreeColumnBack1(cardData) {
+    const name = cardData.name || 'Card Name';
+    const additionalStats = cardData.additionalStats || '';
+
+    return `
+        <div class="card-content" style="padding: 20px;">
+            <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
+                <h2 style="margin: 0; text-align: center; color: #fff;">${name}</h2>
+            </div>
+            <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Additional Stats</h3>
+            <div class="divider"></div>
+            <div class="additional-stats">
+                <p style="white-space: pre-wrap;">${additionalStats || 'No additional stats'}</p>
+            </div>
+        </div>
+    `;
+}
+
+// Generate three-column panel HTML for printing (back panel 2)
+function generatePrintThreeColumnBack2(cardData) {
+    const name = cardData.name || 'Card Name';
+    const description = cardData.description || '';
+
+    return `
+        <div class="card-content" style="padding: 20px;">
+            <div class="card-name-overlay" style="position: relative; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 16px; margin: -20px -20px 20px -20px;">
+                <h2 style="margin: 0; text-align: center; color: #fff;">${name}</h2>
+            </div>
+            <h3 style="text-align: center; color: var(--card-label-color); margin-bottom: 15px;">Abilities & Actions</h3>
+            <div class="divider"></div>
+            <div class="abilities-section">
+                <p style="white-space: pre-wrap;">${description || 'No abilities or actions'}</p>
+            </div>
+        </div>
+    `;
+}
+
 // Show print preview
 function showPrintPreview() {
     if (deck.length === 0) {
@@ -1699,22 +1885,29 @@ function showPrintPreview() {
         }
     });
 
-    // Process three-column cards first (one per page, 3 copies side by side)
+    // Process three-column cards first (one per page, 3 distinct panels side by side)
     threeColumnCards.forEach(card => {
         const printPage = document.createElement('div');
         printPage.className = 'print-page print-page-trifold';
 
-        // Create 3 copies of the card side by side
-        for (let copy = 0; copy < 3; copy++) {
+        // Generate the three distinct panels
+        const panels = [
+            card.html, // Front panel (already contains image + basic stats)
+            generatePrintThreeColumnBack1(card), // Panel 1 - additional stats
+            generatePrintThreeColumnBack2(card)  // Panel 2 - abilities/description
+        ];
+
+        // Create 3 distinct panels side by side
+        panels.forEach((panelHTML, index) => {
             const printCard = document.createElement('div');
             printCard.className = 'print-card print-card-trifold';
 
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
-            cardDiv.innerHTML = card.html;
+            cardDiv.innerHTML = panelHTML;
 
-            // Apply background image styling if it was saved
-            if (card.hasBackgroundImage && card.backgroundImage) {
+            // Apply background image styling if it was saved (only for front panel)
+            if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
                 cardDiv.classList.add('image-as-background');
                 cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
                 cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.3');
@@ -1723,7 +1916,7 @@ function showPrintPreview() {
 
             printCard.appendChild(cardDiv);
             printPage.appendChild(printCard);
-        }
+        });
 
         printContent.appendChild(printPage);
     });
