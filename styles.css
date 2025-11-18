@@ -1452,14 +1452,13 @@ header p {
     transform: scale(0.4);
     transform-origin: top left;
     margin: 0;
+    /* Width calculation: 750px * 0.4 = 300px visual width */
+    width: 750px;
+    margin-right: -450px; /* 750px - 300px = 450px overlap to remove */
 }
 
-.cards-display.three-column .card-front:first-child {
-    transform-origin: top left;
-}
-
-.cards-display.three-column .card-front:last-child {
-    transform-origin: top right;
+.cards-display.three-column .card-front:last-of-type {
+    margin-right: 0;
 }
 
 .cards-display.three-column .card-back {
@@ -1470,6 +1469,11 @@ header p {
 @media (max-width: 1600px) {
     .cards-display.three-column .card-front {
         transform: scale(0.3);
+        margin-right: -525px; /* 750px - (750px * 0.3) = 525px */
+    }
+
+    .cards-display.three-column .card-front:last-of-type {
+        margin-right: 0;
     }
 }
 
@@ -1484,6 +1488,7 @@ header p {
         transform: scale(0.5);
         transform-origin: top center;
         margin-bottom: 0;
+        margin-right: 0;
     }
 }
 
