@@ -287,10 +287,8 @@ function generateCreaturePreview() {
                 <div class="ability-score"><div class="ability-name">WIS</div><div class="ability-value">${wis}</div></div>
                 <div class="ability-score"><div class="ability-name">CHA</div><div class="ability-value">${cha}</div></div>
             </div>
-            <div class="divider"></div>
-            <div class="additional-stats"><p>${additionalStats}</p></div>
-            <div class="divider"></div>
-            <div class="abilities-section"><p>${description}</p></div>
+            ${additionalStats ? '<div class="divider"></div><div class="additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="divider"></div><div class="abilities-section"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -304,6 +302,7 @@ function generateSpellPreview() {
     const range = document.getElementById('spellRange')?.value || '-';
     const components = document.getElementById('components')?.value || '-';
     const duration = document.getElementById('duration')?.value || '-';
+    const additionalStats = document.getElementById('additionalStats').value || '';
     const description = document.getElementById('description').value || '';
 
     return `
@@ -326,8 +325,8 @@ function generateSpellPreview() {
                 <div class="stat-row"><strong>Components</strong><span>${components}</span></div>
                 <div class="stat-row"><strong>Duration</strong><span>${duration}</span></div>
             </div>
-            <div class="divider"></div>
-            <div class="spell-description"><p>${description}</p></div>
+            ${additionalStats ? '<div class="divider"></div><div class="additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="divider"></div><div class="spell-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -338,6 +337,7 @@ function generateItemPreview() {
     const rarity = document.getElementById('itemRarity')?.value || 'Rarity';
     const itemType = document.getElementById('itemType')?.value || 'Type';
     const attunement = document.getElementById('attunement')?.value || '';
+    const additionalStats = document.getElementById('additionalStats').value || '';
     const description = document.getElementById('description').value || '';
 
     return `
@@ -353,8 +353,8 @@ function generateItemPreview() {
                 ${rarity ? '<span class="separator">•</span><span class="item-rarity">' + rarity + '</span>' : ''}
             </div>
             ${attunement ? '<div class="item-attunement">' + attunement + '</div>' : ''}
-            <div class="divider"></div>
-            <div class="item-description"><p>${description}</p></div>
+            ${additionalStats ? '<div class="divider"></div><div class="additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="divider"></div><div class="item-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -364,6 +364,7 @@ function generateAbilityPreview() {
     const name = document.getElementById('cardName').value || 'Ability Name';
     const source = document.getElementById('abilitySource')?.value || 'Source';
     const level = document.getElementById('abilityLevel')?.value || '';
+    const additionalStats = document.getElementById('additionalStats').value || '';
     const description = document.getElementById('description').value || '';
 
     return `
@@ -378,8 +379,8 @@ function generateAbilityPreview() {
                 <span>${source}</span>
                 ${level ? '<span class="separator">•</span><span>' + level + '</span>' : ''}
             </div>
-            <div class="divider"></div>
-            <div class="ability-description"><p>${description}</p></div>
+            ${additionalStats ? '<div class="divider"></div><div class="additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="divider"></div><div class="ability-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -390,6 +391,7 @@ function generateEquipmentPreview() {
     const equipType = document.getElementById('equipmentType')?.value || 'Type';
     const cost = document.getElementById('equipmentCost')?.value || '';
     const weight = document.getElementById('equipmentWeight')?.value || '';
+    const additionalStats = document.getElementById('additionalStats').value || '';
     const description = document.getElementById('description').value || '';
 
     return `
@@ -407,8 +409,8 @@ function generateEquipmentPreview() {
                 ${cost ? '<div><strong>Cost:</strong> ' + cost + '</div>' : ''}
                 ${weight ? '<div><strong>Weight:</strong> ' + weight + '</div>' : ''}
             </div>
-            <div class="divider"></div>
-            <div class="equipment-description"><p>${description}</p></div>
+            ${additionalStats ? '<div class="divider"></div><div class="additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="divider"></div><div class="equipment-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -429,6 +431,8 @@ function generateCreaturePreviewImmersive() {
     const int = document.getElementById('int').value || '-';
     const wis = document.getElementById('wis').value || '-';
     const cha = document.getElementById('cha').value || '-';
+    const additionalStats = document.getElementById('additionalStats').value || '';
+    const description = document.getElementById('description').value || '';
 
     return `
         <div class="card-image-background">
@@ -456,6 +460,8 @@ function generateCreaturePreviewImmersive() {
                 <div class="ability-score"><div class="ability-name">WIS</div><div class="ability-value">${wis}</div></div>
                 <div class="ability-score"><div class="ability-name">CHA</div><div class="ability-value">${cha}</div></div>
             </div>
+            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -467,6 +473,8 @@ function generateSpellPreviewImmersive() {
     const school = document.getElementById('spellSchool')?.value || 'School';
     const castingTime = document.getElementById('castingTime')?.value || 'Casting Time';
     const range = document.getElementById('range')?.value || 'Range';
+    const additionalStats = document.getElementById('additionalStats').value || '';
+    const description = document.getElementById('description').value || '';
 
     return `
         <div class="card-image-background">
@@ -483,6 +491,8 @@ function generateSpellPreviewImmersive() {
                 <div><strong>Casting Time:</strong> ${castingTime}</div>
                 <div><strong>Range:</strong> ${range}</div>
             </div>
+            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -493,6 +503,8 @@ function generateItemPreviewImmersive() {
     const rarity = document.getElementById('itemRarity')?.value || 'Rarity';
     const itemType = document.getElementById('itemType')?.value || 'Type';
     const attunement = document.getElementById('attunement')?.value || '';
+    const additionalStats = document.getElementById('additionalStats').value || '';
+    const description = document.getElementById('description').value || '';
 
     return `
         <div class="card-image-background">
@@ -508,6 +520,8 @@ function generateItemPreviewImmersive() {
                 <span>${rarity}</span>
             </div>
             ${attunement ? '<div class="immersive-attunement">' + attunement + '</div>' : ''}
+            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -517,6 +531,8 @@ function generateAbilityPreviewImmersive() {
     const name = document.getElementById('cardName').value || 'Ability Name';
     const source = document.getElementById('abilitySource')?.value || 'Source';
     const level = document.getElementById('abilityLevel')?.value || 'Level';
+    const additionalStats = document.getElementById('additionalStats').value || '';
+    const description = document.getElementById('description').value || '';
 
     return `
         <div class="card-image-background">
@@ -530,6 +546,8 @@ function generateAbilityPreviewImmersive() {
                 <span>${source}</span>
                 ${level ? '<span class="separator">•</span><span>' + level + '</span>' : ''}
             </div>
+            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
@@ -540,6 +558,8 @@ function generateEquipmentPreviewImmersive() {
     const equipType = document.getElementById('equipmentType')?.value || 'Type';
     const cost = document.getElementById('equipmentCost')?.value || '';
     const weight = document.getElementById('equipmentWeight')?.value || '';
+    const additionalStats = document.getElementById('additionalStats').value || '';
+    const description = document.getElementById('description').value || '';
 
     return `
         <div class="card-image-background">
@@ -556,6 +576,8 @@ function generateEquipmentPreviewImmersive() {
                 ${cost ? '<div><strong>Cost:</strong> ' + cost + '</div>' : ''}
                 ${weight ? '<div><strong>Weight:</strong> ' + weight + '</div>' : ''}
             </div>
+            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
+            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
         </div>
     `;
 }
