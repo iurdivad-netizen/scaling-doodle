@@ -847,7 +847,7 @@ function generateThreeColumnBack1(templateId) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">SPELL SLOTS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-small" style="text-align: center;">
+                    <div class="trifold-text-small">
                         ${cantrips ? `Cantrips: ${cantrips}` : ''}${cantrips && (level1 || level2 || level3) ? ' | ' : ''}${level1 ? `1st Level: ${level1}` : ''}${level1 && (level2 || level3) ? ' | ' : ''}${level2 ? `2nd Level: ${level2}` : ''}${level2 && level3 ? ' | ' : ''}${level3 ? `3rd Level: ${level3}` : ''}
                     </div>
                 </div>
@@ -2325,7 +2325,7 @@ function generatePrintThreeColumnBack1(cardData) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">SPELL SLOTS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-small" style="text-align: center;">
+                    <div class="trifold-text-small">
                         ${cantrips ? `Cantrips: ${cantrips}` : ''}${cantrips && (level1 || level2 || level3) ? ' | ' : ''}${level1 ? `1st Level: ${level1}` : ''}${level1 && (level2 || level3) ? ' | ' : ''}${level2 ? `2nd Level: ${level2}` : ''}${level2 && level3 ? ' | ' : ''}${level3 ? `3rd Level: ${level3}` : ''}
                     </div>
                 </div>
