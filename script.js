@@ -2537,9 +2537,9 @@ function showPrintPreview() {
         gridLayout = 'layout-3x3'; // 3 rows x 3 columns (default)
     }
 
-    // Process four-panel cards - 3 cards per A4 page
-    // Each page has a 4x3 grid (4 columns for panels, 3 rows for cards)
-    const cardsPerFourPanelPage = 3;
+    // Process four-panel cards - 2 cards per A4 landscape page
+    // Each page has a 4x2 grid (4 columns for panels, 2 rows for cards)
+    const cardsPerFourPanelPage = 2;
     const totalFourPanelPages = Math.ceil(threeColumnCards.length / cardsPerFourPanelPage);
 
     for (let page = 0; page < totalFourPanelPages; page++) {
@@ -2549,7 +2549,7 @@ function showPrintPreview() {
         const startIdx = page * cardsPerFourPanelPage;
         const endIdx = Math.min(startIdx + cardsPerFourPanelPage, threeColumnCards.length);
 
-        // Process up to 3 cards on this page
+        // Process up to 2 cards on this page
         for (let i = startIdx; i < endIdx; i++) {
             const card = threeColumnCards[i];
 
