@@ -5,7 +5,7 @@ let cardIdCounter = 0;
 const templates = {
     creature: {
         name: 'Creature/Monster',
-        fields: ['cardName', 'cardType', 'cardSubtype', 'imageUpload', 'imageUrl', 'ac', 'hp', 'speed', 'str', 'dex', 'con', 'int', 'wis', 'cha', 'initiative', 'proficiency', 'savingThrows', 'spellSaveDC', 'spellAttack', 'cantrips', 'level1Slots', 'level2Slots', 'level3Slots', 'keyCantrips', 'domainSpells', 'preparedSpells', 'classFeatures', 'equipment', 'passivePerception', 'additionalStats', 'description'],
+        fields: ['cardName', 'cardType', 'cardSubtype', 'imageUpload', 'imageUrl', 'ac', 'hp', 'speed', 'str', 'dex', 'con', 'int', 'wis', 'cha', 'initiative', 'proficiency', 'savingThrows', 'spellCombat', 'spellSlots', 'keyCantrips', 'domainSpells', 'preparedSpells', 'classFeatures', 'equipment', 'passivePerception', 'additionalStats', 'description'],
         defaults: {
             cardName: 'Ancient Red Dragon',
             cardType: 'Gargantuan Dragon',
@@ -797,38 +797,20 @@ function generateThreeColumnBack1(templateId) {
     const name = document.getElementById('cardName').value || 'Card Name';
 
     if (templateId === 'creature') {
-        const additionalStats = document.getElementById('additionalStats').value || '';
+        // Get spell combat from dedicated field
+        const spellCombat = document.getElementById('spellCombat')?.value || '';
 
-        // Get combat stats from dedicated fields
-        const spellSaveDC = document.getElementById('spellSaveDC')?.value || '';
-        const spellAttack = document.getElementById('spellAttack')?.value || '';
-
-        // Parse for weapon attack (still from additionalStats)
-        const weaponAttackMatch = additionalStats.match(/([A-Za-z\s]+Attack):\s*([+\-]?\d+)\s+to\s+hit,\s*([^\n]+)/i);
-        const weaponAttack = weaponAttackMatch ? `${weaponAttackMatch[1]}: ${weaponAttackMatch[2]} to hit, ${weaponAttackMatch[3]}` : '';
-
-        // Get spell slots from dedicated fields
-        const cantrips = document.getElementById('cantrips')?.value || '';
-        const level1 = document.getElementById('level1Slots')?.value || '';
-        const level2 = document.getElementById('level2Slots')?.value || '';
-        const level3 = document.getElementById('level3Slots')?.value || '';
+        // Get spell slots from dedicated field
+        const spellSlots = document.getElementById('spellSlots')?.value || '';
 
         // Get key cantrips from dedicated field
-        const keyCantripsText = document.getElementById('keyCantrips')?.value || '';
-        const cantripsList = keyCantripsText.split('\n').filter(line => line.trim().startsWith('•')).map(line => line.trim().replace(/^•\s*/, ''));
+        const keyCantrips = document.getElementById('keyCantrips')?.value || '';
 
         // Get domain spells from dedicated field
-        const domainSpellsText = document.getElementById('domainSpells')?.value || '';
-        const domainSpellsLines = domainSpellsText.split('\n').filter(line => line.trim());
-        const domainSpells1stMatch = domainSpellsLines.find(line => /1st:/i.test(line));
-        const domainSpells2ndMatch = domainSpellsLines.find(line => /2nd:/i.test(line));
-
-        const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch.replace(/1st:\s*/i, '').trim() : '';
-        const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch.replace(/2nd:\s*/i, '').trim() : '';
+        const domainSpells = document.getElementById('domainSpells')?.value || '';
 
         // Get prepared spells from dedicated field
-        const preparedSpellsText = document.getElementById('preparedSpells')?.value || '';
-        const preparedSpells = preparedSpellsText;
+        const preparedSpells = document.getElementById('preparedSpells')?.value || '';
 
         return `
             <div class="card-content trifold-content">
@@ -836,43 +818,35 @@ function generateThreeColumnBack1(templateId) {
                     <h2>${name}</h2>
                 </div>
 
-                ${spellSaveDC || spellAttack || weaponAttack ? `
+                ${spellCombat ? `
                 <div class="trifold-section">
-                    <div class="trifold-section-title">COMBAT</div>
+                    <div class="trifold-section-title">SPELL COMBAT</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${spellSaveDC || spellAttack ? `Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}` : ''}${(spellSaveDC || spellAttack) && weaponAttack ? '<br>' : ''}${weaponAttack ? `${weaponAttack}` : ''}
-                    </div>
+                    <div class="trifold-text-tiny">${spellCombat}</div>
                 </div>
                 ` : ''}
 
-                ${cantrips || level1 || level2 || level3 ? `
+                ${spellSlots ? `
                 <div class="trifold-section">
                     <div class="trifold-section-title">SPELL SLOTS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${cantrips ? `Cantrips: ${cantrips}` : ''}${cantrips && (level1 || level2 || level3) ? ' | ' : ''}${level1 ? `1st Level: ${level1}` : ''}${level1 && (level2 || level3) ? ' | ' : ''}${level2 ? `2nd Level: ${level2}` : ''}${level2 && level3 ? ' | ' : ''}${level3 ? `3rd Level: ${level3}` : ''}
-                    </div>
+                    <div class="trifold-text-tiny">${spellSlots}</div>
                 </div>
                 ` : ''}
 
-                ${cantripsList.length > 0 ? `
+                ${keyCantrips ? `
                 <div class="trifold-section">
                     <div class="trifold-section-title">KEY CANTRIPS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${cantripsList.slice(0, 4).join('<br>')}
-                    </div>
+                    <div class="trifold-text-tiny">${keyCantrips}</div>
                 </div>
                 ` : ''}
 
-                ${domainSpells1st || domainSpells2nd ? `
+                ${domainSpells ? `
                 <div class="trifold-section">
                     <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${domainSpells1st ? `<strong>1st:</strong> ${domainSpells1st}` : ''}${domainSpells1st && domainSpells2nd ? '<br>' : ''}${domainSpells2nd ? `<strong>2nd:</strong> ${domainSpells2nd}` : ''}
-                    </div>
+                    <div class="trifold-text-tiny">${domainSpells}</div>
                 </div>
                 ` : ''}
 
@@ -1028,12 +1002,8 @@ function parseCharacterText(text) {
         initiative: '',
         proficiency: '',
         savingThrows: '',
-        spellSaveDC: '',
-        spellAttack: '',
-        cantrips: '',
-        level1Slots: '',
-        level2Slots: '',
-        level3Slots: '',
+        spellCombat: '',
+        spellSlots: '',
         keyCantrips: '',
         domainSpells: '',
         preparedSpells: '',
@@ -2273,38 +2243,20 @@ function generatePrintThreeColumnBack1(cardData) {
     const templateId = cardData.template;
 
     if (templateId === 'creature') {
-        const additionalStats = cardData.additionalStats || '';
-
-        // Get combat stats from form fields
-        const spellSaveDC = cardData.formFields?.spellSaveDC || '';
-        const spellAttack = cardData.formFields?.spellAttack || '';
-
-        // Parse for weapon attack (still from additionalStats)
-        const weaponAttackMatch = additionalStats.match(/([A-Za-z\s]+Attack):\s*([+\-]?\d+)\s+to\s+hit,\s*([^\n]+)/i);
-        const weaponAttack = weaponAttackMatch ? `${weaponAttackMatch[1]}: ${weaponAttackMatch[2]} to hit, ${weaponAttackMatch[3]}` : '';
+        // Get spell combat from form fields
+        const spellCombat = cardData.formFields?.spellCombat || '';
 
         // Get spell slots from form fields
-        const cantrips = cardData.formFields?.cantrips || '';
-        const level1 = cardData.formFields?.level1Slots || '';
-        const level2 = cardData.formFields?.level2Slots || '';
-        const level3 = cardData.formFields?.level3Slots || '';
+        const spellSlots = cardData.formFields?.spellSlots || '';
 
         // Get key cantrips from form fields
-        const keyCantripsText = cardData.formFields?.keyCantrips || '';
-        const cantripsList = keyCantripsText.split('\n').filter(line => line.trim().startsWith('•'));
+        const keyCantrips = cardData.formFields?.keyCantrips || '';
 
         // Get domain spells from form fields
-        const domainSpellsText = cardData.formFields?.domainSpells || '';
-        const domainSpellsLines = domainSpellsText.split('\n').filter(line => line.trim());
-        const domainSpells1stMatch = domainSpellsLines.find(line => /1st:/i.test(line));
-        const domainSpells2ndMatch = domainSpellsLines.find(line => /2nd:/i.test(line));
-
-        const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch.replace(/1st:\s*/i, '').trim() : '';
-        const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch.replace(/2nd:\s*/i, '').trim() : '';
+        const domainSpells = cardData.formFields?.domainSpells || '';
 
         // Get prepared spells from form fields
-        const preparedSpellsText = cardData.formFields?.preparedSpells || '';
-        const preparedSpells = preparedSpellsText;
+        const preparedSpells = cardData.formFields?.preparedSpells || '';
 
         return `
             <div class="card-content trifold-content">
@@ -2312,43 +2264,35 @@ function generatePrintThreeColumnBack1(cardData) {
                     <h2>${name}</h2>
                 </div>
 
-                ${spellSaveDC || spellAttack || weaponAttack ? `
+                ${spellCombat ? `
                 <div class="trifold-section">
-                    <div class="trifold-section-title">COMBAT</div>
+                    <div class="trifold-section-title">SPELL COMBAT</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${spellSaveDC || spellAttack ? `Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}` : ''}${(spellSaveDC || spellAttack) && weaponAttack ? '<br>' : ''}${weaponAttack ? `${weaponAttack}` : ''}
-                    </div>
+                    <div class="trifold-text-tiny">${spellCombat}</div>
                 </div>
                 ` : ''}
 
-                ${cantrips || level1 || level2 || level3 ? `
+                ${spellSlots ? `
                 <div class="trifold-section">
                     <div class="trifold-section-title">SPELL SLOTS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${cantrips ? `Cantrips: ${cantrips}` : ''}${cantrips && (level1 || level2 || level3) ? ' | ' : ''}${level1 ? `1st Level: ${level1}` : ''}${level1 && (level2 || level3) ? ' | ' : ''}${level2 ? `2nd Level: ${level2}` : ''}${level2 && level3 ? ' | ' : ''}${level3 ? `3rd Level: ${level3}` : ''}
-                    </div>
+                    <div class="trifold-text-tiny">${spellSlots}</div>
                 </div>
                 ` : ''}
 
-                ${cantripsList.length > 0 ? `
+                ${keyCantrips ? `
                 <div class="trifold-section">
                     <div class="trifold-section-title">KEY CANTRIPS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${cantripsList.slice(0, 4).join('<br>')}
-                    </div>
+                    <div class="trifold-text-tiny">${keyCantrips}</div>
                 </div>
                 ` : ''}
 
-                ${domainSpells1st || domainSpells2nd ? `
+                ${domainSpells ? `
                 <div class="trifold-section">
                     <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">
-                        ${domainSpells1st ? `<strong>1st:</strong> ${domainSpells1st}` : ''}${domainSpells1st && domainSpells2nd ? '<br>' : ''}${domainSpells2nd ? `<strong>2nd:</strong> ${domainSpells2nd}` : ''}
-                    </div>
+                    <div class="trifold-text-tiny">${domainSpells}</div>
                 </div>
                 ` : ''}
 
