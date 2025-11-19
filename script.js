@@ -826,6 +826,10 @@ function generateThreeColumnBack1(templateId) {
         const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch.replace(/1st:\s*/i, '').trim() : '';
         const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch.replace(/2nd:\s*/i, '').trim() : '';
 
+        // Get prepared spells from dedicated field
+        const preparedSpellsText = document.getElementById('preparedSpells')?.value || '';
+        const preparedSpells = preparedSpellsText;
+
         return `
             <div class="card-content trifold-content">
                 <div class="trifold-header">
@@ -871,6 +875,14 @@ function generateThreeColumnBack1(templateId) {
                     </div>
                 </div>
                 ` : ''}
+
+                ${preparedSpells ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">PREPARED SPELLS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${preparedSpells}</div>
+                </div>
+                ` : ''}
             </div>
         `;
     }
@@ -890,13 +902,9 @@ function generateThreeColumnBack2(templateId) {
 
     if (templateId === 'creature') {
         // Get data from dedicated fields
-        const preparedSpellsText = document.getElementById('preparedSpells')?.value || '';
         const classFeaturesText = document.getElementById('classFeatures')?.value || '';
         const equipmentText = document.getElementById('equipment')?.value || '';
         const passivePerception = document.getElementById('passivePerception')?.value || '';
-
-        // Format prepared spells
-        const preparedSpells = preparedSpellsText;
 
         // Format class features
         const classFeatures = classFeaturesText;
@@ -909,14 +917,6 @@ function generateThreeColumnBack2(templateId) {
                 <div class="trifold-header">
                     <h2>${name}</h2>
                 </div>
-
-                ${preparedSpells ? `
-                <div class="trifold-section">
-                    <div class="trifold-section-title">PREPARED SPELLS</div>
-                    <div class="divider"></div>
-                    <div class="trifold-text-tiny">${preparedSpells}</div>
-                </div>
-                ` : ''}
 
                 ${classFeatures ? `
                 <div class="trifold-section">
@@ -2302,6 +2302,10 @@ function generatePrintThreeColumnBack1(cardData) {
         const domainSpells1st = domainSpells1stMatch ? domainSpells1stMatch.replace(/1st:\s*/i, '').trim() : '';
         const domainSpells2nd = domainSpells2ndMatch ? domainSpells2ndMatch.replace(/2nd:\s*/i, '').trim() : '';
 
+        // Get prepared spells from form fields
+        const preparedSpellsText = cardData.formFields?.preparedSpells || '';
+        const preparedSpells = preparedSpellsText;
+
         return `
             <div class="card-content trifold-content">
                 <div class="trifold-header">
@@ -2347,6 +2351,14 @@ function generatePrintThreeColumnBack1(cardData) {
                     </div>
                 </div>
                 ` : ''}
+
+                ${preparedSpells ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">PREPARED SPELLS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${preparedSpells}</div>
+                </div>
+                ` : ''}
             </div>
         `;
     }
@@ -2369,13 +2381,9 @@ function generatePrintThreeColumnBack2(cardData) {
 
     if (templateId === 'creature') {
         // Get data from form fields
-        const preparedSpellsText = cardData.formFields?.preparedSpells || '';
         const classFeaturesText = cardData.formFields?.classFeatures || '';
         const equipmentText = cardData.formFields?.equipment || '';
         const passivePerception = cardData.formFields?.passivePerception || '';
-
-        // Format prepared spells
-        const preparedSpells = preparedSpellsText;
 
         // Format class features
         const classFeatures = classFeaturesText;
@@ -2388,14 +2396,6 @@ function generatePrintThreeColumnBack2(cardData) {
                 <div class="trifold-header">
                     <h2>${name}</h2>
                 </div>
-
-                ${preparedSpells ? `
-                <div class="trifold-section">
-                    <div class="trifold-section-title">PREPARED SPELLS</div>
-                    <div class="divider"></div>
-                    <div class="trifold-text-tiny">${preparedSpells}</div>
-                </div>
-                ` : ''}
 
                 ${classFeatures ? `
                 <div class="trifold-section">
