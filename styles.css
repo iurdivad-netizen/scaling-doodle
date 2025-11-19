@@ -1373,7 +1373,7 @@ header p {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: 88mm 88mm 88mm;
     column-gap: 0;
     row-gap: 5mm;
     align-items: start;
@@ -1414,7 +1414,7 @@ header p {
 /* Four-panel print card styles - 3 cards per page */
 .print-card-fourpanel {
     width: 100%;
-    height: auto;
+    height: 88mm;
     transform-origin: top left;
     overflow: hidden;
     position: relative;
@@ -1730,9 +1730,7 @@ header p {
     /* Four-panel print layout styles - 3 cards per page */
     .print-page-fourpanel {
         width: 210mm !important;
-        height: auto !important;
-        min-height: 297mm !important;
-        max-height: 297mm !important;
+        height: 297mm !important;
         padding: 10mm !important;
         margin: 0 !important;
         page-break-after: always !important;
@@ -1741,7 +1739,7 @@ header p {
         box-shadow: none !important;
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        grid-template-rows: repeat(3, 1fr) !important;
+        grid-template-rows: 88mm 88mm 88mm !important;
         column-gap: 0 !important;
         row-gap: 5mm !important;
         align-items: start !important;
@@ -1815,10 +1813,9 @@ header p {
     /* Four-panel print card styles - 3 cards per page */
     .print-card-fourpanel {
         width: 100% !important;
-        height: auto !important;
+        height: 88mm !important;
         transform-origin: top left !important;
         overflow: hidden !important;
-        page-break-inside: avoid !important;
         position: relative !important;
     }
 
