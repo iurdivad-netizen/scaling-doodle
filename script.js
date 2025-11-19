@@ -108,6 +108,8 @@ const closePrintModal = document.getElementById('closePrintModal');
 const printContent = document.getElementById('printContent');
 const printBtn = document.getElementById('printBtn');
 const autoSaveNotification = document.getElementById('autoSaveNotification');
+const stickyPreviewToggle = document.getElementById('stickyPreviewToggle');
+const previewPanel = document.querySelector('.preview-panel');
 
 // Print alignment controls
 const alignLeftBtn = document.getElementById('alignLeft');
@@ -1650,6 +1652,24 @@ function attachEventListeners() {
             printModal.classList.remove('active');
         }
     });
+
+    // Sticky preview toggle
+    stickyPreviewToggle.addEventListener('change', function() {
+        if (this.checked) {
+            previewPanel.classList.add('sticky');
+            localStorage.setItem('stickyPreview', 'true');
+        } else {
+            previewPanel.classList.remove('sticky');
+            localStorage.setItem('stickyPreview', 'false');
+        }
+    });
+
+    // Load sticky preference
+    const stickyPreference = localStorage.getItem('stickyPreview');
+    if (stickyPreference === 'true') {
+        stickyPreviewToggle.checked = true;
+        previewPanel.classList.add('sticky');
+    }
 }
 
 // Deck Management Functions
