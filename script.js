@@ -849,7 +849,7 @@ function generateThreeColumnBack1(templateId) {
 
                 ${domainSpells ? `
                 <div class="trifold-section">
-                    <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
+                    <div class="trifold-section-title">DOMAIN SPELLS (always prep)</div>
                     <div class="divider"></div>
                     <div class="trifold-text-tiny">${domainSpells}</div>
                 </div>
@@ -2380,7 +2380,7 @@ function generatePrintThreeColumnBack1(cardData) {
 
                 ${domainSpells ? `
                 <div class="trifold-section">
-                    <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
+                    <div class="trifold-section-title">DOMAIN SPELLS (always prep)</div>
                     <div class="divider"></div>
                     <div class="trifold-text-tiny">${domainSpells}</div>
                 </div>

@@ -17,7 +17,7 @@ KEY CANTRIPS
 • Sacred Flame (1d8 radiant, DC 13 DEX)
 • Spare the Dying (30 ft, bonus action)
 • Thaumaturgy  • Light
-DOMAIN SPELLS (Always Prepared)
+DOMAIN SPELLS (always prep)
 1st: Bane, False Life
 2nd: Gentle Repose, Ray of Enfeeblement
 PREPARED SPELLS (7 total)
