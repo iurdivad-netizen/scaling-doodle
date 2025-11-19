@@ -1427,6 +1427,19 @@ header p {
     transform-origin: top left;
     margin: 0;
     box-sizing: border-box;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* Add left border only to first panel in each row */
+.print-card-fourpanel:nth-child(4n+1) .card {
+    border-left: 2px solid var(--card-border-color) !important;
+}
+
+/* Add right border only to last panel in each row (every 4th panel) */
+.print-card-fourpanel:nth-child(4n) .card {
+    border-right: 2px solid var(--card-border-color) !important;
 }
 
 /* Print media queries */
@@ -1829,9 +1842,21 @@ header p {
         flex-direction: column !important;
         background: var(--card-bg-color) !important;
         border: 2px solid var(--card-border-color) !important;
-        border-radius: var(--card-border-radius) !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
         box-shadow: none !important;
         position: relative !important;
+    }
+
+    /* Add left border only to first panel in each row */
+    .print-card-fourpanel:nth-child(4n+1) .card {
+        border-left: 2px solid var(--card-border-color) !important;
+    }
+
+    /* Add right border only to last panel in each row (every 4th panel) */
+    .print-card-fourpanel:nth-child(4n) .card {
+        border-right: 2px solid var(--card-border-color) !important;
     }
 
     /* Add dashed fold lines between panels within each row */
