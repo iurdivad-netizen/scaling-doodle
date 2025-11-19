@@ -375,19 +375,44 @@ header p {
 .preview-panel {
     background: white;
     border-radius: 12px;
-    padding: 30px;
+    padding: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
+.preview-panel.sticky {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
 .preview-panel h2 {
     color: #333;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     font-size: 1.8em;
     border-bottom: 3px solid #667eea;
     padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sticky-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.5em;
+    font-weight: normal;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sticky-toggle input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
 }
 
 /* Card preview container - no individual scaling */
@@ -2111,7 +2136,7 @@ header p {
 /* Cards display side by side */
 .cards-display {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     justify-content: center;
     align-items: flex-start;
     flex-wrap: nowrap;
@@ -2120,9 +2145,9 @@ header p {
 
 .cards-display .card {
     flex-shrink: 0;
-    transform: scale(0.5);
+    transform: scale(0.35);
     transform-origin: top center;
-    margin-bottom: -262.5px;
+    margin-bottom: -341.25px;
 }
 
 /* Ensure both cards are same size */
@@ -2146,7 +2171,7 @@ header p {
     }
 
     .cards-display .card {
-        margin-bottom: -262.5px;
+        margin-bottom: -341.25px;
     }
 
     .cards-display .card:last-child {
