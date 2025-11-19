@@ -1371,13 +1371,22 @@ header p {
     margin: 0 auto 20px;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 95mm 95mm;
-    column-gap: 0;
-    row-gap: 4mm;
-    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0;
+    align-items: flex-start;
+    align-content: flex-start;
     box-sizing: border-box;
+}
+
+.print-page-fourpanel > * {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Add vertical gap between rows only */
+.print-page-fourpanel > :nth-child(n+5) {
+    margin-top: 4mm !important;
 }
 
 /* Grid layout variations for trifold pages */
@@ -1413,11 +1422,15 @@ header p {
 
 /* Four-panel print card styles - 2 cards per page */
 .print-card-fourpanel {
-    width: 100%;
+    width: 25%;
     height: 95mm;
+    flex-shrink: 0;
+    flex-grow: 0;
     transform-origin: top left;
     overflow: hidden;
     position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .print-card-fourpanel .card {
@@ -1750,14 +1763,23 @@ header p {
         page-break-before: avoid !important;
         page-break-inside: avoid !important;
         box-shadow: none !important;
-        display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        grid-template-rows: 95mm 95mm !important;
-        column-gap: 0 !important;
-        row-gap: 4mm !important;
-        align-items: start !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0 !important;
+        align-items: flex-start !important;
+        align-content: flex-start !important;
         box-sizing: border-box !important;
         background: white !important;
+    }
+
+    .print-page-fourpanel > * {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Add vertical gap between rows only */
+    .print-page-fourpanel > :nth-child(n+5) {
+        margin-top: 4mm !important;
     }
 
     .print-page-fourpanel:last-child {
@@ -1825,11 +1847,15 @@ header p {
 
     /* Four-panel print card styles - 2 cards per page landscape */
     .print-card-fourpanel {
-        width: 100% !important;
+        width: 25% !important;
         height: 95mm !important;
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
         transform-origin: top left !important;
         overflow: hidden !important;
         position: relative !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .print-card-fourpanel .card {
