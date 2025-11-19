@@ -237,6 +237,18 @@ header p {
     border-bottom-color: #4facfe;
 }
 
+.panel-4 {
+    border-color: #a18cd1;
+}
+
+.panel-4 .panel-badge {
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+
+.panel-4 .panel-header {
+    border-bottom-color: #a18cd1;
+}
+
 .image-options {
     margin-bottom: 15px;
 }
