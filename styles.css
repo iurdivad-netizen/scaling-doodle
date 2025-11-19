@@ -221,6 +221,10 @@ header p {
     border-bottom-color: #f093fb;
 }
 
+.panel-2 .form-section > label {
+    text-align: left !important;
+}
+
 .panel-3 {
     border-color: #4facfe;
 }
