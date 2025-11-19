@@ -1363,6 +1363,22 @@ header p {
     box-sizing: border-box;
 }
 
+/* Four-panel layout - one card per A4 page */
+.print-page-fourpanel {
+    width: 210mm;
+    height: 297mm;
+    padding: 10mm;
+    margin: 0 auto 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: row;
+    column-gap: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
 /* Grid layout variations for trifold pages */
 .print-page-trifold.layout-1x3 {
     grid-template-rows: 88mm !important;
@@ -1389,6 +1405,26 @@ header p {
     width: 750px;
     height: 1050px;
     transform: scale(0.317);
+    transform-origin: top left;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Four-panel print card styles */
+.print-card-fourpanel {
+    width: 47.5mm;
+    height: auto;
+    max-height: 277mm;
+    transform-origin: top left;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.print-card-fourpanel .card {
+    width: 750px;
+    height: 1050px;
+    transform: scale(0.24);
     transform-origin: top left;
     margin: 0;
     box-sizing: border-box;
@@ -1692,6 +1728,31 @@ header p {
         page-break-after: auto !important;
     }
 
+    /* Four-panel print layout styles - one card per page */
+    .print-page-fourpanel {
+        width: 210mm !important;
+        height: auto !important;
+        min-height: 297mm !important;
+        max-height: 297mm !important;
+        padding: 10mm !important;
+        margin: 0 !important;
+        page-break-after: always !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
+        box-shadow: none !important;
+        display: flex !important;
+        flex-direction: row !important;
+        column-gap: 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        background: white !important;
+    }
+
+    .print-page-fourpanel:last-child {
+        page-break-after: auto !important;
+    }
+
     /* Grid layout variations for trifold pages (print) */
     .print-page-trifold.layout-1x3 {
         grid-template-rows: 88mm !important;
@@ -1751,7 +1812,53 @@ header p {
         ) !important;
     }
 
+    /* Four-panel print card styles */
+    .print-card-fourpanel {
+        width: 47.5mm !important;
+        height: auto !important;
+        max-height: 277mm !important;
+        transform-origin: top left !important;
+        overflow: hidden !important;
+        page-break-inside: avoid !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
+    }
+
+    .print-card-fourpanel .card {
+        width: 750px !important;
+        height: 1050px !important;
+        transform: scale(0.24) !important;
+        transform-origin: top left !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: var(--card-bg-color) !important;
+        border: 2px solid var(--card-border-color) !important;
+        border-radius: var(--card-border-radius) !important;
+        box-shadow: none !important;
+        position: relative !important;
+    }
+
+    /* Add dashed fold lines between panels within each four-panel card */
+    /* Add fold lines after 1st, 2nd, and 3rd panel of each 4-panel group */
+    .print-card-fourpanel:not(:nth-child(4n)) .card::after {
+        content: '' !important;
+        position: absolute !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 1px !important;
+        background: repeating-linear-gradient(
+            to bottom,
+            #ccc 0,
+            #ccc 5px,
+            transparent 5px,
+            transparent 10px
+        ) !important;
+    }
+
     /* Trifold content styles for print */
+    .print-card-fourpanel .trifold-content,
     .print-card-trifold .trifold-content,
     .print-card .trifold-content {
         padding: var(--card-content-padding) !important;
