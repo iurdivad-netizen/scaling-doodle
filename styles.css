@@ -1363,7 +1363,7 @@ header p {
     box-sizing: border-box;
 }
 
-/* Four-panel layout - one card per A4 page */
+/* Four-panel layout - 3 cards per A4 page */
 .print-page-fourpanel {
     width: 210mm;
     height: 297mm;
@@ -1371,11 +1371,12 @@ header p {
     margin: 0 auto 20px;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     column-gap: 0;
-    align-items: center;
-    justify-content: center;
+    row-gap: 5mm;
+    align-items: start;
     box-sizing: border-box;
 }
 
@@ -1410,15 +1411,13 @@ header p {
     box-sizing: border-box;
 }
 
-/* Four-panel print card styles */
+/* Four-panel print card styles - 3 cards per page */
 .print-card-fourpanel {
-    width: 47.5mm;
+    width: 100%;
     height: auto;
-    max-height: 277mm;
     transform-origin: top left;
     overflow: hidden;
     position: relative;
-    flex-shrink: 0;
 }
 
 .print-card-fourpanel .card {
@@ -1728,7 +1727,7 @@ header p {
         page-break-after: auto !important;
     }
 
-    /* Four-panel print layout styles - one card per page */
+    /* Four-panel print layout styles - 3 cards per page */
     .print-page-fourpanel {
         width: 210mm !important;
         height: auto !important;
@@ -1740,11 +1739,12 @@ header p {
         page-break-before: avoid !important;
         page-break-inside: avoid !important;
         box-shadow: none !important;
-        display: flex !important;
-        flex-direction: row !important;
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        grid-template-rows: repeat(3, 1fr) !important;
         column-gap: 0 !important;
-        align-items: center !important;
-        justify-content: center !important;
+        row-gap: 5mm !important;
+        align-items: start !important;
         box-sizing: border-box !important;
         background: white !important;
     }
@@ -1812,16 +1812,14 @@ header p {
         ) !important;
     }
 
-    /* Four-panel print card styles */
+    /* Four-panel print card styles - 3 cards per page */
     .print-card-fourpanel {
-        width: 47.5mm !important;
+        width: 100% !important;
         height: auto !important;
-        max-height: 277mm !important;
         transform-origin: top left !important;
         overflow: hidden !important;
         page-break-inside: avoid !important;
         position: relative !important;
-        flex-shrink: 0 !important;
     }
 
     .print-card-fourpanel .card {
@@ -1839,8 +1837,8 @@ header p {
         position: relative !important;
     }
 
-    /* Add dashed fold lines between panels within each four-panel card */
-    /* Add fold lines after 1st, 2nd, and 3rd panel of each 4-panel group */
+    /* Add dashed fold lines between panels within each row */
+    /* Add fold lines after columns 1, 2, and 3 (not after column 4) */
     .print-card-fourpanel:not(:nth-child(4n)) .card::after {
         content: '' !important;
         position: absolute !important;
