@@ -1759,7 +1759,9 @@ header p {
     .print-card .trifold-header h2 {
         margin: 0 !important;
         text-align: center !important;
-        font-size: 1.5em !important;
+        font-size: var(--card-name-size) !important;
+        font-family: var(--card-name-font-family) !important;
+        line-height: var(--card-name-line-height) !important;
         color: var(--card-name-color) !important;
     }
 
@@ -2083,7 +2085,9 @@ header p {
 .trifold-content .trifold-header h2 {
     margin: 0;
     text-align: center;
-    font-size: 1.5em;
+    font-size: var(--card-name-size);
+    font-family: var(--card-name-font-family);
+    line-height: var(--card-name-line-height);
     color: var(--card-name-color);
 }
 
