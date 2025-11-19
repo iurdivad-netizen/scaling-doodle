@@ -815,7 +815,7 @@ function generateThreeColumnBack1(templateId) {
 
         // Get key cantrips from dedicated field
         const keyCantripsText = document.getElementById('keyCantrips')?.value || '';
-        const cantripsList = keyCantripsText.split('\n').filter(line => line.trim().startsWith('•'));
+        const cantripsList = keyCantripsText.split('\n').filter(line => line.trim().startsWith('•')).map(line => line.trim().replace(/^•\s*/, ''));
 
         // Get domain spells from dedicated field
         const domainSpellsText = document.getElementById('domainSpells')?.value || '';
@@ -868,8 +868,7 @@ function generateThreeColumnBack1(templateId) {
                     <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
                     <div class="divider"></div>
                     <div class="trifold-text-tiny">
-                        ${domainSpells1st ? `<div><strong>1st:</strong> ${domainSpells1st}</div>` : ''}
-                        ${domainSpells2nd ? `<div><strong>2nd:</strong> ${domainSpells2nd}</div>` : ''}
+                        ${domainSpells1st ? `<strong>1st:</strong> ${domainSpells1st}` : ''}${domainSpells1st && domainSpells2nd ? '<br>' : ''}${domainSpells2nd ? `<strong>2nd:</strong> ${domainSpells2nd}` : ''}
                     </div>
                 </div>
                 ` : ''}
@@ -898,13 +897,13 @@ function generateThreeColumnBack2(templateId) {
         const passivePerception = document.getElementById('passivePerception')?.value || '';
 
         // Format prepared spells
-        const preparedSpells = preparedSpellsText ? `PREPARED SPELLS:\n${preparedSpellsText}` : '';
+        const preparedSpells = preparedSpellsText;
 
         // Format class features
-        const classFeatures = classFeaturesText ? `CLASS FEATURES:\n${classFeaturesText}` : '';
+        const classFeatures = classFeaturesText;
 
         // Format equipment
-        const equipment = equipmentText ? `EQUIPMENT:\n${equipmentText}` : '';
+        const equipment = equipmentText;
 
         return `
             <div class="card-content trifold-content">
@@ -916,7 +915,7 @@ function generateThreeColumnBack2(templateId) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">PREPARED SPELLS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">${preparedSpells.replace(/PREPARED SPELLS\s*\(?\d*\s*total\)?:?/i, '').trim()}</div>
+                    <div class="trifold-text-tiny">${preparedSpells}</div>
                 </div>
                 ` : ''}
 
@@ -924,7 +923,7 @@ function generateThreeColumnBack2(templateId) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">CLASS FEATURES</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">${classFeatures.replace(/CLASS FEATURES:?/i, '').trim()}</div>
+                    <div class="trifold-text-tiny">${classFeatures}</div>
                 </div>
                 ` : ''}
 
@@ -932,7 +931,7 @@ function generateThreeColumnBack2(templateId) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">EQUIPMENT</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">${equipment.replace(/EQUIPMENT:?/i, '').trim()}</div>
+                    <div class="trifold-text-tiny">${equipment}</div>
                 </div>
                 ` : ''}
 
@@ -2346,8 +2345,7 @@ function generatePrintThreeColumnBack1(cardData) {
                     <div class="trifold-section-title">DOMAIN SPELLS (Always Prepared)</div>
                     <div class="divider"></div>
                     <div class="trifold-text-tiny">
-                        ${domainSpells1st ? `<div><strong>1st:</strong> ${domainSpells1st}</div>` : ''}
-                        ${domainSpells2nd ? `<div><strong>2nd:</strong> ${domainSpells2nd}</div>` : ''}
+                        ${domainSpells1st ? `<strong>1st:</strong> ${domainSpells1st}` : ''}${domainSpells1st && domainSpells2nd ? '<br>' : ''}${domainSpells2nd ? `<strong>2nd:</strong> ${domainSpells2nd}` : ''}
                     </div>
                 </div>
                 ` : ''}
@@ -2379,13 +2377,13 @@ function generatePrintThreeColumnBack2(cardData) {
         const passivePerception = cardData.formFields?.passivePerception || '';
 
         // Format prepared spells
-        const preparedSpells = preparedSpellsText ? `PREPARED SPELLS:\n${preparedSpellsText}` : '';
+        const preparedSpells = preparedSpellsText;
 
         // Format class features
-        const classFeatures = classFeaturesText ? `CLASS FEATURES:\n${classFeaturesText}` : '';
+        const classFeatures = classFeaturesText;
 
         // Format equipment
-        const equipment = equipmentText ? `EQUIPMENT:\n${equipmentText}` : '';
+        const equipment = equipmentText;
 
         return `
             <div class="card-content trifold-content">
@@ -2397,7 +2395,7 @@ function generatePrintThreeColumnBack2(cardData) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">PREPARED SPELLS</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">${preparedSpells.replace(/PREPARED SPELLS\s*\(?\d*\s*total\)?:?/i, '').trim()}</div>
+                    <div class="trifold-text-tiny">${preparedSpells}</div>
                 </div>
                 ` : ''}
 
@@ -2405,7 +2403,7 @@ function generatePrintThreeColumnBack2(cardData) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">CLASS FEATURES</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">${classFeatures.replace(/CLASS FEATURES:?/i, '').trim()}</div>
+                    <div class="trifold-text-tiny">${classFeatures}</div>
                 </div>
                 ` : ''}
 
@@ -2413,7 +2411,7 @@ function generatePrintThreeColumnBack2(cardData) {
                 <div class="trifold-section">
                     <div class="trifold-section-title">EQUIPMENT</div>
                     <div class="divider"></div>
-                    <div class="trifold-text-tiny">${equipment.replace(/EQUIPMENT:?/i, '').trim()}</div>
+                    <div class="trifold-text-tiny">${equipment}</div>
                 </div>
                 ` : ''}
 
