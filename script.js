@@ -642,13 +642,16 @@ function generateThreeColumnPanels() {
     // Front panel - image + basic stats
     const frontPanel = generateThreeColumnFront(templateId);
 
-    // Back panel 1 - additional stats
+    // Back panel 1 - spells
     const back1Panel = generateThreeColumnBack1(templateId);
 
-    // Back panel 2 - description/abilities
+    // Back panel 2 - features & equipment
     const back2Panel = generateThreeColumnBack2(templateId);
 
-    return { frontPanel, back1Panel, back2Panel };
+    // Back panel 3 - additional stats & description
+    const back3Panel = generateThreeColumnBack3(templateId);
+
+    return { frontPanel, back1Panel, back2Panel, back3Panel };
 }
 
 function generateSavingThrowsBoxes(savingThrowsText) {
@@ -922,6 +925,65 @@ function generateThreeColumnBack2(templateId) {
     `;
 }
 
+// Generate Panel 4: Back Far Right (Stats & Description)
+function generateThreeColumnBack3(templateId) {
+    const name = document.getElementById('cardName').value || 'Card Name';
+    const descriptionText = document.getElementById('description')?.value || '';
+
+    if (templateId === 'creature') {
+        // Get data from dedicated fields
+        const additionalStatsText = document.getElementById('additionalStats')?.value || '';
+
+        // Format additional stats
+        const additionalStats = additionalStatsText;
+
+        // Format description
+        const description = descriptionText;
+
+        return `
+            <div class="card-content trifold-content">
+                <div class="trifold-header">
+                    <h2>${name}</h2>
+                </div>
+
+                ${additionalStats ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">ADDITIONAL STATS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${additionalStats}</div>
+                </div>
+                ` : ''}
+
+                ${description ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">DESCRIPTION</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${description}</div>
+                </div>
+                ` : ''}
+
+            </div>
+        `;
+    }
+
+    // All other templates show description on Panel 4
+    return `
+        <div class="card-content trifold-content">
+            <div class="trifold-header">
+                <h2>${name}</h2>
+            </div>
+
+            ${descriptionText ? `
+            <div class="trifold-section">
+                <div class="trifold-section-title">DESCRIPTION</div>
+                <div class="divider"></div>
+                <div class="trifold-text-normal">${descriptionText}</div>
+            </div>
+            ` : ''}
+        </div>
+    `;
+}
+
 // Update cards display layout based on selected layout style
 function updateCardsDisplayLayout() {
     const layoutStyle = cardLayoutSelect.value;
@@ -937,8 +999,8 @@ function updateCardsDisplayLayout() {
         const existingPanels = cardsDisplay.querySelectorAll('.trifold-panel');
         existingPanels.forEach(panel => panel.remove());
 
-        // Generate three distinct panels
-        const { frontPanel, back1Panel, back2Panel } = generateThreeColumnPanels();
+        // Generate four distinct panels
+        const { frontPanel, back1Panel, back2Panel, back3Panel } = generateThreeColumnPanels();
 
         // Create back panel 1
         const panel1 = document.createElement('div');
@@ -954,11 +1016,19 @@ function updateCardsDisplayLayout() {
         panel2.innerHTML = back2Panel;
         cardsDisplay.insertBefore(panel2, cardBack);
 
+        // Create back panel 3
+        const panel3 = document.createElement('div');
+        panel3.className = 'card card-front trifold-panel';
+        panel3.id = 'trifold-panel-3';
+        panel3.innerHTML = back3Panel;
+        cardsDisplay.insertBefore(panel3, cardBack);
+
         // Apply horizontal stats layout if enabled
         const useHorizontalStatsLayout = document.getElementById('useHorizontalStatsLayout');
         if (useHorizontalStatsLayout && useHorizontalStatsLayout.checked) {
             panel1.classList.add('horizontal-stats');
             panel2.classList.add('horizontal-stats');
+            panel3.classList.add('horizontal-stats');
         }
 
         // Hide the back card in three-column layout
@@ -2372,6 +2442,66 @@ function generatePrintThreeColumnBack2(cardData) {
     `;
 }
 
+// Generate three-column panel HTML for printing (back panel 3)
+function generatePrintThreeColumnBack3(cardData) {
+    const name = cardData.name || 'Card Name';
+    const templateId = cardData.template;
+    const descriptionText = cardData.formFields?.description || '';
+
+    if (templateId === 'creature') {
+        // Get data from form fields
+        const additionalStatsText = cardData.formFields?.additionalStats || '';
+
+        // Format additional stats
+        const additionalStats = additionalStatsText;
+
+        // Format description
+        const description = descriptionText;
+
+        return `
+            <div class="card-content trifold-content">
+                <div class="trifold-header">
+                    <h2>${name}</h2>
+                </div>
+
+                ${additionalStats ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">ADDITIONAL STATS</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${additionalStats}</div>
+                </div>
+                ` : ''}
+
+                ${description ? `
+                <div class="trifold-section">
+                    <div class="trifold-section-title">DESCRIPTION</div>
+                    <div class="divider"></div>
+                    <div class="trifold-text-tiny">${description}</div>
+                </div>
+                ` : ''}
+
+            </div>
+        `;
+    }
+
+    // All other templates show description on Panel 4
+    return `
+        <div class="card-content trifold-content">
+            <div class="trifold-header">
+                <h2>${name}</h2>
+            </div>
+
+            ${descriptionText ? `
+            <div class="trifold-section">
+                <div class="trifold-section-title">DESCRIPTION</div>
+                <div class="divider"></div>
+                <div class="trifold-text-normal">${descriptionText}</div>
+            </div>
+            ` : ''}
+        </div>
+    `;
+}
+
 // Show print preview
 function showPrintPreview() {
     if (deck.length === 0) {
@@ -2407,30 +2537,31 @@ function showPrintPreview() {
         gridLayout = 'layout-3x3'; // 3 rows x 3 columns (default)
     }
 
-    // Process three-column cards - each trifold card has 3 panels
-    // Calculate trifold cards per page: cardsPerPage / 3
-    const trifoldCardsPerPage = Math.floor(cardsPerPage / 3);
-    const totalTrifoldPages = Math.ceil(threeColumnCards.length / trifoldCardsPerPage);
+    // Process three-column cards - each card now has 4 panels
+    // Calculate cards per page: cardsPerPage / 4
+    const fourPanelCardsPerPage = Math.floor(cardsPerPage / 4);
+    const totalFourPanelPages = Math.ceil(threeColumnCards.length / fourPanelCardsPerPage);
 
-    for (let page = 0; page < totalTrifoldPages; page++) {
+    for (let page = 0; page < totalFourPanelPages; page++) {
         const printPage = document.createElement('div');
         printPage.className = `print-page print-page-trifold ${gridLayout}`;
 
-        const startIdx = page * trifoldCardsPerPage;
-        const endIdx = Math.min(startIdx + trifoldCardsPerPage, threeColumnCards.length);
+        const startIdx = page * fourPanelCardsPerPage;
+        const endIdx = Math.min(startIdx + fourPanelCardsPerPage, threeColumnCards.length);
 
-        // Process each trifold card on this page
+        // Process each 4-panel card on this page
         for (let i = startIdx; i < endIdx; i++) {
             const card = threeColumnCards[i];
 
-            // Generate the three distinct panels for this card
+            // Generate the four distinct panels for this card
             const panels = [
                 card.html, // Front panel (already contains image + basic stats)
-                generatePrintThreeColumnBack1(card), // Panel 1 - additional stats
-                generatePrintThreeColumnBack2(card)  // Panel 2 - abilities/description
+                generatePrintThreeColumnBack1(card), // Panel 2 - spells
+                generatePrintThreeColumnBack2(card), // Panel 3 - features & equipment
+                generatePrintThreeColumnBack3(card)  // Panel 4 - additional stats & description
             ];
 
-            // Create 3 distinct panels side by side
+            // Create 4 distinct panels side by side
             panels.forEach((panelHTML, index) => {
                 const printCard = document.createElement('div');
                 printCard.className = 'print-card print-card-trifold';
