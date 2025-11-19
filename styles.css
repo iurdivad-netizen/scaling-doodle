@@ -1342,7 +1342,8 @@ header p {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 88mm);
-    gap: 5mm;
+    column-gap: 0;
+    row-gap: 5mm;
     box-sizing: border-box;
 }
 
@@ -1665,7 +1666,8 @@ header p {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
         grid-template-rows: repeat(3, 88mm) !important;
-        gap: 5mm !important;
+        column-gap: 0 !important;
+        row-gap: 5mm !important;
         box-sizing: border-box !important;
         background: white !important;
     }
@@ -1715,8 +1717,9 @@ header p {
         position: relative !important;
     }
 
-    /* Add dashed fold lines between trifold cards */
-    .print-card-trifold:not(:last-child) .card::after {
+    /* Add dashed fold lines between panels within each trifold card */
+    /* Only add fold lines after 1st and 2nd panel of each 3-panel group */
+    .print-card-trifold:not(:nth-child(3n)) .card::after {
         content: '' !important;
         position: absolute !important;
         right: 0 !important;
