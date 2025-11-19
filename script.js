@@ -837,8 +837,7 @@ function generateThreeColumnBack1(templateId) {
                     <div class="trifold-section-title">COMBAT</div>
                     <div class="divider"></div>
                     <div class="trifold-text-tiny">
-                        ${spellSaveDC || spellAttack ? `<div>Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>` : ''}
-                        ${weaponAttack ? `<div>${weaponAttack}</div>` : ''}
+                        ${spellSaveDC || spellAttack ? `Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}` : ''}${(spellSaveDC || spellAttack) && weaponAttack ? '<br>' : ''}${weaponAttack ? `${weaponAttack}` : ''}
                     </div>
                 </div>
                 ` : ''}
@@ -2314,8 +2313,7 @@ function generatePrintThreeColumnBack1(cardData) {
                     <div class="trifold-section-title">COMBAT</div>
                     <div class="divider"></div>
                     <div class="trifold-text-tiny">
-                        ${spellSaveDC || spellAttack ? `<div>Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}</div>` : ''}
-                        ${weaponAttack ? `<div>${weaponAttack}</div>` : ''}
+                        ${spellSaveDC || spellAttack ? `Spell Save DC: ${spellSaveDC} | Spell Attack: ${spellAttack}` : ''}${(spellSaveDC || spellAttack) && weaponAttack ? '<br>' : ''}${weaponAttack ? `${weaponAttack}` : ''}
                     </div>
                 </div>
                 ` : ''}
