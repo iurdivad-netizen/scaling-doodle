@@ -2143,6 +2143,7 @@ header p {
     align-items: flex-start;
     flex-wrap: nowrap;
     overflow-x: auto;
+    height: 367.5px; /* Card height (1050px) * scale (0.35) = 367.5px */
 }
 
 .cards-display .card {
@@ -2150,6 +2151,10 @@ header p {
     transform: scale(0.35);
     transform-origin: top center;
     margin-bottom: -341.25px;
+}
+
+.cards-display .card:last-child {
+    margin-bottom: 0;
 }
 
 /* Ensure both cards are same size */
@@ -2170,6 +2175,7 @@ header p {
         flex-direction: column;
         align-items: center;
         overflow-x: visible;
+        height: auto; /* Allow auto height for stacked layout */
     }
 
     .cards-display .card {
@@ -2189,6 +2195,7 @@ header p {
     align-items: flex-start;
     flex-wrap: nowrap;
     overflow-x: auto;
+    height: 420px; /* Card height (1050px) * scale (0.4) = 420px */
 }
 
 .cards-display.three-column .card-front {
@@ -2211,6 +2218,10 @@ header p {
 
 /* Responsive: smaller scale for three-column on smaller screens */
 @media (max-width: 1600px) {
+    .cards-display.three-column {
+        height: 315px; /* Card height (1050px) * scale (0.3) = 315px */
+    }
+
     .cards-display.three-column .card-front {
         transform: scale(0.3);
         margin-right: -525px; /* 750px - (750px * 0.3) = 525px */
@@ -2226,6 +2237,7 @@ header p {
         flex-direction: column;
         align-items: center;
         gap: 10px;
+        height: auto; /* Auto height for stacked layout */
     }
 
     .cards-display.three-column .card-front {
@@ -2244,6 +2256,7 @@ header p {
         page-break-inside: avoid;
         margin: 0;
         padding: 0;
+        height: 1050px; /* Full card height for printing */
     }
 
     .cards-display.three-column .card-front {
