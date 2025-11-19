@@ -168,26 +168,6 @@ function updatePreview() {
     if (layoutStyle === 'three-column') {
         // For three-column, use the front panel content
         previewHTML = generateThreeColumnFront(templateId);
-    }
-    // Check if immersive layout is selected
-    else if (layoutStyle === 'immersive') {
-        switch (templateId) {
-            case 'creature':
-                previewHTML = generateCreaturePreviewImmersive();
-                break;
-            case 'spell':
-                previewHTML = generateSpellPreviewImmersive();
-                break;
-            case 'item':
-                previewHTML = generateItemPreviewImmersive();
-                break;
-            case 'ability':
-                previewHTML = generateAbilityPreviewImmersive();
-                break;
-            case 'equipment':
-                previewHTML = generateEquipmentPreviewImmersive();
-                break;
-        }
     } else {
         // Standard layout
         switch (templateId) {
@@ -237,7 +217,7 @@ function updatePreview() {
         }
     }
 
-    // Update back card for immersive layout
+    // Update back card
     updateBackCard();
 
     // Update cards display layout for three-column view
@@ -417,223 +397,24 @@ function generateEquipmentPreview() {
     `;
 }
 
-// ===== IMMERSIVE LAYOUT RENDERING FUNCTIONS =====
-
-// Generate creature card preview with immersive layout (image as background)
-function generateCreaturePreviewImmersive() {
-    const name = document.getElementById('cardName').value || 'Card Name';
-    const type = document.getElementById('cardType').value || 'Type';
-    const subtype = document.getElementById('cardSubtype').value || 'Subtype';
-    const ac = document.getElementById('ac').value || '-';
-    const hp = document.getElementById('hp').value || '-';
-    const speed = document.getElementById('speed').value || '-';
-    const str = document.getElementById('str').value || '-';
-    const dex = document.getElementById('dex').value || '-';
-    const con = document.getElementById('con').value || '-';
-    const int = document.getElementById('int').value || '-';
-    const wis = document.getElementById('wis').value || '-';
-    const cha = document.getElementById('cha').value || '-';
-    const additionalStats = document.getElementById('additionalStats').value || '';
-    const description = document.getElementById('description').value || '';
-
-    return `
-        <div class="card-image-background">
-            <img id="previewImage" src="" alt="Card Image">
-        </div>
-        <div class="immersive-overlay">
-            <div class="immersive-name">
-                <h2>${name}</h2>
-            </div>
-            <div class="immersive-type">
-                <span>${type}</span>
-                <span class="separator">•</span>
-                <span>${subtype}</span>
-            </div>
-            <div class="immersive-stats">
-                <div class="stat-item"><strong>AC</strong><span>${ac}</span></div>
-                <div class="stat-item"><strong>HP</strong><span>${hp}</span></div>
-                <div class="stat-item"><strong>Speed</strong><span>${speed}</span></div>
-            </div>
-            <div class="immersive-abilities">
-                <div class="ability-score"><div class="ability-name">STR</div><div class="ability-value">${str}</div></div>
-                <div class="ability-score"><div class="ability-name">DEX</div><div class="ability-value">${dex}</div></div>
-                <div class="ability-score"><div class="ability-name">CON</div><div class="ability-value">${con}</div></div>
-                <div class="ability-score"><div class="ability-name">INT</div><div class="ability-value">${int}</div></div>
-                <div class="ability-score"><div class="ability-name">WIS</div><div class="ability-value">${wis}</div></div>
-                <div class="ability-score"><div class="ability-name">CHA</div><div class="ability-value">${cha}</div></div>
-            </div>
-            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
-            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
-        </div>
-    `;
-}
-
-// Generate spell card preview with immersive layout
-function generateSpellPreviewImmersive() {
-    const name = document.getElementById('cardName').value || 'Spell Name';
-    const level = document.getElementById('spellLevel')?.value || 'Level';
-    const school = document.getElementById('spellSchool')?.value || 'School';
-    const castingTime = document.getElementById('castingTime')?.value || 'Casting Time';
-    const range = document.getElementById('range')?.value || 'Range';
-    const additionalStats = document.getElementById('additionalStats').value || '';
-    const description = document.getElementById('description').value || '';
-
-    return `
-        <div class="card-image-background">
-            <img id="previewImage" src="" alt="Card Image">
-        </div>
-        <div class="immersive-overlay">
-            <div class="immersive-name">
-                <h2>${name}</h2>
-            </div>
-            <div class="immersive-type">
-                <span>${level} ${school}</span>
-            </div>
-            <div class="immersive-spell-info">
-                <div><strong>Casting Time:</strong> ${castingTime}</div>
-                <div><strong>Range:</strong> ${range}</div>
-            </div>
-            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
-            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
-        </div>
-    `;
-}
-
-// Generate item card preview with immersive layout
-function generateItemPreviewImmersive() {
-    const name = document.getElementById('cardName').value || 'Item Name';
-    const rarity = document.getElementById('itemRarity')?.value || 'Rarity';
-    const itemType = document.getElementById('itemType')?.value || 'Type';
-    const attunement = document.getElementById('attunement')?.value || '';
-    const additionalStats = document.getElementById('additionalStats').value || '';
-    const description = document.getElementById('description').value || '';
-
-    return `
-        <div class="card-image-background">
-            <img id="previewImage" src="" alt="Card Image">
-        </div>
-        <div class="immersive-overlay">
-            <div class="immersive-name">
-                <h2>${name}</h2>
-            </div>
-            <div class="immersive-type">
-                <span>${itemType}</span>
-                <span class="separator">•</span>
-                <span>${rarity}</span>
-            </div>
-            ${attunement ? '<div class="immersive-attunement">' + attunement + '</div>' : ''}
-            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
-            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
-        </div>
-    `;
-}
-
-// Generate ability card preview with immersive layout
-function generateAbilityPreviewImmersive() {
-    const name = document.getElementById('cardName').value || 'Ability Name';
-    const source = document.getElementById('abilitySource')?.value || 'Source';
-    const level = document.getElementById('abilityLevel')?.value || 'Level';
-    const additionalStats = document.getElementById('additionalStats').value || '';
-    const description = document.getElementById('description').value || '';
-
-    return `
-        <div class="card-image-background">
-            <img id="previewImage" src="" alt="Card Image">
-        </div>
-        <div class="immersive-overlay">
-            <div class="immersive-name">
-                <h2>${name}</h2>
-            </div>
-            <div class="immersive-type">
-                <span>${source}</span>
-                ${level ? '<span class="separator">•</span><span>' + level + '</span>' : ''}
-            </div>
-            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
-            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
-        </div>
-    `;
-}
-
-// Generate equipment card preview with immersive layout
-function generateEquipmentPreviewImmersive() {
-    const name = document.getElementById('cardName').value || 'Equipment Name';
-    const equipType = document.getElementById('equipmentType')?.value || 'Type';
-    const cost = document.getElementById('equipmentCost')?.value || '';
-    const weight = document.getElementById('equipmentWeight')?.value || '';
-    const additionalStats = document.getElementById('additionalStats').value || '';
-    const description = document.getElementById('description').value || '';
-
-    return `
-        <div class="card-image-background">
-            <img id="previewImage" src="" alt="Card Image">
-        </div>
-        <div class="immersive-overlay">
-            <div class="immersive-name">
-                <h2>${name}</h2>
-            </div>
-            <div class="immersive-type">
-                <span>${equipType}</span>
-            </div>
-            <div class="immersive-equipment-details">
-                ${cost ? '<div><strong>Cost:</strong> ' + cost + '</div>' : ''}
-                ${weight ? '<div><strong>Weight:</strong> ' + weight + '</div>' : ''}
-            </div>
-            ${additionalStats ? '<div class="immersive-additional-stats"><p>' + additionalStats + '</p></div>' : ''}
-            ${description ? '<div class="immersive-description"><p>' + description + '</p></div>' : ''}
-        </div>
-    `;
-}
-
 // Update back card based on layout and template
 function updateBackCard() {
-    const layoutStyle = cardLayoutSelect.value;
     const backCardContent = document.querySelector('.back-card-content');
 
     if (!backCardContent) return;
 
-    if (layoutStyle === 'immersive') {
-        // For immersive layout, show mirrored background image with additional content
-        const additionalStats = document.getElementById('additionalStats')?.value || '';
-        const description = document.getElementById('description')?.value || '';
+    // Standard back card with just the image
+    backCardContent.innerHTML = `
+        <img id="backCardPreviewImage" src="" alt="Back Card Design">
+    `;
 
-        // Create rich back card content
-        backCardContent.innerHTML = `
-            <div class="back-card-background">
-                <img id="backCardPreviewImage" src="" alt="Back Card Design">
-            </div>
-            <div class="back-card-overlay">
-                ${additionalStats ? '<div class="back-additional-stats"><h3>Additional Stats</h3><p>' + additionalStats + '</p></div>' : ''}
-                ${description ? '<div class="back-description"><h3>Description</h3><p>' + description + '</p></div>' : ''}
-            </div>
-        `;
-
-        // Apply back card image if available
-        const newBackImage = document.getElementById('backCardPreviewImage');
-        if (newBackImage) {
-            // First check if user uploaded a custom back card image
-            if (window.backCardImageData) {
-                newBackImage.src = window.backCardImageData;
-            }
-            // Otherwise use the front card image as mirrored background
-            else if (previewImage.src) {
-                newBackImage.src = previewImage.src;
-                newBackImage.style.transform = 'scaleX(-1)'; // Mirror the image
-            }
+    const newBackImage = document.getElementById('backCardPreviewImage');
+    if (newBackImage) {
+        // First check if user uploaded a custom back card image
+        if (window.backCardImageData) {
+            newBackImage.src = window.backCardImageData;
         }
-    } else {
-        // Standard back card with just the image
-        backCardContent.innerHTML = `
-            <img id="backCardPreviewImage" src="" alt="Back Card Design">
-        `;
-
-        const newBackImage = document.getElementById('backCardPreviewImage');
-        if (newBackImage) {
-            // First check if user uploaded a custom back card image
-            if (window.backCardImageData) {
-                newBackImage.src = window.backCardImageData;
-            }
-            // Otherwise leave it empty (default back card)
-        }
+        // Otherwise leave it empty (default back card)
     }
 }
 
@@ -1958,7 +1739,7 @@ function loadCardIntoEditor(cardData) {
     loadTemplate(cardData.template);
 
     // Set the layout
-    cardLayoutSelect.value = cardData.layout || 'immersive';
+    cardLayoutSelect.value = cardData.layout || 'three-column';
 
     // Restore all form field values
     if (cardData.formFields) {
@@ -2016,7 +1797,7 @@ function loadCardIntoEditor(cardData) {
     // Update the preview
     updatePreview();
 
-    // Restore background image styling if it was saved (for immersive layout)
+    // Restore background image styling if it was saved
     if (cardData.hasBackgroundImage && cardData.backgroundImage) {
         const card = document.getElementById('cardPreview');
         const root = document.documentElement;
@@ -2683,46 +2464,17 @@ function showPrintPreview() {
             backCardContent.className = 'back-card-content';
 
             // Generate back card to match preview behavior exactly
-            if (layoutStyle === 'immersive') {
-                // For immersive layout, show mirrored background image with additional content
-                // Create rich back card content (matches updateBackCard function)
-                const backCardHTML = `
-                    <div class="back-card-background">
-                        <img class="back-card-print-image" alt="Back Card Design">
-                    </div>
-                    <div class="back-card-overlay">
-                        ${additionalStats ? '<div class="back-additional-stats"><h3>Additional Stats</h3><p>' + additionalStats + '</p></div>' : ''}
-                        ${description ? '<div class="back-description"><h3>Description</h3><p>' + description + '</p></div>' : ''}
-                    </div>
-                `;
-                backCardContent.innerHTML = backCardHTML;
+            // Standard back card with just the image (matches updateBackCard function)
+            const imgElement = document.createElement('img');
+            imgElement.alt = 'Back Card Design';
 
-                // Apply back card image if available
-                const backImgElement = backCardContent.querySelector('.back-card-print-image');
-                if (backImgElement) {
-                    // First check if user uploaded a custom back card image
-                    if (backImage) {
-                        backImgElement.src = backImage;
-                    }
-                    // Otherwise use the front card image as mirrored background
-                    else if (frontCardImage) {
-                        backImgElement.src = frontCardImage;
-                        backImgElement.style.transform = 'scaleX(-1)'; // Mirror the image
-                    }
-                }
-            } else {
-                // Standard back card with just the image (matches updateBackCard function)
-                const imgElement = document.createElement('img');
-                imgElement.alt = 'Back Card Design';
-
-                // First check if user uploaded a custom back card image
-                if (backImage) {
-                    imgElement.src = backImage;
-                }
-                // Otherwise leave it empty (default back card)
-
-                backCardContent.appendChild(imgElement);
+            // First check if user uploaded a custom back card image
+            if (backImage) {
+                imgElement.src = backImage;
             }
+            // Otherwise leave it empty (default back card)
+
+            backCardContent.appendChild(imgElement);
 
             backCardDiv.appendChild(backCardContent);
             printCard.appendChild(backCardDiv);
