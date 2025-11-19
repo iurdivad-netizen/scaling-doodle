@@ -2554,11 +2554,14 @@ function showPrintPreview() {
             const card = threeColumnCards[i];
 
             // Generate the four distinct panels for this card
+            // Panels are printed in reverse order for proper Z-fold pattern:
+            // P4 | P3 | P2 | P1 (when laid flat)
+            // When folded: P1 shows on front
             const panels = [
-                card.html, // Panel 1 - Front (image + basic stats)
-                generatePrintThreeColumnBack1(card), // Panel 2 - spells
+                generatePrintThreeColumnBack3(card),  // Panel 4 - additional stats & description (leftmost)
                 generatePrintThreeColumnBack2(card), // Panel 3 - features & equipment
-                generatePrintThreeColumnBack3(card)  // Panel 4 - additional stats & description
+                generatePrintThreeColumnBack1(card), // Panel 2 - spells
+                card.html // Panel 1 - Front (image + basic stats) (rightmost)
             ];
 
             // Create 4 distinct panels for this card
@@ -2571,7 +2574,8 @@ function showPrintPreview() {
                 cardDiv.innerHTML = panelHTML;
 
                 // Apply background image styling if it was saved (only for front panel)
-                if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
+                // Front panel is now at index 3 (rightmost position)
+                if (index === 3 && card.hasBackgroundImage && card.backgroundImage) {
                     cardDiv.classList.add('image-as-background');
                     cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
                     cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.3');
