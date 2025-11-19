@@ -1768,7 +1768,7 @@ header p {
     .print-card-trifold .trifold-section-title,
     .print-card .trifold-section-title {
         font-weight: bold !important;
-        text-align: center !important;
+        text-align: left !important;
         margin-bottom: calc(var(--section-spacing) * 0.67) !important;
         font-size: var(--card-header-size) !important;
         color: var(--card-label-color) !important;
@@ -2089,7 +2089,7 @@ header p {
 
 .trifold-content .trifold-section-title {
     font-weight: bold;
-    text-align: center;
+    text-align: left;
     margin-bottom: calc(var(--section-spacing) * 0.67);
     font-size: var(--card-header-size);
     color: var(--card-label-color);
