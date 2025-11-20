@@ -1345,7 +1345,7 @@ header p {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 190mm;
+    grid-template-rows: 88.9mm;
     gap: 5mm;
     box-sizing: border-box;
 }
@@ -1353,12 +1353,12 @@ header p {
 /* Grid layout variations for different cards per page */
 .print-page.layout-1x2 {
     grid-template-columns: repeat(2, 1fr) !important;
-    grid-template-rows: 190mm !important;
+    grid-template-rows: 88.9mm !important;
 }
 
 .print-card {
-    width: 136mm;
-    height: 190mm;
+    width: 63.5mm;
+    height: 88.9mm;
     transform-origin: top left;
     overflow: hidden;
     position: relative;
@@ -1367,7 +1367,7 @@ header p {
 .print-card .card {
     width: 750px;
     height: 1050px;
-    transform: scale(0.685);
+    transform: scale(0.32);
     transform-origin: top left;
     margin: 0;
     box-sizing: border-box;
@@ -1545,9 +1545,9 @@ header p {
     padding: 0 !important;
 }
 
-/* Add vertical gap between rows only */
+/* Add minimal vertical gap between rows for easier cutting/folding */
 .print-page-fourpanel > :nth-child(n+5) {
-    margin-top: 4mm !important;
+    margin-top: 0.5mm !important;
 }
 
 /* Grid layout variations for trifold pages */
@@ -1966,7 +1966,7 @@ header p {
         box-shadow: none !important;
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
-        grid-template-rows: 190mm !important;
+        grid-template-rows: 88.9mm !important;
         gap: 5mm !important;
         box-sizing: border-box !important;
         background: white !important;
@@ -1975,7 +1975,7 @@ header p {
     /* Grid layout variations for different cards per page (print) */
     .print-page.layout-1x2 {
         grid-template-columns: repeat(2, 1fr) !important;
-        grid-template-rows: 190mm !important;
+        grid-template-rows: 88.9mm !important;
         min-height: 210mm !important;
     }
 
@@ -1984,8 +1984,8 @@ header p {
     }
 
     .print-card {
-        width: 136mm !important;
-        height: 190mm !important;
+        width: 63.5mm !important;
+        height: 88.9mm !important;
         transform-origin: top left !important;
         overflow: hidden !important;
         page-break-inside: avoid !important;
@@ -1995,7 +1995,7 @@ header p {
     .print-card .card {
         width: 750px !important;
         height: 1050px !important;
-        transform: scale(0.685) !important;
+        transform: scale(0.32) !important;
         transform-origin: top left !important;
         margin: 0 !important;
         display: flex !important;
@@ -2191,9 +2191,9 @@ header p {
         padding: 0 !important;
     }
 
-    /* Add vertical gap between rows only */
+    /* Add minimal vertical gap between rows for easier cutting/folding */
     .print-page-fourpanel > :nth-child(n+5) {
-        margin-top: 4mm !important;
+        margin-top: 0.5mm !important;
     }
 
     .print-page-fourpanel:last-child {
