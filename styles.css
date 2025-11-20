@@ -1401,7 +1401,8 @@ header p {
 .print-card .card-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1468,7 +1469,8 @@ header p {
 .print-card .back-card-print-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1508,7 +1510,8 @@ header p {
 .print-card .card-image-background img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1606,7 +1609,8 @@ header p {
 .print-card-trifold .card-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1673,7 +1677,8 @@ header p {
 .print-card-trifold .back-card-print-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1713,7 +1718,8 @@ header p {
 .print-card-trifold .card-image-background img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1762,7 +1768,8 @@ header p {
 .print-card-fourpanel .card-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1829,7 +1836,8 @@ header p {
 .print-card-fourpanel .back-card-print-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -1869,7 +1877,8 @@ header p {
 .print-card-fourpanel .card-image-background img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -2028,7 +2037,8 @@ header p {
     .print-card .card-image img {
         width: 100% !important;
         height: 100% !important;
-        object-fit: cover !important;
+        object-fit: var(--card-image-fit) !important;
+        object-position: var(--card-image-position) !important;
         display: block !important;
     }
 
@@ -2095,7 +2105,8 @@ header p {
     .print-card .back-card-print-image {
         width: 100% !important;
         height: 100% !important;
-        object-fit: cover !important;
+        object-fit: var(--card-image-fit) !important;
+        object-position: var(--card-image-position) !important;
         display: block !important;
     }
 
@@ -2135,7 +2146,8 @@ header p {
     .print-card .card-image-background img {
         width: 100% !important;
         height: 100% !important;
-        object-fit: cover !important;
+        object-fit: var(--card-image-fit) !important;
+        object-position: var(--card-image-position) !important;
         display: block !important;
     }
 
@@ -2848,7 +2860,8 @@ header p {
     opacity: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
     display: block;
 }
 
@@ -3128,7 +3141,8 @@ header p {
 .back-card-content img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
 }
 
 /* When no back image is set, show a decorative pattern */
