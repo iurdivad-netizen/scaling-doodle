@@ -2045,6 +2045,10 @@ function loadDeckFromFile(event) {
             console.log('Ensuring all imported cards have IDs...');
             await ensureAllCardsHaveIDs();
 
+            // Save the imported deck to IndexedDB so it persists after refresh
+            console.log('Saving imported deck to IndexedDB...');
+            await saveDeck();
+
             updateDeckCounter();
             showDeckModal(); // Refresh the modal
 
