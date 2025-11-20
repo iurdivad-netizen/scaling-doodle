@@ -55,6 +55,7 @@
     /* Image display settings */
     --card-image-fit: cover;
     --card-image-position: center;
+    --card-image-bg-color: #2c3e50;
 
     /* Print alignment */
     --print-alignment: -2px;
@@ -447,7 +448,7 @@ header p {
     width: 100%;
     height: var(--card-image-height); /* Proportional to 750x1050 size */
     overflow: hidden;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background: var(--card-image-bg-color);
     border-bottom: 2px solid var(--card-border-color);
     flex-shrink: 0;
 }
