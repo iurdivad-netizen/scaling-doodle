@@ -1785,8 +1785,11 @@ function loadCardIntoEditor(cardData) {
 
     // Restore image if present
     if (cardData.frontCardImage) {
-        previewImage.src = cardData.frontCardImage;
-        previewImage.style.display = 'block';
+        const currentPreviewImage = document.getElementById('previewImage');
+        if (currentPreviewImage) {
+            currentPreviewImage.src = cardData.frontCardImage;
+            currentPreviewImage.style.display = 'block';
+        }
         document.querySelector('input[name="imageSource"][value="url"]').checked = true;
     }
 
