@@ -1776,12 +1776,7 @@ function loadCardIntoEditor(cardData) {
         document.getElementById('cardNameColor').value = cardData.theme.cardNameColor;
         document.getElementById('backCardBgColor').value = cardData.theme.backCardBgColor;
 
-        // Handle image as background setting
-        const useImageBgCheckbox = document.getElementById('useImageAsBackground');
-        if (useImageBgCheckbox) {
-            useImageBgCheckbox.checked = cardData.theme.useImageAsBackground || false;
-        }
-
+        // Handle content opacity setting
         const contentOpacityInput = document.getElementById('contentOpacity');
         if (contentOpacityInput) {
             contentOpacityInput.value = cardData.theme.contentOpacity || 0.85;
@@ -2985,8 +2980,7 @@ function getCurrentTheme() {
     const cardNameColorElement = document.getElementById('cardNameColor');
     const dividerColorElement = document.getElementById('dividerColor');
 
-    // Background
-    const useImageAsBackgroundElement = document.getElementById('useImageAsBackground');
+    // Background (no longer using useImageAsBackground checkbox)
     const contentOpacityElement = document.getElementById('contentOpacity');
     const backCardBgColorElement = document.getElementById('backCardBgColor');
 
