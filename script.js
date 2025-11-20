@@ -1590,6 +1590,11 @@ async function loadDeck() {
 
     // Ensure all cards have unique IDs
     await ensureAllCardsHaveIDs();
+
+    // Normalize all cards to ensure they have required properties
+    normalizeImportedCards();
+
+    updateDeckCounter();
 }
 
 // Helper function to ensure all cards in deck have unique IDs
@@ -1633,6 +1638,81 @@ async function ensureAllCardsHaveIDs() {
         await saveDeck();
         console.log('Deck saved after ID assignment');
     }
+}
+
+// Normalize imported cards to ensure they have all required properties
+function normalizeImportedCards() {
+    deck.forEach(card => {
+        // Ensure theme exists with default values if missing
+        if (!card.theme || typeof card.theme !== 'object') {
+            card.theme = { ...defaultTheme };
+            console.log('Added default theme to card:', card.name);
+        } else {
+            // Fill in any missing theme properties with defaults
+            Object.keys(defaultTheme).forEach(key => {
+                if (card.theme[key] === undefined) {
+                    card.theme[key] = defaultTheme[key];
+                }
+            });
+        }
+
+        // Ensure frontCardImage exists (empty string if not present)
+        if (card.frontCardImage === undefined) {
+            card.frontCardImage = '';
+        }
+
+        // Ensure background image properties exist
+        if (card.hasBackgroundImage === undefined) {
+            card.hasBackgroundImage = false;
+        }
+        if (card.backgroundImage === undefined) {
+            card.backgroundImage = null;
+        }
+        if (card.contentOpacity === undefined) {
+            card.contentOpacity = null;
+        }
+
+        // Ensure horizontal stats layout property exists
+        if (card.hasHorizontalStatsLayout === undefined) {
+            card.hasHorizontalStatsLayout = false;
+        }
+
+        // Ensure back card properties exist
+        if (card.backCardImage === undefined) {
+            card.backCardImage = '';
+        }
+        if (card.backCardBgColor === undefined) {
+            card.backCardBgColor = '#2c3e50';
+        }
+
+        // Ensure additional stats properties exist
+        if (card.additionalStats === undefined) {
+            card.additionalStats = '';
+        }
+        if (card.description === undefined) {
+            card.description = '';
+        }
+
+        // Ensure image background color exists
+        if (card.imageBgColor === undefined) {
+            card.imageBgColor = '#2c3e50';
+        }
+
+        // Ensure timestamp exists
+        if (card.timestamp === undefined) {
+            card.timestamp = Date.now();
+        }
+
+        // Ensure template and layout have defaults
+        if (!card.template) {
+            card.template = 'dnd';
+        }
+        if (!card.layout) {
+            card.layout = 'standard';
+        }
+    });
+
+    console.log('All cards normalized with required properties');
 }
 
 // Save deck to IndexedDB
@@ -2040,6 +2120,10 @@ function loadDeckFromFile(event) {
             // Ensure all imported cards have unique IDs
             console.log('Ensuring all imported cards have IDs...');
             await ensureAllCardsHaveIDs();
+
+            // Normalize imported cards to ensure they have all required properties
+            console.log('Normalizing imported cards...');
+            normalizeImportedCards();
 
             // Save the imported deck to IndexedDB so it persists after refresh
             console.log('Saving imported deck to IndexedDB...');
