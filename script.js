@@ -4400,6 +4400,52 @@ function createCombatantCard(combatant, type) {
     const maxHP = combatant.maxHP;
     const initiative = combatant.initiative || 0;
 
+    // Extract additional stats from card data (will be empty for enemies without these fields)
+    const speed = isEnemy ? (combatant.speed || '--') : (cardData.formFields.speed || '--');
+    const str = isEnemy ? (combatant.str || '--') : (cardData.formFields.str || '--');
+    const dex = isEnemy ? (combatant.dex || '--') : (cardData.formFields.dex || '--');
+    const con = isEnemy ? (combatant.con || '--') : (cardData.formFields.con || '--');
+    const int = isEnemy ? (combatant.int || '--') : (cardData.formFields.int || '--');
+    const wis = isEnemy ? (combatant.wis || '--') : (cardData.formFields.wis || '--');
+    const cha = isEnemy ? (combatant.cha || '--') : (cardData.formFields.cha || '--');
+    const proficiency = isEnemy ? (combatant.proficiency || '--') : (cardData.formFields.proficiency || '--');
+    const passivePerception = isEnemy ? (combatant.passivePerception || '--') : (cardData.formFields.passivePerception || '--');
+    const savingThrows = isEnemy ? combatant.savingThrows : cardData.formFields.savingThrows;
+    const spellCombat = isEnemy ? combatant.spellCombat : cardData.formFields.spellCombat;
+    const spellSlots = isEnemy ? combatant.spellSlots : cardData.formFields.spellSlots;
+
+    // Build spell combat section if character has spell stats
+    let spellCombatHTML = '';
+    if (spellCombat) {
+        spellCombatHTML = `
+        <div class="combatant-spell-combat">
+            <div class="combatant-stat">
+                <span class="stat-label">Spell Combat:</span>
+                <span class="stat-value">${spellCombat}</span>
+            </div>
+        </div>`;
+    }
+
+    // Build spell slots section if character has spell slots
+    let spellSlotsHTML = '';
+    if (spellSlots) {
+        spellSlotsHTML = `
+        <div class="combatant-spell-slots">
+            <h5>Spell Slots</h5>
+            <div class="spell-slots-content">${spellSlots}</div>
+        </div>`;
+    }
+
+    // Build saving throws section if character has saving throws
+    let savingThrowsHTML = '';
+    if (savingThrows) {
+        savingThrowsHTML = `
+        <div class="combatant-saving-throws">
+            <h5>Saving Throws</h5>
+            <div class="saving-throws-content">${savingThrows}</div>
+        </div>`;
+    }
+
     // Check if this combatant's action panel should be open
     const isPanelOpen = combatState.openActionPanels[combatantId] || false;
     const panelDisplay = isPanelOpen ? 'block' : 'none';
@@ -4415,8 +4461,24 @@ function createCombatantCard(combatant, type) {
         </div>
         <div class="combatant-stats">
             <span class="combatant-stat">AC: ${ac}</span>
-            <span class="combatant-stat">Initiative: <input type="number" class="initiative-input" value="${initiative}" data-id="${combatantId}" data-type="${type}"></span>
+            <span class="combatant-stat">Speed: ${speed}</span>
         </div>
+        <div class="combatant-abilities">
+            <div class="combatant-ability"><span>STR</span> ${str}</div>
+            <div class="combatant-ability"><span>DEX</span> ${dex}</div>
+            <div class="combatant-ability"><span>CON</span> ${con}</div>
+            <div class="combatant-ability"><span>INT</span> ${int}</div>
+            <div class="combatant-ability"><span>WIS</span> ${wis}</div>
+            <div class="combatant-ability"><span>CHA</span> ${cha}</div>
+        </div>
+        <div class="combatant-combat-stats">
+            <span class="combatant-stat">Initiative: <input type="number" class="initiative-input" value="${initiative}" data-id="${combatantId}" data-type="${type}"></span>
+            <span class="combatant-stat">Proficiency: ${proficiency}</span>
+            <span class="combatant-stat">Passive Perception: ${passivePerception}</span>
+        </div>
+        ${savingThrowsHTML}
+        ${spellCombatHTML}
+        ${spellSlotsHTML}
         <div class="combatant-hp">
             <div class="hp-controls">
                 <button class="hp-btn-combat decrease" data-id="${combatantId}" data-type="${type}">−</button>
