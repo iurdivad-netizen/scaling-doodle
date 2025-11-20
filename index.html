@@ -568,6 +568,33 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                                     <label for="cardImageHeight">Image Height (px): <span id="cardImageHeightValue">240</span></label>
                                     <input type="range" id="cardImageHeight" min="150" max="600" step="10" value="240">
                                 </div>
+                                <div class="setting-row">
+                                    <label for="cardImageFit">Image Fit:</label>
+                                    <select id="cardImageFit">
+                                        <option value="cover">Cover (fill space, may crop)</option>
+                                        <option value="contain">Contain (fit within space)</option>
+                                        <option value="fill">Fill (stretch to fit)</option>
+                                        <option value="none">None (original size)</option>
+                                        <option value="scale-down">Scale Down (smaller of none or contain)</option>
+                                    </select>
+                                </div>
+                                <div class="setting-row">
+                                    <label for="cardImagePosition">Image Position:</label>
+                                    <select id="cardImagePosition">
+                                        <option value="center">Center</option>
+                                        <option value="top">Top</option>
+                                        <option value="bottom">Bottom</option>
+                                        <option value="left">Left</option>
+                                        <option value="right">Right</option>
+                                        <option value="top left">Top Left</option>
+                                        <option value="top right">Top Right</option>
+                                        <option value="bottom left">Bottom Left</option>
+                                        <option value="bottom right">Bottom Right</option>
+                                    </select>
+                                </div>
+                                <div class="setting-row">
+                                    <button id="autoFitImageBtn" class="btn btn-secondary" style="width: 100%;">Auto-Fit Image to Space</button>
+                                </div>
                             </div>
 
                             <!-- Background Image Settings -->
