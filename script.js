@@ -1705,25 +1705,8 @@ function captureCardState() {
         }
     });
 
-    // Get current theme settings from CSS variables
-    const root = document.documentElement;
-    const currentTheme = {
-        fontFamily: root.style.getPropertyValue('--card-font-family') || defaultTheme.fontFamily,
-        cardNameSize: parseFloat(root.style.getPropertyValue('--card-name-size')) || defaultTheme.cardNameSize,
-        cardHeaderSize: parseFloat(root.style.getPropertyValue('--card-header-size')) || defaultTheme.cardHeaderSize,
-        cardDescriptionSize: parseFloat(root.style.getPropertyValue('--card-description-size')) || defaultTheme.cardDescriptionSize,
-        cardStatLabelSize: parseFloat(root.style.getPropertyValue('--card-stat-label-size')) || defaultTheme.cardStatLabelSize,
-        cardImageHeight: parseFloat(root.style.getPropertyValue('--card-image-height')) || defaultTheme.cardImageHeight,
-        sectionSpacing: parseFloat(root.style.getPropertyValue('--section-spacing')) || defaultTheme.sectionSpacing,
-        cardBgColor: root.style.getPropertyValue('--card-bg-color') || defaultTheme.cardBgColor,
-        cardBorderColor: root.style.getPropertyValue('--card-border-color') || defaultTheme.cardBorderColor,
-        cardTextColor: root.style.getPropertyValue('--card-text-color') || defaultTheme.cardTextColor,
-        cardLabelColor: root.style.getPropertyValue('--card-label-color') || defaultTheme.cardLabelColor,
-        cardNameColor: root.style.getPropertyValue('--card-name-color') || defaultTheme.cardNameColor,
-        useImageAsBackground: cardPreview.classList.contains('image-as-background'),
-        contentOpacity: parseFloat(root.style.getPropertyValue('--content-opacity')) || defaultTheme.contentOpacity,
-        backCardBgColor: root.style.getPropertyValue('--back-card-bg-color') || defaultTheme.backCardBgColor
-    };
+    // Get current theme settings from UI controls (not CSS variables)
+    const currentTheme = getCurrentTheme();
 
     // Generate truly unique ID with counter
     cardIdCounter++;
@@ -1928,6 +1911,11 @@ function showDeckModal() {
                 }
             }
 
+            // Apply theme if it was saved with the card
+            if (cardData.theme) {
+                applyThemeToElement(cardDiv, cardData.theme);
+            }
+
             // Add click handler to load card into editor
             cardDiv.addEventListener('click', () => {
                 loadCardIntoEditor(cardData);
@@ -2114,11 +2102,21 @@ async function exportAllCards() {
                 }
             }
 
+            // Apply theme if it was saved with the card
+            if (cardData.theme) {
+                applyThemeToElement(tempCard, cardData.theme);
+            }
+
             // Apply background image styling if it was saved (for old "image-as-background" feature)
             if (cardData.hasBackgroundImage && cardData.backgroundImage) {
                 tempCard.classList.add('image-as-background');
                 tempCard.style.setProperty('--card-background-image', cardData.backgroundImage);
                 tempCard.style.setProperty('--content-opacity', cardData.contentOpacity || '0.85');
+            }
+
+            // Apply horizontal stats layout if it was saved
+            if (cardData.hasHorizontalStatsLayout) {
+                tempCard.classList.add('horizontal-stats');
             }
 
             document.body.appendChild(tempCard);
