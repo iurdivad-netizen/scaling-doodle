@@ -1235,6 +1235,9 @@ function attachEventListeners() {
                         document.documentElement.style.setProperty('--card-background-image', `url('${event.target.result}')`);
                     }
 
+                    // Update preview to ensure image displays on front panel
+                    updatePreview();
+
                     // Update back card to reflect new front card image
                     updateBackCard();
                 }
@@ -1295,6 +1298,9 @@ function attachEventListeners() {
                     if (useImageAsBackground && useImageAsBackground.checked) {
                         document.documentElement.style.setProperty('--card-background-image', `url('${url}')`);
                     }
+
+                    // Update preview to ensure image displays on front panel
+                    updatePreview();
 
                     // Update back card to reflect new front card image
                     updateBackCard();
