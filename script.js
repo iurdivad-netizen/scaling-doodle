@@ -1796,7 +1796,7 @@ function loadCardIntoEditor(cardData) {
 
         const contentOpacityInput = document.getElementById('contentOpacity');
         if (contentOpacityInput) {
-            contentOpacityInput.value = cardData.theme.contentOpacity || 0.3;
+            contentOpacityInput.value = cardData.theme.contentOpacity || 0.85;
         }
     }
 
@@ -1894,7 +1894,7 @@ function showDeckModal() {
             if (cardData.hasBackgroundImage && cardData.backgroundImage) {
                 cardDiv.classList.add('image-as-background');
                 cardDiv.style.setProperty('--card-background-image', cardData.backgroundImage);
-                cardDiv.style.setProperty('--content-opacity', cardData.contentOpacity || '0.3');
+                cardDiv.style.setProperty('--content-opacity', cardData.contentOpacity || '0.85');
                 cardDiv.style.background = 'none';
             }
 
@@ -2071,7 +2071,7 @@ async function exportAllCards() {
             if (cardData.hasBackgroundImage && cardData.backgroundImage) {
                 tempCard.classList.add('image-as-background');
                 tempCard.style.setProperty('--card-background-image', cardData.backgroundImage);
-                tempCard.style.setProperty('--content-opacity', cardData.contentOpacity || '0.3');
+                tempCard.style.setProperty('--content-opacity', cardData.contentOpacity || '0.85');
             }
 
             document.body.appendChild(tempCard);
@@ -2383,7 +2383,7 @@ function showPrintPreview() {
                 if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
                     cardDiv.classList.add('image-as-background');
                     cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
-                    cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.3');
+                    cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.85');
                     cardDiv.style.background = 'none';
                 }
 
@@ -2423,7 +2423,7 @@ function showPrintPreview() {
             if (regularCards[i].hasBackgroundImage && regularCards[i].backgroundImage) {
                 cardDiv.classList.add('image-as-background');
                 cardDiv.style.setProperty('--card-background-image', regularCards[i].backgroundImage);
-                cardDiv.style.setProperty('--content-opacity', regularCards[i].contentOpacity || '0.3');
+                cardDiv.style.setProperty('--content-opacity', regularCards[i].contentOpacity || '0.85');
                 cardDiv.style.background = 'none';
             }
 
@@ -2572,7 +2572,7 @@ const themePresets = {
         cardLabelColor: '#8b4513',
         cardNameColor: '#f4e4c1',
         useImageAsBackground: false,
-        contentOpacity: 0.3,
+        contentOpacity: 0.85,
         backCardImage: '',
         backCardBgColor: '#2c3e50'
     },
@@ -2596,7 +2596,7 @@ const themePresets = {
         cardLabelColor: '#5a6c7d',
         cardNameColor: '#2c3e50',
         useImageAsBackground: false,
-        contentOpacity: 0.3,
+        contentOpacity: 0.85,
         backCardImage: '',
         backCardBgColor: '#f8f9fa'
     },
@@ -2620,7 +2620,7 @@ const themePresets = {
         cardLabelColor: '#a0aec0',
         cardNameColor: '#ffd700',
         useImageAsBackground: false,
-        contentOpacity: 0.3,
+        contentOpacity: 0.85,
         backCardImage: '',
         backCardBgColor: '#0f0f0f'
     },
@@ -2644,7 +2644,7 @@ const themePresets = {
         cardLabelColor: '#666666',
         cardNameColor: '#1a1a1a',
         useImageAsBackground: false,
-        contentOpacity: 0.3,
+        contentOpacity: 0.85,
         backCardImage: '',
         backCardBgColor: '#f0f0f0'
     },
@@ -2668,7 +2668,7 @@ const themePresets = {
         cardLabelColor: '#8b6f47',
         cardNameColor: '#f4e8d0',
         useImageAsBackground: false,
-        contentOpacity: 0.3,
+        contentOpacity: 0.85,
         backCardImage: '',
         backCardBgColor: '#3d2817'
     },
@@ -2692,7 +2692,7 @@ const themePresets = {
         cardLabelColor: '#704214',
         cardNameColor: '#ffd700',
         useImageAsBackground: false,
-        contentOpacity: 0.3,
+        contentOpacity: 0.85,
         backCardImage: '',
         backCardBgColor: '#4a3728'
     },
@@ -2716,7 +2716,7 @@ const themePresets = {
         cardLabelColor: '#8b4513',
         cardNameColor: '#f4e4c1',
         useImageAsBackground: false,
-        contentOpacity: 0.3,
+        contentOpacity: 0.85,
         backCardImage: '',
         backCardBgColor: '#2c3e50'
     }
