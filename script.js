@@ -1490,12 +1490,34 @@ const DeckDB = {
                 return;
             }
 
-            const transaction = this.db.transaction([this.storeName], 'readwrite');
-            const objectStore = transaction.objectStore(this.storeName);
-            const request = objectStore.put({ id: 'mainDeck', data: deckData, timestamp: Date.now() });
+            try {
+                const transaction = this.db.transaction([this.storeName], 'readwrite');
+                const objectStore = transaction.objectStore(this.storeName);
 
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
+                // Create a clean copy of the data to avoid any serialization issues
+                const cleanData = JSON.parse(JSON.stringify(deckData));
+                const record = { id: 'mainDeck', data: cleanData, timestamp: Date.now() };
+
+                const request = objectStore.put(record);
+
+                request.onsuccess = () => {
+                    console.log('IndexedDB put operation successful');
+                    resolve();
+                };
+
+                request.onerror = () => {
+                    console.error('IndexedDB put operation failed:', request.error);
+                    reject(request.error);
+                };
+
+                transaction.onerror = () => {
+                    console.error('IndexedDB transaction failed:', transaction.error);
+                    reject(transaction.error);
+                };
+            } catch (e) {
+                console.error('Error preparing IndexedDB save:', e);
+                reject(e);
+            }
         });
     },
 
@@ -1544,15 +1566,18 @@ async function loadDeck() {
     try {
         // Initialize IndexedDB
         await DeckDB.init();
+        console.log('IndexedDB initialized successfully');
 
         // Check if we need to migrate from localStorage
         const hasLocalStorage = localStorage.getItem('cardDeck');
         if (hasLocalStorage) {
+            console.log('Found localStorage data, migrating to IndexedDB');
             await DeckDB.migrateFromLocalStorage();
         }
 
         // Load from IndexedDB
         deck = await DeckDB.loadDeck();
+        console.log('Loaded deck from IndexedDB with', deck.length, 'cards');
     } catch (e) {
         console.error('Failed to load deck from IndexedDB:', e);
 
@@ -1619,15 +1644,27 @@ async function ensureAllCardsHaveIDs() {
 // Save deck to IndexedDB
 async function saveDeck() {
     try {
+        console.log('Saving deck with', deck.length, 'cards');
+
+        // Validate deck data before saving
+        deck.forEach((card, index) => {
+            if (!card || typeof card !== 'object') {
+                console.error(`Invalid card at index ${index}:`, card);
+            }
+        });
+
         // Save to IndexedDB (much larger capacity than localStorage)
         await DeckDB.saveDeck(deck);
+        console.log('Deck saved successfully to IndexedDB');
 
         // Also try to save to localStorage as backup (if it fits)
         try {
-            localStorage.setItem('cardDeck', JSON.stringify(deck));
+            const deckJSON = JSON.stringify(deck);
+            localStorage.setItem('cardDeck', deckJSON);
+            console.log('Deck also saved to localStorage');
         } catch (localStorageError) {
             // Ignore localStorage quota errors - IndexedDB is our primary storage now
-            console.log('localStorage quota exceeded, using IndexedDB only');
+            console.log('localStorage quota exceeded, using IndexedDB only:', localStorageError.message);
         }
 
         // Show auto-save notification
@@ -1635,6 +1672,7 @@ async function saveDeck() {
     } catch (e) {
         // IndexedDB errors are rare but handle them gracefully
         console.error('Failed to save deck:', e);
+        console.error('Deck data:', deck);
         alert('Failed to save deck: ' + e.message + '\n\nTry exporting your deck to a file as a backup.');
     }
 }
