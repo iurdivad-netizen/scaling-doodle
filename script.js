@@ -189,6 +189,12 @@ function updatePreview() {
         }
     }
 
+    // Store whether background image was enabled before updating
+    const hadBackgroundImage = cardPreview.classList.contains('image-as-background');
+    const root = document.documentElement;
+    const savedBackgroundImage = hadBackgroundImage ? root.style.getPropertyValue('--card-background-image') : null;
+    const savedContentOpacity = hadBackgroundImage ? root.style.getPropertyValue('--content-opacity') : null;
+
     // Save the current image src before replacing innerHTML (previewImage reference will become stale)
     const oldPreviewImage = document.getElementById('previewImage');
     const savedImageSrc = oldPreviewImage ? oldPreviewImage.src : '';
@@ -200,6 +206,15 @@ function updatePreview() {
     if (newPreviewImage && savedImageSrc) {
         newPreviewImage.src = savedImageSrc;
         newPreviewImage.style.display = 'block';
+    }
+
+    // Restore background image styling if it was enabled
+    if (hadBackgroundImage && savedBackgroundImage) {
+        cardPreview.classList.add('image-as-background');
+        root.style.setProperty('--card-background-image', savedBackgroundImage);
+        if (savedContentOpacity) {
+            root.style.setProperty('--content-opacity', savedContentOpacity);
+        }
     }
 
     // Update back card
@@ -1299,6 +1314,11 @@ function attachEventListeners() {
         // Clear the URL input
         imageUrlInput.value = '';
 
+        // Clear background image if it was set
+        const root = document.documentElement;
+        root.style.setProperty('--card-background-image', 'none');
+        cardPreview.classList.remove('image-as-background');
+
         // Update back card to reflect removal
         updateBackCard();
 
@@ -1706,6 +1726,7 @@ function captureCardState() {
         cardTextColor: root.style.getPropertyValue('--card-text-color') || defaultTheme.cardTextColor,
         cardLabelColor: root.style.getPropertyValue('--card-label-color') || defaultTheme.cardLabelColor,
         cardNameColor: root.style.getPropertyValue('--card-name-color') || defaultTheme.cardNameColor,
+        useImageAsBackground: cardPreview.classList.contains('image-as-background'),
         contentOpacity: parseFloat(root.style.getPropertyValue('--content-opacity')) || defaultTheme.contentOpacity,
         backCardBgColor: root.style.getPropertyValue('--back-card-bg-color') || defaultTheme.backCardBgColor
     };
@@ -1723,7 +1744,14 @@ function captureCardState() {
         name: document.getElementById('cardName').value || 'Unnamed Card',
         formFields: formFields,
         theme: currentTheme,
+        hasBackgroundImage: cardPreview.classList.contains('image-as-background'),
         hasHorizontalStatsLayout: cardPreview.classList.contains('horizontal-stats'),
+        backgroundImage: window.cardBackgroundImageData
+            ? `url('${window.cardBackgroundImageData}')`
+            : null,
+        contentOpacity: cardPreview.classList.contains('image-as-background')
+            ? (root.style.getPropertyValue('--content-opacity') || '0.85')
+            : null,
         backCardImage: window.backCardImageData || '',
         backCardBgColor: document.getElementById('backCardBgColor').value || '#2c3e50',
         // Save additional content for back card
@@ -1798,6 +1826,30 @@ function loadCardIntoEditor(cardData) {
 
     // Update the preview
     updatePreview();
+
+    // Restore background image styling if it was saved
+    if (cardData.hasBackgroundImage && cardData.backgroundImage) {
+        const card = document.getElementById('cardPreview');
+        const root = document.documentElement;
+        card.classList.add('image-as-background');
+        root.style.setProperty('--card-background-image', cardData.backgroundImage);
+        if (cardData.contentOpacity) {
+            root.style.setProperty('--content-opacity', cardData.contentOpacity);
+        }
+
+        // Restore the background image data for future saves
+        // Extract the data URL from the url() wrapper
+        const match = cardData.backgroundImage.match(/url\(['"]?(.+?)['"]?\)/);
+        if (match && match[1]) {
+            window.cardBackgroundImageData = match[1];
+        }
+    } else {
+        // Clear background image if not present
+        window.cardBackgroundImageData = null;
+        const card = document.getElementById('cardPreview');
+        if (card) {
+            card.classList.remove('image-as-background');
+        }
     }
 
     // Restore horizontal stats layout if it was saved
@@ -1875,6 +1927,14 @@ function showDeckModal() {
             cardDiv.addEventListener('click', () => {
                 loadCardIntoEditor(cardData);
             });
+
+            // Apply background image styling if it was saved (for old "image-as-background" feature)
+            if (cardData.hasBackgroundImage && cardData.backgroundImage) {
+                cardDiv.classList.add('image-as-background');
+                cardDiv.style.setProperty('--card-background-image', cardData.backgroundImage);
+                cardDiv.style.setProperty('--content-opacity', cardData.contentOpacity || '0.85');
+                cardDiv.style.background = 'none';
+            }
 
             // Apply horizontal stats layout if it was saved
             if (cardData.hasHorizontalStatsLayout) {
@@ -2047,6 +2107,13 @@ async function exportAllCards() {
                 if (imgElement) {
                     imgElement.src = cardData.frontCardImage;
                 }
+            }
+
+            // Apply background image styling if it was saved (for old "image-as-background" feature)
+            if (cardData.hasBackgroundImage && cardData.backgroundImage) {
+                tempCard.classList.add('image-as-background');
+                tempCard.style.setProperty('--card-background-image', cardData.backgroundImage);
+                tempCard.style.setProperty('--content-opacity', cardData.contentOpacity || '0.85');
             }
 
             document.body.appendChild(tempCard);
@@ -2353,6 +2420,15 @@ function showPrintPreview() {
                 cardDiv.className = 'card';
                 cardDiv.innerHTML = panelHTML;
 
+                // Apply background image styling if it was saved (only for front panel)
+                // Front panel is at index 0 (leftmost position)
+                if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
+                    cardDiv.classList.add('image-as-background');
+                    cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
+                    cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.85');
+                    cardDiv.style.background = 'none';
+                }
+
                 // Apply horizontal stats layout if it was saved
                 if (card.hasHorizontalStatsLayout) {
                     cardDiv.classList.add('horizontal-stats');
@@ -2384,6 +2460,14 @@ function showPrintPreview() {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
             cardDiv.innerHTML = regularCards[i].html;
+
+            // Apply background image styling if it was saved
+            if (regularCards[i].hasBackgroundImage && regularCards[i].backgroundImage) {
+                cardDiv.classList.add('image-as-background');
+                cardDiv.style.setProperty('--card-background-image', regularCards[i].backgroundImage);
+                cardDiv.style.setProperty('--content-opacity', regularCards[i].contentOpacity || '0.85');
+                cardDiv.style.background = 'none';
+            }
 
             // Apply horizontal stats layout if it was saved
             if (regularCards[i].hasHorizontalStatsLayout) {
@@ -2734,6 +2818,9 @@ function applyTheme(theme) {
     root.style.setProperty('--divider-color', theme.dividerColor || '#c0a080');
     root.style.setProperty('--content-opacity', theme.contentOpacity !== undefined ? theme.contentOpacity : 0.85);
     root.style.setProperty('--back-card-bg-color', theme.backCardBgColor || '#2c3e50');
+
+    // Note: Background images are now handled separately via the dedicated background image upload
+    // The image-as-background class and CSS variable are managed by the backgroundImageUpload handler
 }
 
 // Apply horizontal stats layout
@@ -3430,6 +3517,59 @@ function initCustomization() {
             });
         }
     });
+
+    // Background image upload
+    const backgroundImageUploadElement = document.getElementById('backgroundImageUpload');
+    if (backgroundImageUploadElement) {
+        backgroundImageUploadElement.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const card = document.getElementById('cardPreview');
+                    const root = document.documentElement;
+
+                    if (card) {
+                        // Set the background image
+                        const imageUrl = `url('${event.target.result}')`;
+                        root.style.setProperty('--card-background-image', imageUrl);
+                        card.classList.add('image-as-background');
+
+                        // Store the background image data
+                        window.cardBackgroundImageData = event.target.result;
+
+                        console.log('Background image applied successfully');
+                        console.log('CSS Variable set to:', imageUrl.substring(0, 50) + '...');
+                        console.log('Card has class:', card.classList.contains('image-as-background'));
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Clear background image button
+    const clearBackgroundImageBtn = document.getElementById('clearBackgroundImageBtn');
+    if (clearBackgroundImageBtn) {
+        clearBackgroundImageBtn.addEventListener('click', function() {
+            const card = document.getElementById('cardPreview');
+            const root = document.documentElement;
+
+            if (card) {
+                card.classList.remove('image-as-background');
+                root.style.setProperty('--card-background-image', 'none');
+                window.cardBackgroundImageData = null;
+
+                // Clear the file input
+                const uploadInput = document.getElementById('backgroundImageUpload');
+                if (uploadInput) {
+                    uploadInput.value = '';
+                }
+
+                console.log('Background image cleared');
+            }
+        });
+    }
 
     // Horizontal stats layout checkbox
     const useHorizontalStatsLayoutElement = document.getElementById('useHorizontalStatsLayout');
