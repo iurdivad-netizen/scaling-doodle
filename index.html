@@ -601,10 +601,11 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                             <div class="customization-section">
                                 <h5>Background Image</h5>
                                 <div class="setting-row">
-                                    <label>
-                                        <input type="checkbox" id="useImageAsBackground">
-                                        Use Card Image as Background
-                                    </label>
+                                    <label>Upload Full Card Background Image:</label>
+                                    <input type="file" id="backgroundImageUpload" accept="image/*">
+                                </div>
+                                <div class="setting-row">
+                                    <button id="clearBackgroundImageBtn" class="btn btn-secondary" style="width: 100%;">Clear Background Image</button>
                                 </div>
                                 <div class="setting-row">
                                     <label for="contentOpacity">Content Overlay Darkness: <span id="contentOpacityValue">0.85</span></label>
