@@ -2934,8 +2934,8 @@ function updateCustomizationUI(theme) {
     }
 
     // Background
-    document.getElementById('useImageAsBackground').checked = theme.useImageAsBackground || false;
-    const opacity = theme.contentOpacity !== undefined ? theme.contentOpacity : 0.3;
+    // Background image setting (removed - now handled by dedicated upload)
+    const opacity = theme.contentOpacity !== undefined ? theme.contentOpacity : 0.85;
     document.getElementById('contentOpacity').value = opacity;
     document.getElementById('contentOpacityValue').textContent = opacity.toFixed(2);
     document.getElementById('backCardBgColor').value = theme.backCardBgColor || '#2c3e50';
@@ -3033,9 +3033,8 @@ function getCurrentTheme() {
         cardNameColor: cardNameColorElement ? cardNameColorElement.value : '#f4e4c1',
         dividerColor: dividerColorElement ? dividerColorElement.value : '#c0a080',
 
-        // Background
-        useImageAsBackground: useImageAsBackgroundElement ? useImageAsBackgroundElement.checked : false,
-        contentOpacity: contentOpacityElement ? parseFloat(contentOpacityElement.value) : 0.3,
+        // Background (no longer using useImageAsBackground - handled separately)
+        contentOpacity: contentOpacityElement ? parseFloat(contentOpacityElement.value) : 0.85,
         backCardImage: window.backCardImageData || '',
         backCardBgColor: backCardBgColorElement ? backCardBgColorElement.value : '#2c3e50'
     };
