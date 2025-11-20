@@ -1708,11 +1708,11 @@ function captureCardState() {
         theme: currentTheme,
         hasBackgroundImage: cardPreview.classList.contains('image-as-background'),
         hasHorizontalStatsLayout: cardPreview.classList.contains('horizontal-stats'),
-        backgroundImage: cardPreview.classList.contains('image-as-background')
-            ? getComputedStyle(document.documentElement).getPropertyValue('--card-background-image')
+        backgroundImage: window.cardBackgroundImageData
+            ? `url('${window.cardBackgroundImageData}')`
             : null,
         contentOpacity: cardPreview.classList.contains('image-as-background')
-            ? getComputedStyle(document.documentElement).getPropertyValue('--content-opacity')
+            ? (root.style.getPropertyValue('--content-opacity') || '0.85')
             : null,
         backCardImage: window.backCardImageData || '',
         backCardBgColor: document.getElementById('backCardBgColor').value || '#2c3e50',
@@ -1794,6 +1794,20 @@ function loadCardIntoEditor(cardData) {
         root.style.setProperty('--card-background-image', cardData.backgroundImage);
         if (cardData.contentOpacity) {
             root.style.setProperty('--content-opacity', cardData.contentOpacity);
+        }
+
+        // Restore the background image data for future saves
+        // Extract the data URL from the url() wrapper
+        const match = cardData.backgroundImage.match(/url\(['"]?(.+?)['"]?\)/);
+        if (match && match[1]) {
+            window.cardBackgroundImageData = match[1];
+        }
+    } else {
+        // Clear background image if not present
+        window.cardBackgroundImageData = null;
+        const card = document.getElementById('cardPreview');
+        if (card) {
+            card.classList.remove('image-as-background');
         }
     }
 
