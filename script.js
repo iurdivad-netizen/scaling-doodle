@@ -2415,6 +2415,11 @@ function showPrintPreview() {
                 cardDiv.className = 'card';
                 cardDiv.innerHTML = panelHTML;
 
+                // Apply theme if it was saved with the card
+                if (card.theme) {
+                    applyThemeToElement(cardDiv, card.theme);
+                }
+
                 // Apply background image styling if it was saved (only for front panel)
                 // Front panel is at index 0 (leftmost position)
                 if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
@@ -2456,6 +2461,11 @@ function showPrintPreview() {
             cardDiv.className = 'card';
             cardDiv.innerHTML = regularCards[i].html;
 
+            // Apply theme if it was saved with the card
+            if (regularCards[i].theme) {
+                applyThemeToElement(cardDiv, regularCards[i].theme);
+            }
+
             // Apply background image styling if it was saved
             if (regularCards[i].hasBackgroundImage && regularCards[i].backgroundImage) {
                 cardDiv.classList.add('image-as-background');
@@ -2490,6 +2500,11 @@ function showPrintPreview() {
 
             const backCardDiv = document.createElement('div');
             backCardDiv.className = 'card card-back';
+
+            // Apply theme if it was saved with the card
+            if (regularCards[i].theme) {
+                applyThemeToElement(backCardDiv, regularCards[i].theme);
+            }
 
             // Get back card data for this card
             const backImage = regularCards[i].backCardImage || '';
@@ -2817,6 +2832,60 @@ function applyTheme(theme) {
 
     // Note: Background images are now handled separately via the dedicated background image upload
     // The image-as-background class and CSS variable are managed by the backgroundImageUpload handler
+}
+
+// Apply theme CSS variables to a specific card element
+function applyThemeToElement(element, theme) {
+    if (!element || !theme) return;
+
+    // Font families
+    element.style.setProperty('--card-font-family', theme.fontFamily);
+    element.style.setProperty('--card-name-font-family', theme.fontFamily);
+    element.style.setProperty('--card-header-font-family', theme.fontFamily);
+    element.style.setProperty('--card-content-font-family', theme.fontFamily);
+
+    // Font sizes
+    element.style.setProperty('--card-name-size', theme.cardNameSize + 'em');
+    element.style.setProperty('--card-header-size', theme.cardHeaderSize + 'em');
+    element.style.setProperty('--card-description-size', theme.cardDescriptionSize + 'em');
+    element.style.setProperty('--card-stat-label-size', theme.cardStatLabelSize + 'em');
+    element.style.setProperty('--card-stat-value-size', (theme.cardStatValueSize || theme.cardStatLabelSize) + 'em');
+    element.style.setProperty('--card-ability-name-size', (theme.cardAbilityNameSize || 1.1) + 'em');
+    element.style.setProperty('--card-ability-value-size', (theme.cardAbilityValueSize || 1.0) + 'em');
+
+    // Line heights
+    element.style.setProperty('--card-name-line-height', theme.cardNameLineHeight || 1.2);
+    element.style.setProperty('--card-header-line-height', theme.cardHeaderLineHeight || 1.2);
+    element.style.setProperty('--card-stat-line-height', theme.cardStatLineHeight || 1.3);
+    element.style.setProperty('--card-description-line-height', theme.cardDescriptionLineHeight || 1.5);
+
+    // Section sizes and spacing
+    element.style.setProperty('--card-image-height', theme.cardImageHeight + 'px');
+    element.style.setProperty('--section-spacing', theme.sectionSpacing + 'px');
+    element.style.setProperty('--stat-row-spacing', (theme.statRowSpacing !== undefined ? theme.statRowSpacing : 6) + 'px');
+    element.style.setProperty('--ability-grid-gap', (theme.abilityGridGap !== undefined ? theme.abilityGridGap : 8) + 'px');
+
+    // Image display
+    element.style.setProperty('--card-image-fit', theme.cardImageFit || 'cover');
+    element.style.setProperty('--card-image-position', theme.cardImagePosition || 'center');
+    element.style.setProperty('--card-image-bg-color', theme.imageBgColor || '#2c3e50');
+
+    // Padding and border
+    const paddingV = theme.cardContentPaddingV !== undefined ? theme.cardContentPaddingV : 16;
+    const paddingH = theme.cardContentPaddingH !== undefined ? theme.cardContentPaddingH : 20;
+    element.style.setProperty('--card-content-padding', `${paddingV}px ${paddingH}px`);
+    element.style.setProperty('--card-border-radius', (theme.cardBorderRadius !== undefined ? theme.cardBorderRadius : 8) + 'px');
+
+    // Colors
+    element.style.setProperty('--card-bg-color', theme.cardBgColor);
+    element.style.setProperty('--card-border-color', theme.cardBorderColor);
+    element.style.setProperty('--card-text-color', theme.cardTextColor);
+    element.style.setProperty('--card-label-color', theme.cardLabelColor);
+    element.style.setProperty('--card-header-color', theme.cardHeaderColor || theme.cardLabelColor);
+    element.style.setProperty('--card-name-color', theme.cardNameColor);
+    element.style.setProperty('--divider-color', theme.dividerColor || '#c0a080');
+    element.style.setProperty('--content-opacity', theme.contentOpacity !== undefined ? theme.contentOpacity : 0.85);
+    element.style.setProperty('--back-card-bg-color', theme.backCardBgColor || '#2c3e50');
 }
 
 // Apply horizontal stats layout
