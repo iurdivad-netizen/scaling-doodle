@@ -2415,6 +2415,14 @@ function showPrintPreview() {
                 cardDiv.className = 'card';
                 cardDiv.innerHTML = panelHTML;
 
+                // Restore the front card image if it was saved (only for front panel)
+                if (index === 0 && card.frontCardImage) {
+                    const imgElement = cardDiv.querySelector('#previewImage');
+                    if (imgElement) {
+                        imgElement.src = card.frontCardImage;
+                    }
+                }
+
                 // Apply theme if it was saved with the card
                 if (card.theme) {
                     applyThemeToElement(cardDiv, card.theme);
@@ -2460,6 +2468,14 @@ function showPrintPreview() {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
             cardDiv.innerHTML = regularCards[i].html;
+
+            // Restore the front card image if it was saved
+            if (regularCards[i].frontCardImage) {
+                const imgElement = cardDiv.querySelector('#previewImage');
+                if (imgElement) {
+                    imgElement.src = regularCards[i].frontCardImage;
+                }
+            }
 
             // Apply theme if it was saved with the card
             if (regularCards[i].theme) {
