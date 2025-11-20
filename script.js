@@ -3472,13 +3472,16 @@ function initCustomization() {
 
                     if (card) {
                         // Set the background image
-                        root.style.setProperty('--card-background-image', `url('${event.target.result}')`);
+                        const imageUrl = `url('${event.target.result}')`;
+                        root.style.setProperty('--card-background-image', imageUrl);
                         card.classList.add('image-as-background');
 
                         // Store the background image data
                         window.cardBackgroundImageData = event.target.result;
 
                         console.log('Background image applied successfully');
+                        console.log('CSS Variable set to:', imageUrl.substring(0, 50) + '...');
+                        console.log('Card has class:', card.classList.contains('image-as-background'));
                     }
                 };
                 reader.readAsDataURL(file);
