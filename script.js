@@ -3921,6 +3921,29 @@ function updateAdventurePartyDisplay() {
 
         const charCard = document.createElement('div');
         charCard.className = 'party-character-card';
+
+        // Build spell combat section if character has spell stats
+        let spellCombatHTML = '';
+        if (card.formFields.spellCombat) {
+            spellCombatHTML = `
+            <div class="party-spell-combat">
+                <div class="party-stat">
+                    <span class="stat-label">Spell Combat:</span>
+                    <span class="stat-value">${card.formFields.spellCombat}</span>
+                </div>
+            </div>`;
+        }
+
+        // Build spell slots section if character has spell slots
+        let spellSlotsHTML = '';
+        if (card.formFields.spellSlots) {
+            spellSlotsHTML = `
+            <div class="party-spell-slots">
+                <h4>Spell Slots</h4>
+                <div class="spell-slots-content">${card.formFields.spellSlots}</div>
+            </div>`;
+        }
+
         charCard.innerHTML = `
             <div class="party-char-header">
                 <div>
@@ -3949,6 +3972,31 @@ function updateAdventurePartyDisplay() {
                 <div class="party-ability"><span>WIS</span> ${card.formFields.wis || '--'}</div>
                 <div class="party-ability"><span>CHA</span> ${card.formFields.cha || '--'}</div>
             </div>
+
+            <div class="party-combat-stats">
+                <div class="party-stat">
+                    <span class="stat-label">Initiative:</span>
+                    <span class="stat-value">${card.formFields.initiative || '--'}</span>
+                </div>
+                <div class="party-stat">
+                    <span class="stat-label">Proficiency:</span>
+                    <span class="stat-value">${card.formFields.proficiency || '--'}</span>
+                </div>
+                <div class="party-stat">
+                    <span class="stat-label">Passive Perception:</span>
+                    <span class="stat-value">${card.formFields.passivePerception || '--'}</span>
+                </div>
+            </div>
+
+            ${card.formFields.savingThrows ? `
+            <div class="party-saving-throws">
+                <h4>Saving Throws</h4>
+                <div class="saving-throws-content">${card.formFields.savingThrows}</div>
+            </div>` : ''}
+
+            ${spellCombatHTML}
+
+            ${spellSlotsHTML}
 
             <div class="party-hp-section">
                 <h4>Hit Points</h4>
