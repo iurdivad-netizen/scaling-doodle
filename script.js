@@ -80,6 +80,7 @@ const imageUploadInput = document.getElementById('imageUpload');
 const imageUrlInput = document.getElementById('imageUrl');
 const loadImageBtn = document.getElementById('loadImageBtn');
 const clearImageBtn = document.getElementById('clearImageBtn');
+const imageBgColorInput = document.getElementById('imageBgColor');
 const imageSourceRadios = document.getElementsByName('imageSource');
 const resetBtn = document.getElementById('resetBtn');
 const exportBtn = document.getElementById('exportBtn');
@@ -1255,6 +1256,12 @@ function attachEventListeners() {
         });
     });
 
+    // Image background color picker
+    imageBgColorInput.addEventListener('input', function(e) {
+        const color = e.target.value;
+        cardPreview.style.setProperty('--card-image-bg-color', color);
+    });
+
     // Load image from URL
     loadImageBtn.addEventListener('click', function() {
         const url = imageUrlInput.value.trim();
@@ -1758,7 +1765,9 @@ function captureCardState() {
         additionalStats: document.getElementById('additionalStats')?.value || '',
         description: document.getElementById('description')?.value || '',
         // Save front card image for back card mirroring
-        frontCardImage: document.getElementById('previewImage')?.src || ''
+        frontCardImage: document.getElementById('previewImage')?.src || '',
+        // Save image panel background color
+        imageBgColor: document.getElementById('imageBgColor')?.value || '#2c3e50'
     };
     return cardData;
 }
@@ -1796,6 +1805,15 @@ function loadCardIntoEditor(cardData) {
     // Restore back card image if present
     if (cardData.backCardImage) {
         window.backCardImageData = cardData.backCardImage;
+    }
+
+    // Restore image panel background color
+    if (cardData.imageBgColor) {
+        const imageBgColorInput = document.getElementById('imageBgColor');
+        if (imageBgColorInput) {
+            imageBgColorInput.value = cardData.imageBgColor;
+            cardPreview.style.setProperty('--card-image-bg-color', cardData.imageBgColor);
+        }
     }
 
     // Restore theme settings
@@ -2801,6 +2819,7 @@ function applyTheme(theme) {
     // Image display
     root.style.setProperty('--card-image-fit', theme.cardImageFit || 'cover');
     root.style.setProperty('--card-image-position', theme.cardImagePosition || 'center');
+    root.style.setProperty('--card-image-bg-color', theme.imageBgColor || '#2c3e50');
 
     // Padding and border
     const paddingV = theme.cardContentPaddingV !== undefined ? theme.cardContentPaddingV : 16;
@@ -2923,6 +2942,11 @@ function updateCustomizationUI(theme) {
     const imagePositionElement = document.getElementById('cardImagePosition');
     if (imagePositionElement) {
         imagePositionElement.value = theme.cardImagePosition || 'center';
+    }
+
+    const imageBgColorElement = document.getElementById('imageBgColor');
+    if (imageBgColorElement) {
+        imageBgColorElement.value = theme.imageBgColor || '#2c3e50';
     }
 
     document.getElementById('sectionSpacing').value = theme.sectionSpacing;
@@ -3071,6 +3095,7 @@ function getCurrentTheme() {
         // Image display
         cardImageFit: cardImageFitElement ? cardImageFitElement.value : 'cover',
         cardImagePosition: cardImagePositionElement ? cardImagePositionElement.value : 'center',
+        imageBgColor: imageBgColorInput ? imageBgColorInput.value : '#2c3e50',
 
         // Padding and border
         cardContentPaddingV: cardContentPaddingVElement ? parseInt(cardContentPaddingVElement.value) : 16,
