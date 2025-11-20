@@ -1410,19 +1410,6 @@ function attachEventListeners() {
     alignRightBtn.addEventListener('click', adjustAlignmentRight);
     resetAlignmentBtn.addEventListener('click', resetPrintAlignment);
 
-    // Cards per page selector - regenerate preview on change
-    const cardsPerPageSelect = document.getElementById('cardsPerPageSelect');
-    if (cardsPerPageSelect) {
-        cardsPerPageSelect.addEventListener('change', () => {
-            // Only regenerate if print modal is visible
-            if (printModal.classList.contains('active')) {
-                showPrintPreview();
-                // Don't open the modal again, just update content
-                printModal.classList.add('active');
-            }
-        });
-    }
-
     // Close modals on outside click
     deckModal.addEventListener('click', (e) => {
         if (e.target === deckModal) {
@@ -2390,19 +2377,9 @@ function showPrintPreview() {
         }
     });
 
-    // Get cards per page from selector
-    const cardsPerPageSelect = document.getElementById('cardsPerPageSelect');
-    const cardsPerPage = parseInt(cardsPerPageSelect?.value || 9);
-
-    // Determine grid layout based on cards per page
-    let gridLayout;
-    if (cardsPerPage === 3) {
-        gridLayout = 'layout-1x3'; // 1 row x 3 columns
-    } else if (cardsPerPage === 6) {
-        gridLayout = 'layout-2x3'; // 2 rows x 3 columns
-    } else {
-        gridLayout = 'layout-3x3'; // 3 rows x 3 columns (default)
-    }
+    // Fixed layout: 2 cards per landscape sheet
+    const cardsPerPage = 2;
+    const gridLayout = 'layout-1x2'; // 1 row x 2 columns
 
     // Process four-panel cards - 2 cards per A4 landscape page
     // Each page has a 4x2 grid (4 columns for panels, 2 rows for cards)
