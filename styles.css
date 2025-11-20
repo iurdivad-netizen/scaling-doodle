@@ -1547,7 +1547,7 @@ header p {
 
 /* Add minimal vertical gap between rows for easier cutting/folding */
 .print-page-fourpanel > :nth-child(n+5) {
-    margin-top: 1mm !important;
+    margin-top: 0.5mm !important;
 }
 
 /* Grid layout variations for trifold pages */
@@ -2193,7 +2193,7 @@ header p {
 
     /* Add minimal vertical gap between rows for easier cutting/folding */
     .print-page-fourpanel > :nth-child(n+5) {
-        margin-top: 1mm !important;
+        margin-top: 0.5mm !important;
     }
 
     .print-page-fourpanel:last-child {
