@@ -1229,17 +1229,6 @@ function attachEventListeners() {
                     };
                     tempImg.src = event.target.result;
 
-                    // Update background image if feature is enabled
-                    const useImageAsBackground = document.getElementById('useImageAsBackground');
-                    if (useImageAsBackground && useImageAsBackground.checked) {
-                        document.documentElement.style.setProperty('--card-background-image', `url('${event.target.result}')`);
-                        // Add the class immediately so updatePreview() can save the state
-                        const card = document.getElementById('cardPreview');
-                        if (card) {
-                            card.classList.add('image-as-background');
-                        }
-                    }
-
                     // Update preview to ensure image displays on front panel
                     updatePreview();
 
@@ -1296,17 +1285,6 @@ function attachEventListeners() {
                         // Apply the theme with new height
                         const theme = getCurrentTheme();
                         applyTheme(theme);
-                    }
-
-                    // Update background image if feature is enabled
-                    const useImageAsBackground = document.getElementById('useImageAsBackground');
-                    if (useImageAsBackground && useImageAsBackground.checked) {
-                        document.documentElement.style.setProperty('--card-background-image', `url('${url}')`);
-                        // Add the class immediately so updatePreview() can save the state
-                        const card = document.getElementById('cardPreview');
-                        if (card) {
-                            card.classList.add('image-as-background');
-                        }
                     }
 
                     // Update preview to ensure image displays on front panel
@@ -2784,39 +2762,11 @@ function applyTheme(theme) {
     root.style.setProperty('--card-header-color', theme.cardHeaderColor || theme.cardLabelColor);
     root.style.setProperty('--card-name-color', theme.cardNameColor);
     root.style.setProperty('--divider-color', theme.dividerColor || '#c0a080');
-    root.style.setProperty('--content-opacity', theme.contentOpacity !== undefined ? theme.contentOpacity : 0.3);
+    root.style.setProperty('--content-opacity', theme.contentOpacity !== undefined ? theme.contentOpacity : 0.85);
     root.style.setProperty('--back-card-bg-color', theme.backCardBgColor || '#2c3e50');
 
-    // Apply image as background setting
-    const card = document.getElementById('cardPreview');
-    if (card) {
-        const cardImageSection = card.querySelector('.card-image') || card.querySelector('.card-image-background');
-
-        if (theme.useImageAsBackground) {
-            // Lock the current height before applying background mode
-            if (cardImageSection) {
-                const currentHeight = cardImageSection.offsetHeight;
-                cardImageSection.style.height = currentHeight + 'px';
-                cardImageSection.style.minHeight = currentHeight + 'px';
-            }
-
-            card.classList.add('image-as-background');
-            // Set the background image from the current card image
-            const cardImage = document.getElementById('previewImage');
-            if (cardImage && cardImage.src) {
-                root.style.setProperty('--card-background-image', `url('${cardImage.src}')`);
-            }
-        } else {
-            // Remove inline height styles when disabling background mode
-            if (cardImageSection) {
-                cardImageSection.style.height = '';
-                cardImageSection.style.minHeight = '';
-            }
-
-            card.classList.remove('image-as-background');
-            root.style.setProperty('--card-background-image', 'none');
-        }
-    }
+    // Note: Background images are now handled separately via the dedicated background image upload
+    // The image-as-background class and CSS variable are managed by the backgroundImageUpload handler
 }
 
 // Apply horizontal stats layout
@@ -3516,42 +3466,52 @@ function initCustomization() {
         }
     });
 
-    // Image as background checkbox
-    const useImageAsBackgroundElement = document.getElementById('useImageAsBackground');
-    if (useImageAsBackgroundElement) {
-        useImageAsBackgroundElement.addEventListener('change', function() {
+    // Background image upload
+    const backgroundImageUploadElement = document.getElementById('backgroundImageUpload');
+    if (backgroundImageUploadElement) {
+        backgroundImageUploadElement.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const card = document.getElementById('cardPreview');
+                    const root = document.documentElement;
+
+                    if (card) {
+                        // Set the background image
+                        root.style.setProperty('--card-background-image', `url('${event.target.result}')`);
+                        card.classList.add('image-as-background');
+
+                        // Store the background image data
+                        window.cardBackgroundImageData = event.target.result;
+
+                        console.log('Background image applied successfully');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Clear background image button
+    const clearBackgroundImageBtn = document.getElementById('clearBackgroundImageBtn');
+    if (clearBackgroundImageBtn) {
+        clearBackgroundImageBtn.addEventListener('click', function() {
             const card = document.getElementById('cardPreview');
-            const cardImage = document.getElementById('previewImage');
             const root = document.documentElement;
 
-            if (this.checked) {
-                // Enable background mode
-                if (card && cardImage && cardImage.src) {
-                    card.classList.add('image-as-background');
-                    root.style.setProperty('--card-background-image', `url('${cardImage.src}')`);
-                    // Lock the image height
-                    const cardImageSection = card.querySelector('.card-image');
-                    if (cardImageSection) {
-                        const currentHeight = cardImageSection.offsetHeight;
-                        cardImageSection.style.height = currentHeight + 'px';
-                        cardImageSection.style.minHeight = currentHeight + 'px';
-                    }
-                } else {
-                    alert('Please upload an image first before enabling background mode.');
-                    this.checked = false;
+            if (card) {
+                card.classList.remove('image-as-background');
+                root.style.setProperty('--card-background-image', 'none');
+                window.cardBackgroundImageData = null;
+
+                // Clear the file input
+                const uploadInput = document.getElementById('backgroundImageUpload');
+                if (uploadInput) {
+                    uploadInput.value = '';
                 }
-            } else {
-                // Disable background mode
-                if (card) {
-                    card.classList.remove('image-as-background');
-                    root.style.setProperty('--card-background-image', 'none');
-                    // Remove inline height styles
-                    const cardImageSection = card.querySelector('.card-image');
-                    if (cardImageSection) {
-                        cardImageSection.style.height = '';
-                        cardImageSection.style.minHeight = '';
-                    }
-                }
+
+                console.log('Background image cleared');
             }
         });
     }
