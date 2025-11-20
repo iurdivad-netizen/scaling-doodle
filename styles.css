@@ -49,7 +49,7 @@
     --card-description-line-height: 1.5;
 
     /* Background image settings */
-    --content-opacity: 0.95;
+    --content-opacity: 0.85;
     --back-card-bg-color: #2c3e50;
 
     /* Image display settings */
@@ -2427,11 +2427,11 @@ header p {
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: 100% 100%;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-image: var(--card-background-image, none);
-    opacity: var(--content-opacity);
+    opacity: 1;
     z-index: 0;
     pointer-events: none;
 }
@@ -2464,11 +2464,12 @@ header p {
 .card.image-as-background .card-name-overlay {
     position: absolute;
     z-index: 2;
+    background: linear-gradient(to top, rgba(0, 0, 0, var(--content-opacity)), rgba(0, 0, 0, calc(var(--content-opacity) * 0.5)));
 }
 
 /* Make card type/alignment readable over background image */
 .card.image-as-background .card-type {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity)), rgba(0, 0, 0, calc(var(--content-opacity) * 0.8)));
     color: var(--card-name-color);
     padding: 8px 12px;
     border-radius: 4px;
@@ -2478,7 +2479,7 @@ header p {
 
 /* Apply NAME section scheme to stats section */
 .card.image-as-background .card-stats {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity)), rgba(0, 0, 0, calc(var(--content-opacity) * 0.9)));
     padding: 12px;
     border-radius: 6px;
 }
@@ -2501,7 +2502,7 @@ header p {
 
 /* Apply NAME section scheme to ability scores */
 .card.image-as-background .ability-scores-display {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity)), rgba(0, 0, 0, calc(var(--content-opacity) * 0.9)));
     padding: 12px;
     border-radius: 6px;
 }
@@ -2626,13 +2627,13 @@ header p {
 
 /* Three-Column Front Panel Background Mode Styles */
 .card.image-as-background .trifold-front {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity)), rgba(0, 0, 0, calc(var(--content-opacity) * 0.9)));
     padding: var(--card-content-padding);
     border-radius: 6px;
 }
 
 .card.image-as-background .trifold-front .card-type {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, calc(var(--content-opacity) * 1.1)), rgba(0, 0, 0, var(--content-opacity)));
     color: var(--card-name-color);
     padding: 8px 12px;
     border-radius: 4px;
@@ -2647,7 +2648,7 @@ header p {
 }
 
 .card.image-as-background .trifold-front .stat-list {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity)), rgba(0, 0, 0, calc(var(--content-opacity) * 0.9)));
     padding: 12px;
     border-radius: 6px;
 }
@@ -2672,7 +2673,7 @@ header p {
 }
 
 .card.image-as-background .trifold-front .ability-scores-section {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity)), rgba(0, 0, 0, calc(var(--content-opacity) * 0.9)));
     padding: 12px;
     border-radius: 6px;
     margin: calc(var(--section-spacing) * 0.83) 0;
