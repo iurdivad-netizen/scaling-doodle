@@ -1336,36 +1336,29 @@ header p {
 }
 
 .print-page {
-    width: 210mm;
-    height: 297mm;
+    width: 297mm;
+    height: 210mm;
     padding: 10mm;
     padding-left: calc(10mm + var(--print-alignment));
     margin: 0 auto 20px;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 88mm);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 190mm;
     gap: 5mm;
     box-sizing: border-box;
 }
 
 /* Grid layout variations for different cards per page */
-.print-page.layout-1x3 {
-    grid-template-rows: 88mm !important;
-}
-
-.print-page.layout-2x3 {
-    grid-template-rows: repeat(2, 88mm) !important;
-}
-
-.print-page.layout-3x3 {
-    grid-template-rows: repeat(3, 88mm) !important;
+.print-page.layout-1x2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: 190mm !important;
 }
 
 .print-card {
-    width: 63mm;
-    height: 88mm;
+    width: 136mm;
+    height: 190mm;
     transform-origin: top left;
     overflow: hidden;
     position: relative;
@@ -1374,7 +1367,7 @@ header p {
 .print-card .card {
     width: 750px;
     height: 1050px;
-    transform: scale(0.317);
+    transform: scale(0.685);
     transform-origin: top left;
     margin: 0;
     box-sizing: border-box;
@@ -1960,10 +1953,10 @@ header p {
     }
 
     .print-page {
-        width: 210mm !important;
+        width: 297mm !important;
         height: auto !important;
-        min-height: 297mm !important;
-        max-height: 297mm !important;
+        min-height: 210mm !important;
+        max-height: 210mm !important;
         padding: 10mm !important;
         padding-left: calc(10mm + var(--print-alignment)) !important;
         margin: 0 !important;
@@ -1972,27 +1965,18 @@ header p {
         page-break-inside: avoid !important;
         box-shadow: none !important;
         display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        grid-template-rows: repeat(3, 88mm) !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-rows: 190mm !important;
         gap: 5mm !important;
         box-sizing: border-box !important;
         background: white !important;
     }
 
     /* Grid layout variations for different cards per page (print) */
-    .print-page.layout-1x3 {
-        grid-template-rows: 88mm !important;
-        min-height: auto !important;
-    }
-
-    .print-page.layout-2x3 {
-        grid-template-rows: repeat(2, 88mm) !important;
-        min-height: auto !important;
-    }
-
-    .print-page.layout-3x3 {
-        grid-template-rows: repeat(3, 88mm) !important;
-        min-height: 297mm !important;
+    .print-page.layout-1x2 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-rows: 190mm !important;
+        min-height: 210mm !important;
     }
 
     .print-page:last-child {
@@ -2000,8 +1984,8 @@ header p {
     }
 
     .print-card {
-        width: 63mm !important;
-        height: 88mm !important;
+        width: 136mm !important;
+        height: 190mm !important;
         transform-origin: top left !important;
         overflow: hidden !important;
         page-break-inside: avoid !important;
@@ -2011,7 +1995,7 @@ header p {
     .print-card .card {
         width: 750px !important;
         height: 1050px !important;
-        transform: scale(0.317) !important;
+        transform: scale(0.685) !important;
         transform-origin: top left !important;
         margin: 0 !important;
         display: flex !important;
