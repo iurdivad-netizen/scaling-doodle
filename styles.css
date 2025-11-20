@@ -3694,6 +3694,69 @@ header p {
     font-weight: bold;
 }
 
+.combatant-abilities {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.combatant-ability {
+    background: white;
+    border: 2px solid #8b4513;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.combatant-ability span {
+    display: block;
+    font-weight: bold;
+    color: #8b4513;
+    margin-bottom: 4px;
+}
+
+.combatant-combat-stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.combatant-saving-throws,
+.combatant-spell-combat,
+.combatant-spell-slots {
+    background: white;
+    border: 2px solid #8b4513;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.combatant-saving-throws h5,
+.combatant-spell-slots h5 {
+    color: #8b4513;
+    margin: 0 0 10px 0;
+    font-size: 1em;
+}
+
+.saving-throws-content,
+.spell-slots-content {
+    color: #555;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.combatant-spell-combat .stat-label {
+    font-weight: bold;
+    color: #8b4513;
+}
+
+.combatant-spell-combat .stat-value {
+    color: #555;
+}
+
 .combatant-hp {
     background: white;
     padding: 12px;
