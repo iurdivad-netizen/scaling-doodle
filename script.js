@@ -2563,6 +2563,8 @@ const themePresets = {
         cardAbilityNameSize: 1.1,
         cardAbilityValueSize: 1.0,
         cardImageHeight: 240,
+        cardImageFit: 'cover',
+        cardImagePosition: 'center',
         sectionSpacing: 12,
         cardBgColor: '#f9f6f0',
         cardBorderColor: '#8b4513',
@@ -2585,6 +2587,8 @@ const themePresets = {
         cardAbilityNameSize: 1.15,
         cardAbilityValueSize: 1.05,
         cardImageHeight: 280,
+        cardImageFit: 'cover',
+        cardImagePosition: 'center',
         sectionSpacing: 16,
         cardBgColor: '#ffffff',
         cardBorderColor: '#e0e0e0',
@@ -2607,6 +2611,8 @@ const themePresets = {
         cardAbilityNameSize: 1.1,
         cardAbilityValueSize: 1.05,
         cardImageHeight: 250,
+        cardImageFit: 'cover',
+        cardImagePosition: 'center',
         sectionSpacing: 14,
         cardBgColor: '#1a1a1a',
         cardBorderColor: '#4a5568',
@@ -2629,6 +2635,8 @@ const themePresets = {
         cardAbilityNameSize: 1.0,
         cardAbilityValueSize: 0.95,
         cardImageHeight: 220,
+        cardImageFit: 'cover',
+        cardImagePosition: 'center',
         sectionSpacing: 18,
         cardBgColor: '#fafafa',
         cardBorderColor: '#d1d1d1',
@@ -2651,6 +2659,8 @@ const themePresets = {
         cardAbilityNameSize: 1.1,
         cardAbilityValueSize: 1.05,
         cardImageHeight: 240,
+        cardImageFit: 'cover',
+        cardImagePosition: 'center',
         sectionSpacing: 12,
         cardBgColor: '#f4e8d0',
         cardBorderColor: '#6b4423',
@@ -2673,6 +2683,8 @@ const themePresets = {
         cardAbilityNameSize: 1.05,
         cardAbilityValueSize: 1.0,
         cardImageHeight: 260,
+        cardImageFit: 'cover',
+        cardImagePosition: 'center',
         sectionSpacing: 14,
         cardBgColor: '#c9b99b',
         cardBorderColor: '#8b5a00',
@@ -2695,6 +2707,8 @@ const themePresets = {
         cardAbilityNameSize: 1.1,
         cardAbilityValueSize: 1.0,
         cardImageHeight: 240,
+        cardImageFit: 'cover',
+        cardImagePosition: 'center',
         sectionSpacing: 12,
         cardBgColor: '#f9f6f0',
         cardBorderColor: '#8b4513',
@@ -2741,6 +2755,10 @@ function applyTheme(theme) {
     root.style.setProperty('--section-spacing', theme.sectionSpacing + 'px');
     root.style.setProperty('--stat-row-spacing', (theme.statRowSpacing !== undefined ? theme.statRowSpacing : 6) + 'px');
     root.style.setProperty('--ability-grid-gap', (theme.abilityGridGap !== undefined ? theme.abilityGridGap : 8) + 'px');
+
+    // Image display
+    root.style.setProperty('--card-image-fit', theme.cardImageFit || 'cover');
+    root.style.setProperty('--card-image-position', theme.cardImagePosition || 'center');
 
     // Padding and border
     const paddingV = theme.cardContentPaddingV !== undefined ? theme.cardContentPaddingV : 16;
@@ -2882,6 +2900,17 @@ function updateCustomizationUI(theme) {
     document.getElementById('cardImageHeight').value = theme.cardImageHeight;
     document.getElementById('cardImageHeightValue').textContent = theme.cardImageHeight;
 
+    // Image display
+    const imageFitElement = document.getElementById('cardImageFit');
+    if (imageFitElement) {
+        imageFitElement.value = theme.cardImageFit || 'cover';
+    }
+
+    const imagePositionElement = document.getElementById('cardImagePosition');
+    if (imagePositionElement) {
+        imagePositionElement.value = theme.cardImagePosition || 'center';
+    }
+
     document.getElementById('sectionSpacing').value = theme.sectionSpacing;
     document.getElementById('sectionSpacingValue').textContent = theme.sectionSpacing;
 
@@ -2978,6 +3007,10 @@ function getCurrentTheme() {
     const statRowSpacingElement = document.getElementById('statRowSpacing');
     const abilityGridGapElement = document.getElementById('abilityGridGap');
 
+    // Image display
+    const cardImageFitElement = document.getElementById('cardImageFit');
+    const cardImagePositionElement = document.getElementById('cardImagePosition');
+
     // Padding and border
     const cardContentPaddingVElement = document.getElementById('cardContentPaddingV');
     const cardContentPaddingHElement = document.getElementById('cardContentPaddingH');
@@ -3021,6 +3054,10 @@ function getCurrentTheme() {
         sectionSpacing: sectionSpacingElement ? parseInt(sectionSpacingElement.value) : 12,
         statRowSpacing: statRowSpacingElement ? parseInt(statRowSpacingElement.value) : 6,
         abilityGridGap: abilityGridGapElement ? parseInt(abilityGridGapElement.value) : 8,
+
+        // Image display
+        cardImageFit: cardImageFitElement ? cardImageFitElement.value : 'cover',
+        cardImagePosition: cardImagePositionElement ? cardImagePositionElement.value : 'center',
 
         // Padding and border
         cardContentPaddingV: cardContentPaddingVElement ? parseInt(cardContentPaddingVElement.value) : 16,
@@ -3507,6 +3544,63 @@ function initCustomization() {
             const theme = getCurrentTheme();
             applyTheme(theme);
             updatePreview(); // Force preview update to apply theme changes
+        });
+    }
+
+    // Image fit control
+    const cardImageFitElement = document.getElementById('cardImageFit');
+    if (cardImageFitElement) {
+        cardImageFitElement.addEventListener('change', function() {
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+            updatePreview(); // Force preview update to apply theme changes
+        });
+    }
+
+    // Image position control
+    const cardImagePositionElement = document.getElementById('cardImagePosition');
+    if (cardImagePositionElement) {
+        cardImagePositionElement.addEventListener('change', function() {
+            const theme = getCurrentTheme();
+            applyTheme(theme);
+            updatePreview(); // Force preview update to apply theme changes
+        });
+    }
+
+    // Auto-fit image button
+    const autoFitImageBtn = document.getElementById('autoFitImageBtn');
+    if (autoFitImageBtn) {
+        autoFitImageBtn.addEventListener('click', function() {
+            const img = document.getElementById('previewImage');
+            if (img && img.src && img.naturalWidth && img.naturalHeight) {
+                const cardWidth = 750; // CSS variable --card-width
+                const aspectRatio = img.naturalHeight / img.naturalWidth;
+                let calculatedHeight = Math.round(cardWidth * aspectRatio);
+
+                // Clamp between 150 and 600
+                calculatedHeight = Math.max(150, Math.min(600, calculatedHeight));
+
+                // Update the slider and value display
+                const heightSlider = document.getElementById('cardImageHeight');
+                const heightValue = document.getElementById('cardImageHeightValue');
+                if (heightSlider && heightValue) {
+                    heightSlider.value = calculatedHeight;
+                    heightValue.textContent = calculatedHeight;
+
+                    // Set image fit to 'contain' for best results
+                    const imageFit = document.getElementById('cardImageFit');
+                    if (imageFit) {
+                        imageFit.value = 'contain';
+                    }
+
+                    // Apply the theme with new height and fit
+                    const theme = getCurrentTheme();
+                    applyTheme(theme);
+                    updatePreview();
+                }
+            } else {
+                alert('Please upload an image first before using auto-fit.');
+            }
         });
     }
 
