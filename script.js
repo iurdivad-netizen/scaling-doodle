@@ -1233,6 +1233,11 @@ function attachEventListeners() {
                     const useImageAsBackground = document.getElementById('useImageAsBackground');
                     if (useImageAsBackground && useImageAsBackground.checked) {
                         document.documentElement.style.setProperty('--card-background-image', `url('${event.target.result}')`);
+                        // Add the class immediately so updatePreview() can save the state
+                        const card = document.getElementById('cardPreview');
+                        if (card) {
+                            card.classList.add('image-as-background');
+                        }
                     }
 
                     // Update preview to ensure image displays on front panel
@@ -1297,6 +1302,11 @@ function attachEventListeners() {
                     const useImageAsBackground = document.getElementById('useImageAsBackground');
                     if (useImageAsBackground && useImageAsBackground.checked) {
                         document.documentElement.style.setProperty('--card-background-image', `url('${url}')`);
+                        // Add the class immediately so updatePreview() can save the state
+                        const card = document.getElementById('cardPreview');
+                        if (card) {
+                            card.classList.add('image-as-background');
+                        }
                     }
 
                     // Update preview to ensure image displays on front panel
@@ -3510,9 +3520,39 @@ function initCustomization() {
     const useImageAsBackgroundElement = document.getElementById('useImageAsBackground');
     if (useImageAsBackgroundElement) {
         useImageAsBackgroundElement.addEventListener('change', function() {
-            const theme = getCurrentTheme();
-            applyTheme(theme);
-            updatePreview(); // Force preview update to apply theme changes
+            const card = document.getElementById('cardPreview');
+            const cardImage = document.getElementById('previewImage');
+            const root = document.documentElement;
+
+            if (this.checked) {
+                // Enable background mode
+                if (card && cardImage && cardImage.src) {
+                    card.classList.add('image-as-background');
+                    root.style.setProperty('--card-background-image', `url('${cardImage.src}')`);
+                    // Lock the image height
+                    const cardImageSection = card.querySelector('.card-image');
+                    if (cardImageSection) {
+                        const currentHeight = cardImageSection.offsetHeight;
+                        cardImageSection.style.height = currentHeight + 'px';
+                        cardImageSection.style.minHeight = currentHeight + 'px';
+                    }
+                } else {
+                    alert('Please upload an image first before enabling background mode.');
+                    this.checked = false;
+                }
+            } else {
+                // Disable background mode
+                if (card) {
+                    card.classList.remove('image-as-background');
+                    root.style.setProperty('--card-background-image', 'none');
+                    // Remove inline height styles
+                    const cardImageSection = card.querySelector('.card-image');
+                    if (cardImageSection) {
+                        cardImageSection.style.height = '';
+                        cardImageSection.style.minHeight = '';
+                    }
+                }
+            }
         });
     }
 
