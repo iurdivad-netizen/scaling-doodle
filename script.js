@@ -2463,8 +2463,8 @@ function showPrintPreview() {
     const cardsPerPage = 2;
     const gridLayout = 'layout-1x2'; // 1 row x 2 columns
 
-    // Process 4-panel cards (front + 3 panels) using card preview layout - 2 cards per page
-    const cardsPerFourPanelPage = 2;
+    // Process 4-panel cards (front + 3 panels) using card preview layout - 3 cards per page
+    const cardsPerFourPanelPage = 3;
     const totalFourPanelPages = Math.ceil(threeColumnCards.length / cardsPerFourPanelPage);
 
     for (let page = 0; page < totalFourPanelPages; page++) {
@@ -2474,7 +2474,7 @@ function showPrintPreview() {
         const startIdx = page * cardsPerFourPanelPage;
         const endIdx = Math.min(startIdx + cardsPerFourPanelPage, threeColumnCards.length);
 
-        // Process up to 2 cards on this page
+        // Process up to 3 cards on this page
         for (let i = startIdx; i < endIdx; i++) {
             const card = threeColumnCards[i];
 
