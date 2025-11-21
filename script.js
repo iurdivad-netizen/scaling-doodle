@@ -1677,6 +1677,11 @@ function normalizeImportedCards() {
             card.hasHorizontalStatsLayout = false;
         }
 
+        // Ensure front image fills background property exists
+        if (card.hasFrontImageFillsBackground === undefined) {
+            card.hasFrontImageFillsBackground = false;
+        }
+
         // Ensure back card properties exist
         if (card.backCardImage === undefined) {
             card.backCardImage = '';
@@ -1803,6 +1808,7 @@ function captureCardState() {
         theme: currentTheme,
         hasBackgroundImage: cardPreview.classList.contains('image-as-background'),
         hasHorizontalStatsLayout: cardPreview.classList.contains('horizontal-stats'),
+        hasFrontImageFillsBackground: cardPreview.classList.contains('front-image-fills-background'),
         backgroundImage: window.cardBackgroundImageData
             ? `url('${window.cardBackgroundImageData}')`
             : null,
@@ -1935,6 +1941,27 @@ function loadCardIntoEditor(cardData) {
         applyHorizontalStatsLayout(false);
     }
 
+    // Restore front image fills background if it was saved
+    if (cardData.hasFrontImageFillsBackground) {
+        const imageFillsBackgroundCheckbox = document.getElementById('imageFillsBackground');
+        if (imageFillsBackgroundCheckbox) {
+            imageFillsBackgroundCheckbox.checked = true;
+        }
+        const card = document.getElementById('cardPreview');
+        if (card) {
+            card.classList.add('front-image-fills-background');
+        }
+    } else {
+        const imageFillsBackgroundCheckbox = document.getElementById('imageFillsBackground');
+        if (imageFillsBackgroundCheckbox) {
+            imageFillsBackgroundCheckbox.checked = false;
+        }
+        const card = document.getElementById('cardPreview');
+        if (card) {
+            card.classList.remove('front-image-fills-background');
+        }
+    }
+
     // Close the deck modal
     deckModal.classList.remove('active');
 
@@ -2012,6 +2039,11 @@ function showDeckModal() {
             // Apply horizontal stats layout if it was saved
             if (cardData.hasHorizontalStatsLayout) {
                 cardDiv.classList.add('horizontal-stats');
+            }
+
+            // Apply front image fills background if it was saved
+            if (cardData.hasFrontImageFillsBackground) {
+                cardDiv.classList.add('front-image-fills-background');
             }
 
             cardContainer.appendChild(removeBtn);
@@ -2201,6 +2233,11 @@ async function exportAllCards() {
             // Apply horizontal stats layout if it was saved
             if (cardData.hasHorizontalStatsLayout) {
                 tempCard.classList.add('horizontal-stats');
+            }
+
+            // Apply front image fills background if it was saved
+            if (cardData.hasFrontImageFillsBackground) {
+                tempCard.classList.add('front-image-fills-background');
             }
 
             document.body.appendChild(tempCard);
@@ -2526,6 +2563,11 @@ function showPrintPreview() {
                     cardDiv.classList.add('horizontal-stats');
                 }
 
+                // Apply front image fills background if it was saved (only for front panel)
+                if (index === 0 && card.hasFrontImageFillsBackground) {
+                    cardDiv.classList.add('front-image-fills-background');
+                }
+
                 cardsDisplay.appendChild(cardDiv);
             });
 
@@ -2578,6 +2620,11 @@ function showPrintPreview() {
             // Apply horizontal stats layout if it was saved
             if (regularCards[i].hasHorizontalStatsLayout) {
                 cardDiv.classList.add('horizontal-stats');
+            }
+
+            // Apply front image fills background if it was saved
+            if (regularCards[i].hasFrontImageFillsBackground) {
+                cardDiv.classList.add('front-image-fills-background');
             }
 
             printCard.appendChild(cardDiv);
@@ -3091,6 +3138,20 @@ function updateCustomizationUI(theme) {
         imagePositionElement.value = theme.cardImagePosition || 'center';
     }
 
+    const imageFillsBackgroundElement = document.getElementById('imageFillsBackground');
+    if (imageFillsBackgroundElement) {
+        imageFillsBackgroundElement.checked = theme.imageFillsBackground || false;
+        // Apply or remove the class based on the theme
+        const cardPreview = document.getElementById('cardPreview');
+        if (cardPreview) {
+            if (theme.imageFillsBackground) {
+                cardPreview.classList.add('front-image-fills-background');
+            } else {
+                cardPreview.classList.remove('front-image-fills-background');
+            }
+        }
+    }
+
     const imageBgColorElement = document.getElementById('imageBgColor');
     if (imageBgColorElement) {
         imageBgColorElement.value = theme.imageBgColor || '#2c3e50';
@@ -3195,6 +3256,7 @@ function getCurrentTheme() {
     // Image display
     const cardImageFitElement = document.getElementById('cardImageFit');
     const cardImagePositionElement = document.getElementById('cardImagePosition');
+    const imageFillsBackgroundElement = document.getElementById('imageFillsBackground');
 
     // Padding and border
     const cardContentPaddingVElement = document.getElementById('cardContentPaddingV');
@@ -3242,6 +3304,7 @@ function getCurrentTheme() {
         // Image display
         cardImageFit: cardImageFitElement ? cardImageFitElement.value : 'cover',
         cardImagePosition: cardImagePositionElement ? cardImagePositionElement.value : 'center',
+        imageFillsBackground: imageFillsBackgroundElement ? imageFillsBackgroundElement.checked : false,
         imageBgColor: imageBgColorInput ? imageBgColorInput.value : '#2c3e50',
 
         // Padding and border
@@ -3827,6 +3890,22 @@ function initCustomization() {
                 }
             } else {
                 alert('Please upload an image first before using auto-fit.');
+            }
+        });
+    }
+
+    // Image fills background checkbox
+    const imageFillsBackgroundElement = document.getElementById('imageFillsBackground');
+    if (imageFillsBackgroundElement) {
+        imageFillsBackgroundElement.addEventListener('change', function() {
+            const cardPreview = document.getElementById('cardPreview');
+            if (cardPreview) {
+                if (this.checked) {
+                    cardPreview.classList.add('front-image-fills-background');
+                } else {
+                    cardPreview.classList.remove('front-image-fills-background');
+                }
+                updatePreview();
             }
         });
     }
