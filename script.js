@@ -2463,74 +2463,65 @@ function showPrintPreview() {
     const cardsPerPage = 2;
     const gridLayout = 'layout-1x2'; // 1 row x 2 columns
 
-    // Process four-panel cards - 2 cards per A4 landscape page
-    // Each page has a 4x2 grid (4 columns for panels, 2 rows for cards)
-    const cardsPerFourPanelPage = 2;
-    const totalFourPanelPages = Math.ceil(threeColumnCards.length / cardsPerFourPanelPage);
-
-    for (let page = 0; page < totalFourPanelPages; page++) {
+    // Process three-column cards using card preview layout - 1 card per page
+    threeColumnCards.forEach(card => {
         const printPage = document.createElement('div');
-        printPage.className = 'print-page print-page-fourpanel';
+        printPage.className = 'print-page print-page-card-preview';
 
-        const startIdx = page * cardsPerFourPanelPage;
-        const endIdx = Math.min(startIdx + cardsPerFourPanelPage, threeColumnCards.length);
+        // Create cards display container (like the main editor preview)
+        const cardsDisplay = document.createElement('div');
+        cardsDisplay.className = 'cards-display three-column';
 
-        // Process up to 2 cards on this page
-        for (let i = startIdx; i < endIdx; i++) {
-            const card = threeColumnCards[i];
+        // Generate the four distinct panels for this card
+        const panels = [
+            { html: card.html, isFront: true }, // Panel 1 - Front (image + basic stats)
+            { html: generatePrintThreeColumnBack1(card), isFront: false }, // Panel 2 - spells
+            { html: generatePrintThreeColumnBack2(card), isFront: false }, // Panel 3 - features & equipment
+            { html: generatePrintThreeColumnBack3(card), isFront: false }  // Panel 4 - additional stats & description
+        ];
 
-            // Generate the four distinct panels for this card in original order
-            // P1 | P2 | P3 | P4 (when laid flat)
-            const panels = [
-                card.html, // Panel 1 - Front (image + basic stats) (leftmost)
-                generatePrintThreeColumnBack1(card), // Panel 2 - spells
-                generatePrintThreeColumnBack2(card), // Panel 3 - features & equipment
-                generatePrintThreeColumnBack3(card)  // Panel 4 - additional stats & description (rightmost)
-            ];
+        // Create 4 distinct panels for this card
+        panels.forEach((panel, index) => {
+            const cardDiv = document.createElement('div');
+            if (index === 0) {
+                cardDiv.className = 'card card-front';
+            } else {
+                cardDiv.className = 'card card-front trifold-panel';
+            }
+            cardDiv.innerHTML = panel.html;
 
-            // Create 4 distinct panels for this card
-            panels.forEach((panelHTML, index) => {
-                const printCard = document.createElement('div');
-                printCard.className = 'print-card print-card-fourpanel';
-
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'card';
-                cardDiv.innerHTML = panelHTML;
-
-                // Restore the front card image if it was saved (only for front panel)
-                if (index === 0 && card.frontCardImage) {
-                    const imgElement = cardDiv.querySelector('#previewImage');
-                    if (imgElement) {
-                        imgElement.src = card.frontCardImage;
-                    }
+            // Restore the front card image if it was saved (only for front panel)
+            if (index === 0 && card.frontCardImage) {
+                const imgElement = cardDiv.querySelector('#previewImage');
+                if (imgElement) {
+                    imgElement.src = card.frontCardImage;
                 }
+            }
 
-                // Apply theme if it was saved with the card
-                if (card.theme) {
-                    applyThemeToElement(cardDiv, card.theme);
-                }
+            // Apply theme if it was saved with the card
+            if (card.theme) {
+                applyThemeToElement(cardDiv, card.theme);
+            }
 
-                // Apply background image styling if it was saved (only for front panel)
-                // Front panel is at index 0 (leftmost position)
-                if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
-                    cardDiv.classList.add('image-as-background');
-                    cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
-                    cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.85');
-                    cardDiv.style.background = 'none';
-                }
+            // Apply background image styling if it was saved (only for front panel)
+            if (index === 0 && card.hasBackgroundImage && card.backgroundImage) {
+                cardDiv.classList.add('image-as-background');
+                cardDiv.style.setProperty('--card-background-image', card.backgroundImage);
+                cardDiv.style.setProperty('--content-opacity', card.contentOpacity || '0.85');
+                cardDiv.style.background = 'none';
+            }
 
-                // Apply horizontal stats layout if it was saved
-                if (card.hasHorizontalStatsLayout) {
-                    cardDiv.classList.add('horizontal-stats');
-                }
+            // Apply horizontal stats layout if it was saved
+            if (card.hasHorizontalStatsLayout) {
+                cardDiv.classList.add('horizontal-stats');
+            }
 
-                printCard.appendChild(cardDiv);
-                printPage.appendChild(printCard);
-            });
-        }
+            cardsDisplay.appendChild(cardDiv);
+        });
 
+        printPage.appendChild(cardsDisplay);
         printContent.appendChild(printPage);
-    }
+    });
 
     // Process regular cards
     const totalPages = Math.ceil(regularCards.length / cardsPerPage);
