@@ -1571,6 +1571,7 @@ header p {
     transform: scale(0.5);
     transform-origin: center;
     height: 420px;
+    padding-left: 225px;
 }
 
 .print-page-card-preview .cards-display.three-column .card-front {
@@ -2269,6 +2270,7 @@ header p {
         height: 420px !important;
         margin: 0 !important;
         padding: 0 !important;
+        padding-left: 225px !important;
     }
 
     .print-page-card-preview .cards-display.three-column .card-front {
