@@ -1550,7 +1550,7 @@ header p {
     margin-top: 0.5mm !important;
 }
 
-/* Card preview layout for print - matches the main editor preview */
+/* 4-panel (front + 3 panels) layout for print preview */
 .print-page-card-preview {
     width: 297mm;
     height: 210mm;
@@ -1564,9 +1564,19 @@ header p {
     overflow: hidden;
 }
 
-.print-page-card-preview .cards-display {
-    transform: scale(0.5);
+.print-page-card-preview .cards-display.three-column {
+    transform: scale(0.63);
     transform-origin: center;
+    height: 420px;
+}
+
+.print-page-card-preview .cards-display.three-column .card-front {
+    transform: scale(0.4);
+    margin-right: -450px;
+}
+
+.print-page-card-preview .cards-display.three-column .card-front:last-of-type {
+    margin-right: 0;
 }
 
 /* Grid layout variations for trifold pages */
@@ -2219,7 +2229,7 @@ header p {
         page-break-after: auto !important;
     }
 
-    /* Card preview layout for print - matches the main editor preview */
+    /* 4-panel (front + 3 panels) layout for print media */
     .print-page-card-preview {
         width: 297mm !important;
         height: 210mm !important;
@@ -2241,27 +2251,38 @@ header p {
         page-break-after: auto !important;
     }
 
-    .print-page-card-preview .cards-display {
-        transform: scale(0.5) !important;
+    .print-page-card-preview .cards-display.three-column {
+        transform: scale(0.63) !important;
         transform-origin: center !important;
         display: flex !important;
+        flex-direction: row !important;
         gap: 0 !important;
         justify-content: center !important;
         align-items: flex-start !important;
         flex-wrap: nowrap !important;
         overflow: visible !important;
-        height: auto !important;
+        height: 420px !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
-    .print-page-card-preview .cards-display .card {
-        transform: scale(1) !important;
+    .print-page-card-preview .cards-display.three-column .card-front {
+        transform: scale(0.4) !important;
+        transform-origin: top left !important;
         margin: 0 !important;
+        margin-right: -450px !important;
         border-right: 1px dashed #ccc !important;
         page-break-inside: avoid !important;
+        flex-shrink: 0 !important;
     }
 
-    .print-page-card-preview .cards-display .card:last-child {
+    .print-page-card-preview .cards-display.three-column .card-front:last-of-type {
+        margin-right: 0 !important;
         border-right: none !important;
+    }
+
+    .print-page-card-preview .cards-display.three-column .card-back {
+        display: none !important;
     }
 
     /* Grid layout variations for trifold pages (print) */
