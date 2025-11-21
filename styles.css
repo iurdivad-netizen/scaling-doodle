@@ -1550,6 +1550,25 @@ header p {
     margin-top: 0.5mm !important;
 }
 
+/* Card preview layout for print - matches the main editor preview */
+.print-page-card-preview {
+    width: 297mm;
+    height: 210mm;
+    margin: 0 auto 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.print-page-card-preview .cards-display {
+    transform: scale(0.5);
+    transform-origin: center;
+}
+
 /* Grid layout variations for trifold pages */
 .print-page-trifold.layout-1x3 {
     grid-template-rows: 88mm !important;
@@ -2198,6 +2217,51 @@ header p {
 
     .print-page-fourpanel:last-child {
         page-break-after: auto !important;
+    }
+
+    /* Card preview layout for print - matches the main editor preview */
+    .print-page-card-preview {
+        width: 297mm !important;
+        height: 210mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        page-break-after: always !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
+        box-shadow: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        background: white !important;
+        overflow: hidden !important;
+    }
+
+    .print-page-card-preview:last-child {
+        page-break-after: auto !important;
+    }
+
+    .print-page-card-preview .cards-display {
+        transform: scale(0.5) !important;
+        transform-origin: center !important;
+        display: flex !important;
+        gap: 0 !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        flex-wrap: nowrap !important;
+        overflow: visible !important;
+        height: auto !important;
+    }
+
+    .print-page-card-preview .cards-display .card {
+        transform: scale(1) !important;
+        margin: 0 !important;
+        border-right: 1px dashed #ccc !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-page-card-preview .cards-display .card:last-child {
+        border-right: none !important;
     }
 
     /* Grid layout variations for trifold pages (print) */
