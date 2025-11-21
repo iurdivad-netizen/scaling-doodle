@@ -1233,13 +1233,6 @@ function attachEventListeners() {
                     // Update preview to ensure image displays on front panel
                     updatePreview();
 
-                    // Update front image URL for background mode if enabled
-                    const cardPreview = document.getElementById('cardPreview');
-                    const imageFillsBackgroundCheckbox = document.getElementById('imageFillsBackground');
-                    if (cardPreview && imageFillsBackgroundCheckbox && imageFillsBackgroundCheckbox.checked) {
-                        cardPreview.style.setProperty('--front-image-url', `url('${event.target.result}')`);
-                    }
-
                     // Update back card to reflect new front card image
                     updateBackCard();
                 }
@@ -1303,13 +1296,6 @@ function attachEventListeners() {
 
                     // Update preview to ensure image displays on front panel
                     updatePreview();
-
-                    // Update front image URL for background mode if enabled
-                    const cardPreview = document.getElementById('cardPreview');
-                    const imageFillsBackgroundCheckbox = document.getElementById('imageFillsBackground');
-                    if (cardPreview && imageFillsBackgroundCheckbox && imageFillsBackgroundCheckbox.checked) {
-                        cardPreview.style.setProperty('--front-image-url', `url('${url}')`);
-                    }
 
                     // Update back card to reflect new front card image
                     updateBackCard();
@@ -1964,10 +1950,6 @@ function loadCardIntoEditor(cardData) {
         const card = document.getElementById('cardPreview');
         if (card) {
             card.classList.add('front-image-fills-background');
-            // Set the front image URL CSS variable
-            if (cardData.frontCardImage) {
-                card.style.setProperty('--front-image-url', `url('${cardData.frontCardImage}')`);
-            }
         }
     } else {
         const imageFillsBackgroundCheckbox = document.getElementById('imageFillsBackground');
@@ -1977,7 +1959,6 @@ function loadCardIntoEditor(cardData) {
         const card = document.getElementById('cardPreview');
         if (card) {
             card.classList.remove('front-image-fills-background');
-            card.style.removeProperty('--front-image-url');
         }
     }
 
@@ -2063,9 +2044,6 @@ function showDeckModal() {
             // Apply front image fills background if it was saved
             if (cardData.hasFrontImageFillsBackground) {
                 cardDiv.classList.add('front-image-fills-background');
-                if (cardData.frontCardImage) {
-                    cardDiv.style.setProperty('--front-image-url', `url('${cardData.frontCardImage}')`);
-                }
             }
 
             cardContainer.appendChild(removeBtn);
@@ -2260,9 +2238,6 @@ async function exportAllCards() {
             // Apply front image fills background if it was saved
             if (cardData.hasFrontImageFillsBackground) {
                 tempCard.classList.add('front-image-fills-background');
-                if (cardData.frontCardImage) {
-                    tempCard.style.setProperty('--front-image-url', `url('${cardData.frontCardImage}')`);
-                }
             }
 
             document.body.appendChild(tempCard);
@@ -2591,9 +2566,6 @@ function showPrintPreview() {
                 // Apply front image fills background if it was saved (only for front panel)
                 if (index === 0 && card.hasFrontImageFillsBackground) {
                     cardDiv.classList.add('front-image-fills-background');
-                    if (card.frontCardImage) {
-                        cardDiv.style.setProperty('--front-image-url', `url('${card.frontCardImage}')`);
-                    }
                 }
 
                 cardsDisplay.appendChild(cardDiv);
@@ -2653,9 +2625,6 @@ function showPrintPreview() {
             // Apply front image fills background if it was saved
             if (regularCards[i].hasFrontImageFillsBackground) {
                 cardDiv.classList.add('front-image-fills-background');
-                if (regularCards[i].frontCardImage) {
-                    cardDiv.style.setProperty('--front-image-url', `url('${regularCards[i].frontCardImage}')`);
-                }
             }
 
             printCard.appendChild(cardDiv);
@@ -3933,14 +3902,8 @@ function initCustomization() {
             if (cardPreview) {
                 if (this.checked) {
                     cardPreview.classList.add('front-image-fills-background');
-                    // Set the front image URL CSS variable
-                    const previewImage = document.getElementById('previewImage');
-                    if (previewImage && previewImage.src) {
-                        cardPreview.style.setProperty('--front-image-url', `url('${previewImage.src}')`);
-                    }
                 } else {
                     cardPreview.classList.remove('front-image-fills-background');
-                    cardPreview.style.removeProperty('--front-image-url');
                 }
                 updatePreview();
             }

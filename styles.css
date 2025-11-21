@@ -3196,47 +3196,37 @@ header p {
     background: none !important;
 }
 
+/* Position card-image to have height for spacing - use static so it doesn't capture absolute positioning */
 .card.front-image-fills-background .card-image {
-    position: relative;
+    position: static;
     width: 100%;
     height: var(--card-image-height);
     min-height: var(--card-image-height);
     border-bottom: none;
     background: none;
-    overflow: visible;
-    z-index: 1;
 }
 
-/* Use ::before for background image */
-.card.front-image-fills-background::before {
-    content: '';
+/* Position the image absolutely relative to .card to cover entire card */
+.card.front-image-fills-background .card-image img {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     width: 100%;
     height: 100%;
-    background-image: var(--front-image-url, none);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.card.front-image-fills-background .card-image img {
-    opacity: 0;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    object-fit: var(--card-image-fit);
-    object-position: var(--card-image-position);
+    object-fit: cover;
+    object-position: center;
     display: block;
+    opacity: 1;
+    z-index: 0;
 }
 
+/* Need to reposition name overlay since card-image is now static */
 .card.front-image-fills-background .card-name-overlay {
-    position: relative;
+    position: absolute;
+    bottom: auto;
+    top: calc(var(--card-image-height) - 80px);
+    left: 0;
+    right: 0;
     background: linear-gradient(to top, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.5)));
     margin-bottom: 0;
     z-index: 1;
