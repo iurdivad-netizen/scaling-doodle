@@ -2463,7 +2463,7 @@ function showPrintPreview() {
     const cardsPerPage = 2;
     const gridLayout = 'layout-1x2'; // 1 row x 2 columns
 
-    // Process three-column cards using card preview layout - 1 card per page
+    // Process 4-panel cards (front + 3 panels) using card preview layout - 1 card per page
     threeColumnCards.forEach(card => {
         const printPage = document.createElement('div');
         printPage.className = 'print-page print-page-card-preview';
@@ -2472,15 +2472,15 @@ function showPrintPreview() {
         const cardsDisplay = document.createElement('div');
         cardsDisplay.className = 'cards-display three-column';
 
-        // Generate the four distinct panels for this card
+        // Generate the 4 panels for this card: front panel + 3 back panels
         const panels = [
             { html: card.html, isFront: true }, // Panel 1 - Front (image + basic stats)
-            { html: generatePrintThreeColumnBack1(card), isFront: false }, // Panel 2 - spells
-            { html: generatePrintThreeColumnBack2(card), isFront: false }, // Panel 3 - features & equipment
-            { html: generatePrintThreeColumnBack3(card), isFront: false }  // Panel 4 - additional stats & description
+            { html: generatePrintThreeColumnBack1(card), isFront: false }, // Panel 2 - Spells
+            { html: generatePrintThreeColumnBack2(card), isFront: false }, // Panel 3 - Features & Equipment
+            { html: generatePrintThreeColumnBack3(card), isFront: false }  // Panel 4 - Stats & Description
         ];
 
-        // Create 4 distinct panels for this card
+        // Create all 4 panels for this card
         panels.forEach((panel, index) => {
             const cardDiv = document.createElement('div');
             if (index === 0) {
