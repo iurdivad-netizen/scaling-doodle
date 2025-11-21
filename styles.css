@@ -3196,28 +3196,42 @@ header p {
 }
 
 .card.front-image-fills-background .card-image {
+    position: relative;
+    width: 100%;
+    height: var(--card-image-height);
+    min-height: var(--card-image-height);
+    border-bottom: none;
+    background: none;
+    overflow: visible;
+    z-index: 0;
+}
+
+/* Use ::before for background image */
+.card.front-image-fills-background::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    height: 100% !important;
-    min-height: 100% !important;
-    border-bottom: none;
-    background: none;
+    height: 100%;
+    background-image: var(--front-image-url, none);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     z-index: -1;
-    overflow: hidden;
+    pointer-events: none;
 }
 
 .card.front-image-fills-background .card-image img {
-    position: absolute;
-    top: 0;
-    left: 0;
+    opacity: 0;
+    position: relative;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center;
+    object-fit: var(--card-image-fit);
+    object-position: var(--card-image-position);
+    display: block;
 }
 
 .card.front-image-fills-background .card-name-overlay {
