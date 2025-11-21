@@ -3193,6 +3193,7 @@ header p {
 .card.front-image-fills-background {
     position: relative;
     overflow: hidden;
+    background: none !important;
 }
 
 .card.front-image-fills-background .card-image {
