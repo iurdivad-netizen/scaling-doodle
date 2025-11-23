@@ -5,14 +5,11 @@ let cardIdCounter = 0;
 const templates = {
     creature: {
         name: 'Creature/Monster',
-        fields: ['cardName', 'cardType', 'cardSubtype', 'imageUpload', 'imageUrl', 'diceRollEnabled', 'diceRollNotation', 'diceRollLabel', 'ac', 'hp', 'speed', 'str', 'dex', 'con', 'int', 'wis', 'cha', 'initiative', 'proficiency', 'savingThrows', 'spellCombat', 'spellSlots', 'keyCantrips', 'domainSpells', 'preparedSpells', 'classFeatures', 'equipment', 'passivePerception', 'additionalStats', 'description'],
+        fields: ['cardName', 'cardType', 'cardSubtype', 'imageUpload', 'imageUrl', 'ac', 'hp', 'speed', 'str', 'dex', 'con', 'int', 'wis', 'cha', 'initiative', 'proficiency', 'savingThrows', 'spellCombat', 'spellSlots', 'keyCantrips', 'domainSpells', 'preparedSpells', 'classFeatures', 'equipment', 'passivePerception', 'additionalStats', 'description'],
         defaults: {
             cardName: 'Ancient Red Dragon',
             cardType: 'Gargantuan Dragon',
             cardSubtype: 'Chaotic Evil',
-            diceRollEnabled: false,
-            diceRollNotation: '1d20+5',
-            diceRollLabel: 'Initiative',
             ac: '22',
             hp: '546 (28d20 + 252)',
             speed: '40 ft., climb 40 ft., fly 80 ft.',
@@ -28,7 +25,7 @@ const templates = {
     },
     spell: {
         name: 'Spell',
-        fields: ['cardName', 'spellLevel', 'spellSchool', 'castingTime', 'spellRange', 'components', 'duration', 'imageUpload', 'imageUrl', 'diceRollEnabled', 'diceRollNotation', 'diceRollLabel', 'description'],
+        fields: ['cardName', 'spellLevel', 'spellSchool', 'castingTime', 'spellRange', 'components', 'duration', 'imageUpload', 'imageUrl', 'description'],
         defaults: {
             cardName: 'Fireball',
             spellLevel: '3rd-level',
@@ -37,50 +34,38 @@ const templates = {
             spellRange: '150 feet',
             components: 'V, S, M (a tiny ball of bat guano and sulfur)',
             duration: 'Instantaneous',
-            diceRollEnabled: false,
-            diceRollNotation: '8d6',
-            diceRollLabel: 'Damage',
             description: 'A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one.\n\nThe fire spreads around corners. It ignites flammable objects in the area that aren\'t being worn or carried.\n\nAt Higher Levels: When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3rd.'
         }
     },
     item: {
         name: 'Magic Item',
-        fields: ['cardName', 'itemRarity', 'itemType', 'attunement', 'imageUpload', 'imageUrl', 'diceRollEnabled', 'diceRollNotation', 'diceRollLabel', 'description'],
+        fields: ['cardName', 'itemRarity', 'itemType', 'attunement', 'imageUpload', 'imageUrl', 'description'],
         defaults: {
             cardName: 'Ring of Protection',
             itemRarity: 'Rare',
             itemType: 'Ring',
             attunement: 'Requires attunement',
-            diceRollEnabled: false,
-            diceRollNotation: '1d20',
-            diceRollLabel: 'Roll',
             description: 'You gain a +1 bonus to AC and saving throws while wearing this ring.\n\nThis elegant silver ring is adorned with protective runes that glow faintly when danger is near.'
         }
     },
     ability: {
         name: 'Character Ability',
-        fields: ['cardName', 'abilitySource', 'abilityLevel', 'imageUpload', 'imageUrl', 'diceRollEnabled', 'diceRollNotation', 'diceRollLabel', 'description'],
+        fields: ['cardName', 'abilitySource', 'abilityLevel', 'imageUpload', 'imageUrl', 'description'],
         defaults: {
             cardName: 'Rage',
             abilitySource: 'Barbarian Class Feature',
             abilityLevel: '1st level',
-            diceRollEnabled: false,
-            diceRollNotation: '1d12',
-            diceRollLabel: 'Damage',
             description: 'In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action.\n\nWhile raging, you gain the following benefits if you aren\'t wearing heavy armor:\n\n• You have advantage on Strength checks and Strength saving throws.\n• When you make a melee weapon attack using Strength, you gain a bonus to the damage roll.\n• You have resistance to bludgeoning, piercing, and slashing damage.\n\nYour rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven\'t attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action.'
         }
     },
     equipment: {
         name: 'Equipment',
-        fields: ['cardName', 'equipmentType', 'equipmentCost', 'equipmentWeight', 'imageUpload', 'imageUrl', 'diceRollEnabled', 'diceRollNotation', 'diceRollLabel', 'description'],
+        fields: ['cardName', 'equipmentType', 'equipmentCost', 'equipmentWeight', 'imageUpload', 'imageUrl', 'description'],
         defaults: {
             cardName: 'Plate Armor',
             equipmentType: 'Heavy Armor',
             equipmentCost: '1,500 gp',
             equipmentWeight: '65 lb.',
-            diceRollEnabled: false,
-            diceRollNotation: '1d20',
-            diceRollLabel: 'Roll',
             description: 'Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body.\n\nArmor Class: 18\nStrength: Str 15\nStealth: Disadvantage'
         }
     }
@@ -240,31 +225,6 @@ function updatePreview() {
     updateCardsDisplayLayout();
 }
 
-// Helper function to generate the HEADER mega section with dice roll
-function generateHeaderSection(cardId = '') {
-    const diceRollEnabled = document.getElementById('diceRollEnabled')?.checked || false;
-
-    if (!diceRollEnabled) {
-        return '';
-    }
-
-    const diceRollNotation = document.getElementById('diceRollNotation')?.value || '1d20';
-    const diceRollLabel = document.getElementById('diceRollLabel')?.value || 'Roll';
-
-    return `
-        <div class="header-mega-section">
-            <div class="header-dice-container">
-                <span class="header-dice-label">${diceRollLabel}:</span>
-                <span class="header-dice-notation">${diceRollNotation}</span>
-                <button class="header-roll-button" data-dice="${diceRollNotation}" data-card-id="${cardId}">Roll</button>
-            </div>
-            <div class="header-roll-result" data-result-for="${cardId}">
-                <span>—</span>
-            </div>
-        </div>
-    `;
-}
-
 // Generate creature card preview
 function generateCreaturePreview() {
     const name = document.getElementById('cardName').value || 'Card Name';
@@ -283,7 +243,6 @@ function generateCreaturePreview() {
     const description = document.getElementById('description').value || '';
 
     return `
-        ${generateHeaderSection('preview')}
         <div class="card-image">
             <img id="previewImage" src="" alt="Card Image">
             <div class="card-name-overlay">
@@ -330,7 +289,6 @@ function generateSpellPreview() {
     const description = document.getElementById('description').value || '';
 
     return `
-        ${generateHeaderSection('preview')}
         <div class="card-image">
             <img id="previewImage" src="" alt="Card Image">
             <div class="card-name-overlay">
@@ -366,7 +324,6 @@ function generateItemPreview() {
     const description = document.getElementById('description').value || '';
 
     return `
-        ${generateHeaderSection('preview')}
         <div class="card-image">
             <img id="previewImage" src="" alt="Card Image">
             <div class="card-name-overlay">
@@ -394,7 +351,6 @@ function generateAbilityPreview() {
     const description = document.getElementById('description').value || '';
 
     return `
-        ${generateHeaderSection('preview')}
         <div class="card-image">
             <img id="previewImage" src="" alt="Card Image">
             <div class="card-name-overlay">
@@ -422,7 +378,6 @@ function generateEquipmentPreview() {
     const description = document.getElementById('description').value || '';
 
     return `
-        ${generateHeaderSection('preview')}
         <div class="card-image">
             <img id="previewImage" src="" alt="Card Image">
             <div class="card-name-overlay">
@@ -1484,52 +1439,6 @@ function attachEventListeners() {
         stickyPreviewToggle.checked = true;
         previewPanel.classList.add('sticky');
     }
-
-    // Dice roll header event listeners
-    const diceRollEnabled = document.getElementById('diceRollEnabled');
-    if (diceRollEnabled) {
-        diceRollEnabled.addEventListener('change', updatePreview);
-    }
-
-    // Event delegation for dice roll buttons
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('header-roll-button')) {
-            const diceNotation = e.target.getAttribute('data-dice');
-            const cardId = e.target.getAttribute('data-card-id');
-
-            if (diceNotation) {
-                const result = parseDiceNotation(diceNotation);
-
-                if (result) {
-                    // Find the result display element for this card
-                    const resultElement = document.querySelector(`.header-roll-result[data-result-for="${cardId}"]`);
-
-                    if (resultElement) {
-                        // Add animation class
-                        resultElement.classList.add('rolled');
-
-                        // Update result display
-                        const rollsText = result.rolls.join(', ');
-                        const modifierText = result.modifier !== 0 ? ` ${result.modifier > 0 ? '+' : ''}${result.modifier}` : '';
-
-                        resultElement.innerHTML = `
-                            <div>
-                                <strong>Total: ${result.total}</strong>
-                                <div class="header-roll-details">Rolls: [${rollsText}]${modifierText}</div>
-                            </div>
-                        `;
-
-                        // Remove animation class after animation completes
-                        setTimeout(() => {
-                            resultElement.classList.remove('rolled');
-                        }, 300);
-                    }
-                } else {
-                    alert('Invalid dice notation. Please use format like "1d20+5" or "2d6"');
-                }
-            }
-        }
-    });
 }
 
 // Deck Management Functions
