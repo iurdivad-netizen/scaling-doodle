@@ -1918,6 +1918,128 @@ header p {
     border-right: 2px solid var(--card-border-color) !important;
 }
 
+/* Front Image Fills Background styles for print preview (on-screen) */
+.print-card .card.front-image-fills-background {
+    background: none;
+}
+
+.print-card .card.front-image-fills-background .card-image {
+    position: static;
+    height: var(--card-image-height);
+    min-height: var(--card-image-height);
+    background: none;
+    border-bottom: none;
+}
+
+.print-card .card.front-image-fills-background .card-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 1;
+    z-index: 0;
+}
+
+.print-card .card.front-image-fills-background .card-name-overlay {
+    position: absolute;
+    top: calc(var(--card-image-height) - 80px);
+    bottom: auto;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.5)));
+    z-index: 1;
+}
+
+.print-card .card.front-image-fills-background .card-content {
+    position: relative;
+    background: none;
+    z-index: 1;
+    padding: var(--card-content-padding);
+}
+
+.print-card .card.front-image-fills-background .card-type {
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.8)));
+    color: var(--card-name-color);
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: inline-block;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.print-card .card.front-image-fills-background .card-stats {
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.9)));
+    padding: 12px;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.print-card .card.front-image-fills-background .card-stats .stat-row {
+    background: rgba(232, 220, 196, 0.15);
+    border-color: rgba(139, 69, 19, 0.5);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.print-card .card.front-image-fills-background .card-stats .stat-row strong {
+    color: var(--card-name-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.print-card .card.front-image-fills-background .card-stats .stat-row span {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.print-card .card.front-image-fills-background .ability-scores-display {
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.9)));
+    padding: 12px;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.print-card .card.front-image-fills-background .ability-scores-display .ability-score {
+    background: rgba(232, 220, 196, 0.15);
+    border-color: rgba(139, 69, 19, 0.5);
+}
+
+.print-card .card.front-image-fills-background .ability-scores-display .ability-name {
+    color: var(--card-name-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.print-card .card.front-image-fills-background .ability-scores-display .ability-value {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.print-card .card.front-image-fills-background .card-description {
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.9)));
+    padding: 12px;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.print-card .card.front-image-fills-background .card-description p,
+.print-card .card.front-image-fills-background .card-description div {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.print-card .card.front-image-fills-background .trifold-front {
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.9)));
+    padding: var(--card-content-padding);
+    border-radius: 6px;
+    z-index: 1;
+}
+
 /* Print media queries */
 @media print {
     /* Remove default page margins */
@@ -2687,6 +2809,7 @@ header p {
         position: relative !important;
         background: none !important;
         z-index: 1 !important;
+        padding: var(--card-content-padding) !important;
     }
 
     .print-card .card.front-image-fills-background .card-type {
