@@ -10,6 +10,9 @@ const templates = {
             cardName: 'Ancient Red Dragon',
             cardType: 'Gargantuan Dragon',
             cardSubtype: 'Chaotic Evil',
+            diceRollEnabled: true,
+            diceRollNotation: '1d20+5',
+            diceRollLabel: 'Initiative',
             ac: '22',
             hp: '546 (28d20 + 252)',
             speed: '40 ft., climb 40 ft., fly 80 ft.',
@@ -152,7 +155,11 @@ function loadTemplate(templateId) {
     Object.keys(template.defaults).forEach(fieldId => {
         const element = document.getElementById(fieldId);
         if (element) {
-            element.value = template.defaults[fieldId];
+            if (element.type === 'checkbox') {
+                element.checked = template.defaults[fieldId];
+            } else {
+                element.value = template.defaults[fieldId];
+            }
         }
     });
 
@@ -489,6 +496,7 @@ function generateThreeColumnFront(templateId) {
         const savingThrows = document.getElementById('savingThrows')?.value || '';
 
         return `
+            ${generateHeaderSection('preview')}
             <div class="card-image">
                 <img id="previewImage" src="" alt="Card Image">
                 <div class="card-name-overlay">
