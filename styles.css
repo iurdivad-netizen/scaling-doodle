@@ -443,102 +443,6 @@ header p {
     position: relative;
 }
 
-/* Header Mega Section - Dice Roll Area */
-.header-mega-section {
-    width: 100%;
-    padding: 12px 16px;
-    background: linear-gradient(135deg, #e8dcc4 0%, #d4c4a8 100%);
-    border-bottom: 2px solid var(--card-border-color);
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.header-dice-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.header-dice-label {
-    font-family: var(--card-header-font-family);
-    font-weight: 600;
-    font-size: 0.9em;
-    color: var(--card-header-color);
-    flex-shrink: 0;
-}
-
-.header-dice-notation {
-    flex-grow: 1;
-    text-align: center;
-    font-family: var(--card-content-font-family);
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--card-text-color);
-    background: rgba(255, 255, 255, 0.5);
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: 1px solid var(--card-border-color);
-}
-
-.header-roll-button {
-    padding: 8px 16px;
-    background: var(--card-border-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-family: var(--card-font-family);
-    font-size: 0.9em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-
-.header-roll-button:hover {
-    background: #7a6f5d;
-}
-
-.header-roll-button:active {
-    background: #5a4f3d;
-    transform: scale(0.98);
-}
-
-.header-roll-result {
-    text-align: center;
-    font-family: var(--card-content-font-family);
-    font-size: 1.2em;
-    font-weight: 700;
-    color: var(--card-header-color);
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 4px;
-    border: 2px solid var(--card-border-color);
-    min-height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-roll-result.rolled {
-    animation: rollPulse 0.3s ease-out;
-}
-
-@keyframes rollPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); background: rgba(255, 215, 0, 0.3); }
-    100% { transform: scale(1); }
-}
-
-.header-roll-details {
-    font-size: 0.7em;
-    color: var(--card-label-color);
-    margin-top: 2px;
-}
-
 .card-image {
     position: relative;
     width: 100%;
@@ -5361,5 +5265,393 @@ header p {
     .combatant-stats {
         flex-direction: column;
         gap: 10px;
+    }
+}
+
+/* ===================================
+   DICE ROLLER TAB STYLES
+   =================================== */
+
+.dice-roller-main-content {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dice-roller-header-panel {
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dice-roller-header h2 {
+    color: white;
+    margin: 0 0 10px 0;
+    font-size: 2.2em;
+}
+
+.dice-roller-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.dice-roller-interface {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+/* Quick Roll Section */
+.quick-roll-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid #8b4513;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quick-roll-section h3 {
+    color: #8b4513;
+    margin: 0 0 20px 0;
+    font-size: 1.5em;
+}
+
+.quick-roll-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.quick-roll-btn {
+    background: linear-gradient(135deg, #e8dcc4 0%, #d4c4a8 100%);
+    border: 2px solid #8b4513;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'MedievalSharp', serif;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #4a3728;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quick-roll-btn:hover {
+    background: linear-gradient(135deg, #d4c4a8 0%, #c0b090 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.quick-roll-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.quick-roll-btn.advantage {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+}
+
+.quick-roll-btn.advantage:hover {
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+}
+
+/* Custom Roll Section */
+.custom-roll-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid #8b4513;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-roll-section h3 {
+    color: #8b4513;
+    margin: 0 0 20px 0;
+    font-size: 1.5em;
+}
+
+.custom-roll-input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+#customDiceInput {
+    flex: 1;
+    padding: 15px;
+    font-size: 1.1em;
+    border: 2px solid #8b4513;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+}
+
+.btn-roll-custom {
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-roll-custom:hover {
+    background: linear-gradient(135deg, #a0522d 0%, #b8651f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dice-notation-help {
+    color: #666;
+    font-size: 0.9em;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Roll Results Section */
+.roll-results-section {
+    grid-column: 1 / -1;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid #8b4513;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.roll-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.roll-results-header h3 {
+    color: #8b4513;
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.btn-clear-history {
+    background: #c0392b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.3s;
+}
+
+.btn-clear-history:hover {
+    background: #a93226;
+}
+
+.roll-results-display {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    background: #f9f6f0;
+    border-radius: 8px;
+}
+
+.no-rolls {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+    font-style: italic;
+}
+
+.roll-result-item {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 2px solid #8b4513;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: rollAppear 0.3s ease-out;
+}
+
+@keyframes rollAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.roll-result-item.latest {
+    border-color: #f39c12;
+    background: linear-gradient(135deg, #fff5e6 0%, white 100%);
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+}
+
+.roll-notation {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+    color: #8b4513;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.roll-total {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 10px 0;
+}
+
+.roll-details {
+    color: #666;
+    font-size: 1em;
+    margin-top: 8px;
+}
+
+.roll-timestamp {
+    color: #999;
+    font-size: 0.85em;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* Saved Rolls Section */
+.saved-rolls-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid #8b4513;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.saved-rolls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.saved-rolls-header h3 {
+    color: #8b4513;
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.btn-add-saved {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.3s;
+}
+
+.btn-add-saved:hover {
+    background: #229954;
+}
+
+.saved-rolls-list {
+    display: grid;
+    gap: 12px;
+}
+
+.saved-roll-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto auto;
+    gap: 15px;
+    align-items: center;
+    padding: 15px;
+    background: #f9f6f0;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    transition: all 0.3s;
+}
+
+.saved-roll-item:hover {
+    border-color: #8b4513;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.saved-roll-name {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.saved-roll-notation {
+    font-family: 'Courier New', monospace;
+    color: #8b4513;
+    font-weight: 600;
+}
+
+.btn-roll-saved {
+    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s;
+}
+
+.btn-roll-saved:hover {
+    background: linear-gradient(135deg, #a0522d 0%, #b8651f 100%);
+    transform: translateY(-2px);
+}
+
+.btn-delete-saved {
+    background: #c0392b;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete-saved:hover {
+    background: #a93226;
+}
+
+/* Responsive Design for Dice Roller */
+@media (max-width: 1024px) {
+    .dice-roller-interface {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-roll-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .quick-roll-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .saved-roll-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .custom-roll-input-group {
+        flex-direction: column;
     }
 }
