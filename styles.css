@@ -2648,6 +2648,57 @@ header p {
     max-height: var(--card-height);
 }
 
+    /* Front Image Fills Background styles for print media */
+    .print-card .card.front-image-fills-background {
+        background: none !important;
+    }
+
+    .print-card .card.front-image-fills-background .card-image {
+        position: static !important;
+        height: var(--card-image-height) !important;
+        min-height: var(--card-image-height) !important;
+        background: none !important;
+        border-bottom: none !important;
+    }
+
+    .print-card .card.front-image-fills-background .card-image img {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        opacity: 1 !important;
+        z-index: 0 !important;
+    }
+
+    .print-card .card.front-image-fills-background .card-name-overlay {
+        position: absolute !important;
+        top: calc(var(--card-image-height) - 80px) !important;
+        bottom: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: linear-gradient(to top, rgba(0, 0, 0, var(--content-opacity, 0.85)), rgba(0, 0, 0, calc(var(--content-opacity, 0.85) * 0.5))) !important;
+        z-index: 1 !important;
+    }
+
+    .print-card .card.front-image-fills-background .card-content {
+        position: relative !important;
+        background: none !important;
+        z-index: 1 !important;
+    }
+
+    .print-card .card.front-image-fills-background .card-type,
+    .print-card .card.front-image-fills-background .card-stats,
+    .print-card .card.front-image-fills-background .ability-scores-display,
+    .print-card .card.front-image-fills-background .card-description,
+    .print-card .card.front-image-fills-background .trifold-front {
+        position: relative !important;
+        z-index: 1 !important;
+    }
+}
+
 /* Responsive: stack cards on smaller screens */
 @media (max-width: 1600px) {
     .cards-display {
@@ -2750,6 +2801,45 @@ header p {
 
     .cards-display.three-column .card-back {
         display: none;
+    }
+
+    /* Front Image Fills Background styles for three-column print */
+    .cards-display.three-column .card-front.front-image-fills-background {
+        background: none;
+    }
+
+    .cards-display.three-column .card-front.front-image-fills-background .card-image {
+        position: static;
+        height: var(--card-image-height);
+        background: none;
+        border-bottom: none;
+    }
+
+    .cards-display.three-column .card-front.front-image-fills-background .card-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        opacity: 1;
+        z-index: 0;
+    }
+
+    .cards-display.three-column .card-front.front-image-fills-background .card-name-overlay {
+        position: absolute;
+        top: calc(var(--card-image-height) - 80px);
+        bottom: auto;
+        left: 0;
+        right: 0;
+        z-index: 1;
+    }
+
+    .cards-display.three-column .card-front.front-image-fills-background .card-content {
+        position: relative;
+        background: none;
+        z-index: 1;
     }
 }
 
