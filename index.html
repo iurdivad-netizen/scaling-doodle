@@ -18,7 +18,6 @@
             <button class="tab-button active" data-tab="card-builder">Card Builder</button>
             <button class="tab-button" data-tab="adventure-tracker">Adventure Tracker</button>
             <button class="tab-button" data-tab="encounters-combat">Encounters/Combat</button>
-            <button class="tab-button" data-tab="dice-roller">Dice Roller</button>
         </div>
 
         <!-- Card Builder Tab -->
@@ -869,91 +868,6 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
             </div>
         </div>
         <!-- End Encounters/Combat Tab -->
-
-        <!-- Dice Roller Tab -->
-        <div id="dice-roller-tab" class="tab-content">
-            <div class="dice-roller-main-content">
-                <!-- Dice Roller Header -->
-                <div class="dice-roller-header-panel">
-                    <div class="dice-roller-header">
-                        <h2>🎲 Dice Roller</h2>
-                        <p class="dice-roller-subtitle">Roll dice using standard D&D notation</p>
-                    </div>
-                </div>
-
-                <!-- Main Roller Interface -->
-                <div class="dice-roller-interface">
-                    <!-- Quick Roll Buttons -->
-                    <div class="quick-roll-section">
-                        <h3>Quick Rolls</h3>
-                        <div class="quick-roll-grid">
-                            <button class="quick-roll-btn" data-dice="1d4">1d4</button>
-                            <button class="quick-roll-btn" data-dice="1d6">1d6</button>
-                            <button class="quick-roll-btn" data-dice="1d8">1d8</button>
-                            <button class="quick-roll-btn" data-dice="1d10">1d10</button>
-                            <button class="quick-roll-btn" data-dice="1d12">1d12</button>
-                            <button class="quick-roll-btn" data-dice="1d20">1d20</button>
-                            <button class="quick-roll-btn" data-dice="1d100">1d100</button>
-                            <button class="quick-roll-btn" data-dice="2d6">2d6</button>
-                            <button class="quick-roll-btn" data-dice="3d6">3d6</button>
-                            <button class="quick-roll-btn" data-dice="4d6">4d6</button>
-                            <button class="quick-roll-btn advantage" data-dice="2d20">2d20 (Adv)</button>
-                            <button class="quick-roll-btn" data-dice="8d6">8d6</button>
-                        </div>
-                    </div>
-
-                    <!-- Custom Roll Input -->
-                    <div class="custom-roll-section">
-                        <h3>Custom Roll</h3>
-                        <div class="custom-roll-input-group">
-                            <input type="text" id="customDiceInput" placeholder="e.g., 2d20+5, 8d6-2, 1d12+3" value="">
-                            <button id="customRollBtn" class="btn-roll-custom">Roll Custom</button>
-                        </div>
-                        <p class="dice-notation-help">Format: [count]d[sides][+/-modifier] (e.g., 2d6+3)</p>
-                    </div>
-
-                    <!-- Roll Results Display -->
-                    <div class="roll-results-section">
-                        <div class="roll-results-header">
-                            <h3>Roll Results</h3>
-                            <button id="clearRollHistoryBtn" class="btn-clear-history">Clear History</button>
-                        </div>
-                        <div id="rollResultsDisplay" class="roll-results-display">
-                            <div class="no-rolls">No rolls yet. Click a quick roll button or enter custom dice notation above.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Saved Rolls -->
-                <div class="saved-rolls-section">
-                    <div class="saved-rolls-header">
-                        <h3>Saved Rolls</h3>
-                        <button id="addSavedRollBtn" class="btn-add-saved">+ Add Custom Roll</button>
-                    </div>
-                    <div id="savedRollsList" class="saved-rolls-list">
-                        <div class="saved-roll-item" data-dice="1d20+5">
-                            <span class="saved-roll-name">Initiative</span>
-                            <span class="saved-roll-notation">1d20+5</span>
-                            <button class="btn-roll-saved" data-dice="1d20+5">Roll</button>
-                            <button class="btn-delete-saved">×</button>
-                        </div>
-                        <div class="saved-roll-item" data-dice="1d20+8">
-                            <span class="saved-roll-name">Attack Roll</span>
-                            <span class="saved-roll-notation">1d20+8</span>
-                            <button class="btn-roll-saved" data-dice="1d20+8">Roll</button>
-                            <button class="btn-delete-saved">×</button>
-                        </div>
-                        <div class="saved-roll-item" data-dice="8d6">
-                            <span class="saved-roll-name">Fireball Damage</span>
-                            <span class="saved-roll-notation">8d6</span>
-                            <button class="btn-roll-saved" data-dice="8d6">Roll</button>
-                            <button class="btn-delete-saved">×</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Dice Roller Tab -->
     </div>
 
     <!-- Deck Modal -->
