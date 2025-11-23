@@ -164,6 +164,25 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
                         <input type="text" id="cardName" placeholder="Enter card name" value="Ancient Red Dragon">
                     </div>
 
+                    <!-- Dice Roll Header Section -->
+                    <div class="form-section">
+                        <h3>Dice Roll Header</h3>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <input type="checkbox" id="diceRollEnabled" style="width: auto; margin: 0;">
+                            <label for="diceRollEnabled" style="margin: 0; font-weight: 600;">Enable Dice Roll Header</label>
+                        </div>
+                        <div class="stats-grid" style="grid-template-columns: 1fr 2fr;">
+                            <div class="stat-input">
+                                <label for="diceRollLabel">Label</label>
+                                <input type="text" id="diceRollLabel" placeholder="e.g., Initiative, Damage" value="Initiative">
+                            </div>
+                            <div class="stat-input">
+                                <label for="diceRollNotation">Dice Notation</label>
+                                <input type="text" id="diceRollNotation" placeholder="e.g., 1d20+5, 8d6" value="1d20+5">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-section">
                         <label for="cardType">Type</label>
                         <input type="text" id="cardType" placeholder="e.g., Dragon, Humanoid" value="Gargantuan Dragon">
