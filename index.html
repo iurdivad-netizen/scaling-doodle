@@ -18,6 +18,7 @@
             <button class="tab-button active" data-tab="card-builder">Card Builder</button>
             <button class="tab-button" data-tab="adventure-tracker">Adventure Tracker</button>
             <button class="tab-button" data-tab="encounters-combat">Encounters/Combat</button>
+            <button class="tab-button" data-tab="dice-roller">Dice Roller</button>
         </div>
 
         <!-- Card Builder Tab -->
@@ -849,6 +850,97 @@ Multiattack: The dragon can use its Frightful Presence. It then makes three atta
             </div>
         </div>
         <!-- End Encounters/Combat Tab -->
+
+        <!-- Dice Roller Tab -->
+        <div id="dice-roller-tab" class="tab-content">
+            <div class="dice-roller-main-content">
+                <div class="dice-roller-header">
+                    <h2>Dice Roller</h2>
+                    <p class="dice-roller-subtitle">Roll any combination of dice for your D&D adventures</p>
+                </div>
+
+                <!-- Quick Roll Buttons -->
+                <div class="quick-roll-section">
+                    <h3>Quick Rolls</h3>
+                    <div class="quick-roll-buttons">
+                        <button class="quick-roll-btn" data-dice="1d4">d4</button>
+                        <button class="quick-roll-btn" data-dice="1d6">d6</button>
+                        <button class="quick-roll-btn" data-dice="1d8">d8</button>
+                        <button class="quick-roll-btn" data-dice="1d10">d10</button>
+                        <button class="quick-roll-btn" data-dice="1d12">d12</button>
+                        <button class="quick-roll-btn" data-dice="1d20">d20</button>
+                        <button class="quick-roll-btn" data-dice="1d100">d100</button>
+                    </div>
+                </div>
+
+                <!-- Custom Dice Notation -->
+                <div class="custom-roll-section">
+                    <h3>Custom Roll</h3>
+                    <div class="custom-roll-input-group">
+                        <input type="text" id="customDiceNotation" class="custom-dice-input" placeholder="e.g., 2d6+3, 1d20, 3d8-2">
+                        <button id="customRollBtn" class="btn-primary">Roll</button>
+                        <button id="clearHistoryBtn" class="btn-secondary">Clear History</button>
+                    </div>
+                    <p class="dice-notation-help">Enter dice notation: [number]d[sides][+/-modifier] (e.g., 2d6+3)</p>
+                </div>
+
+                <!-- Common D&D Rolls -->
+                <div class="common-rolls-section">
+                    <h3>Common D&D Rolls</h3>
+                    <div class="common-roll-buttons">
+                        <button class="common-roll-btn" data-dice="1d20">Ability Check</button>
+                        <button class="common-roll-btn" data-dice="1d20">Attack Roll</button>
+                        <button class="common-roll-btn" data-dice="1d20">Saving Throw</button>
+                        <button class="common-roll-btn" data-dice="4d6">Ability Score (4d6)</button>
+                        <button class="common-roll-btn" data-dice="2d6">Greatsword (2d6)</button>
+                        <button class="common-roll-btn" data-dice="1d8">Longsword (1d8)</button>
+                        <button class="common-roll-btn" data-dice="1d6">Shortsword (1d6)</button>
+                        <button class="common-roll-btn" data-dice="1d4">Dagger (1d4)</button>
+                    </div>
+                </div>
+
+                <!-- Multi-Roll Section -->
+                <div class="multi-roll-section">
+                    <h3>Multiple Dice Roller</h3>
+                    <div class="multi-roll-controls">
+                        <div class="multi-roll-input-row">
+                            <label for="multiDiceCount">Number of Dice:</label>
+                            <input type="number" id="multiDiceCount" min="1" max="100" value="1">
+                            <label for="multiDiceSides">Sides:</label>
+                            <select id="multiDiceSides">
+                                <option value="4">d4</option>
+                                <option value="6">d6</option>
+                                <option value="8">d8</option>
+                                <option value="10">d10</option>
+                                <option value="12">d12</option>
+                                <option value="20" selected>d20</option>
+                                <option value="100">d100</option>
+                            </select>
+                            <label for="multiDiceModifier">Modifier:</label>
+                            <input type="number" id="multiDiceModifier" value="0">
+                            <button id="multiRollBtn" class="btn-primary">Roll</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roll Result Display -->
+                <div class="roll-result-section">
+                    <h3>Current Roll</h3>
+                    <div id="currentRollDisplay" class="current-roll-display">
+                        <p class="no-roll-message">Roll some dice to see results here!</p>
+                    </div>
+                </div>
+
+                <!-- Roll History -->
+                <div class="roll-history-section">
+                    <h3>Roll History</h3>
+                    <div id="rollHistory" class="roll-history">
+                        <p class="no-history-message">Your roll history will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Dice Roller Tab -->
     </div>
 
     <!-- Deck Modal -->

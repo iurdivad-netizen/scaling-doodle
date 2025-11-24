@@ -5463,6 +5463,191 @@ function initCombat() {
     });
 }
 
+// Dice Roller Tab Functions
+let rollHistory = [];
+
+function initDiceRoller() {
+    // Quick roll buttons
+    const quickRollButtons = document.querySelectorAll('.quick-roll-btn');
+    quickRollButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const notation = this.getAttribute('data-dice');
+            performDiceRoll(notation);
+        });
+    });
+
+    // Common roll buttons
+    const commonRollButtons = document.querySelectorAll('.common-roll-btn');
+    commonRollButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const notation = this.getAttribute('data-dice');
+            performDiceRoll(notation);
+        });
+    });
+
+    // Custom roll button
+    document.getElementById('customRollBtn').addEventListener('click', function() {
+        const notation = document.getElementById('customDiceNotation').value.trim();
+        if (notation) {
+            performDiceRoll(notation);
+        }
+    });
+
+    // Allow Enter key in custom dice input
+    document.getElementById('customDiceNotation').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const notation = this.value.trim();
+            if (notation) {
+                performDiceRoll(notation);
+            }
+        }
+    });
+
+    // Multi-roll button
+    document.getElementById('multiRollBtn').addEventListener('click', function() {
+        const count = parseInt(document.getElementById('multiDiceCount').value);
+        const sides = parseInt(document.getElementById('multiDiceSides').value);
+        const modifier = parseInt(document.getElementById('multiDiceModifier').value);
+
+        let notation = `${count}d${sides}`;
+        if (modifier > 0) {
+            notation += `+${modifier}`;
+        } else if (modifier < 0) {
+            notation += modifier;
+        }
+
+        performDiceRoll(notation);
+    });
+
+    // Clear history button
+    document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+        rollHistory = [];
+        updateRollHistory();
+    });
+}
+
+function performDiceRoll(notation) {
+    const result = parseDiceNotation(notation);
+
+    if (!result) {
+        alert('Invalid dice notation! Please use format like: 2d6+3, 1d20, 3d8-2');
+        return;
+    }
+
+    // Add to history
+    rollHistory.unshift({
+        notation: result.notation,
+        total: result.total,
+        rolls: result.rolls,
+        count: result.count,
+        sides: result.sides,
+        modifier: result.modifier,
+        timestamp: new Date().toLocaleTimeString()
+    });
+
+    // Keep only last 50 rolls in history
+    if (rollHistory.length > 50) {
+        rollHistory = rollHistory.slice(0, 50);
+    }
+
+    // Update displays
+    displayCurrentRoll(result);
+    updateRollHistory();
+}
+
+function displayCurrentRoll(result) {
+    const display = document.getElementById('currentRollDisplay');
+
+    let modifierText = '';
+    if (result.modifier > 0) {
+        modifierText = ` + ${result.modifier}`;
+    } else if (result.modifier < 0) {
+        modifierText = ` - ${Math.abs(result.modifier)}`;
+    }
+
+    let rollsHTML = '';
+    if (result.rolls.length > 1 || result.modifier !== 0) {
+        rollsHTML = '<div class="roll-individual">';
+        result.rolls.forEach(roll => {
+            let dieClass = 'die-result';
+            // Highlight critical rolls for d20
+            if (result.sides === 20) {
+                if (roll === 20) dieClass += ' critical-success';
+                if (roll === 1) dieClass += ' critical-fail';
+            } else if (roll === result.sides) {
+                dieClass += ' critical-success';
+            } else if (roll === 1) {
+                dieClass += ' critical-fail';
+            }
+            rollsHTML += `<span class="${dieClass}">${roll}</span>`;
+        });
+        rollsHTML += '</div>';
+    }
+
+    let detailsText = '';
+    if (result.rolls.length > 1 || result.modifier !== 0) {
+        const rollSum = result.rolls.reduce((a, b) => a + b, 0);
+        if (result.modifier !== 0) {
+            detailsText = `<div class="roll-details">Rolls: ${result.rolls.join(' + ')} = ${rollSum}${modifierText} = ${result.total}</div>`;
+        } else {
+            detailsText = `<div class="roll-details">Rolls: ${result.rolls.join(' + ')} = ${result.total}</div>`;
+        }
+    }
+
+    display.innerHTML = `
+        <div class="roll-result">
+            <div class="roll-result-header">
+                <span class="roll-notation">${result.notation}</span>
+                <span class="roll-timestamp">${new Date().toLocaleTimeString()}</span>
+            </div>
+            <div class="roll-total">${result.total}</div>
+            ${rollsHTML}
+            ${detailsText}
+        </div>
+    `;
+}
+
+function updateRollHistory() {
+    const historyContainer = document.getElementById('rollHistory');
+
+    if (rollHistory.length === 0) {
+        historyContainer.innerHTML = '<p class="no-history-message">Your roll history will appear here</p>';
+        return;
+    }
+
+    let historyHTML = '';
+    rollHistory.forEach(roll => {
+        let rollsText = roll.rolls.join(', ');
+        let detailsText = '';
+
+        if (roll.rolls.length > 1 || roll.modifier !== 0) {
+            const rollSum = roll.rolls.reduce((a, b) => a + b, 0);
+            if (roll.modifier > 0) {
+                detailsText = `[${rollsText}] = ${rollSum} + ${roll.modifier}`;
+            } else if (roll.modifier < 0) {
+                detailsText = `[${rollsText}] = ${rollSum} - ${Math.abs(roll.modifier)}`;
+            } else {
+                detailsText = `[${rollsText}] = ${rollSum}`;
+            }
+        } else {
+            detailsText = `[${rollsText}]`;
+        }
+
+        historyHTML += `
+            <div class="history-item">
+                <div class="history-header">
+                    <span class="history-notation">${roll.notation}</span>
+                    <span class="history-total">${roll.total}</span>
+                </div>
+                <div class="history-details">${detailsText}</div>
+                <div class="history-timestamp">${roll.timestamp}</div>
+            </div>
+        `;
+    });
+
+    historyContainer.innerHTML = historyHTML;
+}
+
 function initAdventureTracker() {
     // Refresh character list button
     document.getElementById('refreshCharactersBtn').addEventListener('click', loadCharacterList);
@@ -5497,4 +5682,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     initTabs();
     initAdventureTracker();
     initCombat();
+    initDiceRoller();
 });
